@@ -1,8 +1,18 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Chronicles.css';
+
+// ── Uncomment these imports once photos are added to src/assets/chronicles/ ──
+// import orientationImg  from '../assets/chronicles/01-orientation.jpg';
+// import firstCodeImg    from '../assets/chronicles/02-firstcode.jpg';
+// import hackathonImg    from '../assets/chronicles/03-hackathon.jpg';
+// import festsImg        from '../assets/chronicles/04-fests.jpg';
+// import internshipImg   from '../assets/chronicles/05-internship.jpg';
+// import projectsImg     from '../assets/chronicles/06-projects.jpg';
+// import farewellImg     from '../assets/chronicles/07-farewell.jpg';
+// ─────────────────────────────────────────────────────────────────────────────
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,17 +22,17 @@ interface TimelineItem {
   title: string;
   body: string;
   tag: string;
-  photoLabel: string;
+  image: string | null;  // set to imported image variable once photos are added
 }
 
 const items: TimelineItem[] = [
-  { id: 1, date: 'August 2022',     title: 'Day One — The Beginning',      body: 'Strangers carrying laptops and nervous smiles walked into JIT. Nobody knew anyone. Everyone knew nothing. The AI & ML batch had officially begun.',                                          tag: 'Orientation',   photoLabel: 'Add Orientation Photo'           },
-  { id: 2, date: '2022 — Sem 1',    title: 'First Code. First Bug. First Panic.', body: 'C programs that somehow printed the wrong output. Matrix math that made no sense. And the first taste of what late nights in the lab actually feel like.',                               tag: 'Academics',     photoLabel: 'Add Lab Photo'                   },
-  { id: 3, date: '2023',            title: 'The Hackathon Era Begins',      body: 'Sleep-deprived, over-caffeinated, and dangerously optimistic — the batch started competing. And winning. [Add hackathon names here]',                                                          tag: 'Hackathons',    photoLabel: 'Add Hackathon Photo'             },
-  { id: 4, date: '2023 — Fests',    title: 'Chaos, Music & the Canteen',   body: 'Tech fests, cultural nights, and the canteen that was somehow always open. The batch found its rhythm — loud, brilliant, and unapologetic.',                                                    tag: 'Campus Life',   photoLabel: 'Add Fest Photo'                  },
-  { id: 5, date: '2024 — 3rd Year', title: 'Internship Season',            body: 'Offer letters, rejections, referrals, and random LinkedIn DMs. The real-world education had started. [Add notable companies/internship stories here]',                                           tag: 'Internships',   photoLabel: 'Add Internship Celebration Photo'},
-  { id: 6, date: '2025',            title: 'The Project Marathon',          body: 'Final-year projects, capstone presentations, and the dawning realisation that this was actually ending. [Add project titles/themes here]',                                                      tag: 'Final Project', photoLabel: 'Add Project Presentation Photo'  },
-  { id: 7, date: 'April 2026',      title: 'The Farewell — EndOfBeginning', body: 'They called it a goodbye. We\'re calling it a launch. The batch of 2022–26 steps into the world — and the world better be ready.',                                                             tag: 'Farewell 2026', photoLabel: 'Add Farewell Photo'              },
+  { id: 1, date: 'August 2022',     title: 'Day One — The Beginning',       body: 'Strangers carrying laptops and nervous smiles walked into JIT. Nobody knew anyone. Everyone knew nothing. The AI & ML batch had officially begun.',                                        tag: 'Orientation',   image: null /* orientationImg */  },
+  { id: 2, date: '2022 — Sem 1',    title: 'First Code. First Bug. First Panic.', body: 'C programs that somehow printed the wrong output. Matrix math that made no sense. And the first taste of what late nights in the lab actually feel like.',                             tag: 'Academics',     image: null /* firstCodeImg */    },
+  { id: 3, date: '2023',            title: 'The Hackathon Era Begins',       body: 'Sleep-deprived, over-caffeinated, and dangerously optimistic — the batch started competing. And winning. [Add hackathon names here]',                                                        tag: 'Hackathons',    image: null /* hackathonImg */    },
+  { id: 4, date: '2023 — Fests',    title: 'Chaos, Music & the Canteen',    body: 'Tech fests, cultural nights, and the canteen that was somehow always open. The batch found its rhythm — loud, brilliant, and unapologetic.',                                                  tag: 'Campus Life',   image: null /* festsImg */        },
+  { id: 5, date: '2024 — 3rd Year', title: 'Internship Season',             body: 'Offer letters, rejections, referrals, and random LinkedIn DMs. The real-world education had started. [Add notable companies/internship stories here]',                                         tag: 'Internships',   image: null /* internshipImg */   },
+  { id: 6, date: '2025',            title: 'The Project Marathon',           body: 'Final-year projects, capstone presentations, and the dawning realisation that this was actually ending. [Add project titles/themes here]',                                                    tag: 'Final Project', image: null /* projectsImg */     },
+  { id: 7, date: 'April 2026',      title: 'The Farewell — EndOfBeginning', body: 'They called it a goodbye. We\'re calling it a launch. The batch of 2022–26 steps into the world — and the world better be ready.',                                                           tag: 'Farewell 2026', image: null /* farewellImg */     },
 ];
 
 export default function Chronicles() {
