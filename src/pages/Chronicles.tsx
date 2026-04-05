@@ -55,12 +55,18 @@ export default function Chronicles() {
       },
     });
 
-    document.querySelectorAll('.tl-item').forEach((item, i) => {
-      gsap.from(item, {
-        opacity: 0, x: i % 2 === 0 ? -50 : 50, y: 20, duration: 0.75,
-        ease: 'power3.out',
-        scrollTrigger: { trigger: item, start: 'top 83%' },
-      });
+    document.querySelectorAll<HTMLElement>('.tl-item').forEach((item, i) => {
+      gsap.fromTo(item,
+        { opacity: 0, x: i % 2 === 0 ? -50 : 50, y: 20 },
+        {
+          opacity: 1, x: 0, y: 0, duration: 0.75, ease: 'power3.out',
+          scrollTrigger: {
+            trigger: item,
+            start: 'top 90%',  // fires earlier so top items don't stay invisible
+            toggleActions: 'play none none none',
+          },
+        }
+      );
     });
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
@@ -82,30 +88,34 @@ export default function Chronicles() {
 
         {items.map((item, i) => {
           const side = i % 2 === 0 ? 'left' : 'right';
+
+          const card = (
+            <div className="tl-card glass-card">
+              <div className="tl-date">{item.date}</div>
+              <div className="tl-title">{item.title}</div>
+              <p className="tl-body">{item.body}</p>
+              <span className="tl-tag">{item.tag}</span>
+
+              {/* Cascading photo — always visible, overlaps next card by ~50px */}
+              <div className={`tl-photo tl-photo--${side}`}>
+                {item.image ? (
+                  <img src={item.image} alt={item.title} className="tl-photo-img" />
+                ) : (
+                  <div className="tl-photo-ph">
+                    <span className="tl-photo-ph-icon">📷</span>
+                    <span className="tl-photo-ph-label">{item.title}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+
           return (
             <div className={`tl-item ${side}`} key={item.id}>
-              {side === 'right' && <div className="tl-spacer" />}
+              {/* left: card · spine · spacer  |  right: spacer · spine · card */}
+              {side === 'left'  && <>{card}<div className="tl-spacer" /></>}
               <div className="tl-dot" />
-              {side === 'left'  && <div className="tl-spacer" />}
-
-              <div className="tl-card glass-card">
-                <div className="tl-date">{item.date}</div>
-                <div className="tl-title">{item.title}</div>
-                <p className="tl-body">{item.body}</p>
-                <span className="tl-tag">{item.tag}</span>
-
-                {/* Cascading photo — always visible, overlaps next card by 50px */}
-                <div className={`tl-photo tl-photo--${side}`}>
-                  {item.image ? (
-                    <img src={item.image} alt={item.title} className="tl-photo-img" />
-                  ) : (
-                    <div className="tl-photo-ph">
-                      <span className="tl-photo-ph-icon">📷</span>
-                      <span className="tl-photo-ph-label">{item.title}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
+              {side === 'right' && <><div className="tl-spacer" />{card}</>}
             </div>
           );
         })}
