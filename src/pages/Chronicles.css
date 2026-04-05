@@ -1,9 +1,10 @@
 .tl-section {
   position: relative; z-index: 1;
   max-width: 960px; margin: 0 auto;
-  padding: 3rem 2rem 8rem;
+  padding: 3rem 2rem 10rem;
 }
 
+/* ── SPINE ── */
 .tl-spine {
   position: absolute;
   left: 50%; top: 0; bottom: 0;
@@ -20,16 +21,18 @@
   transition: height 0.1s linear;
 }
 
+/* ── ITEM ROW ── */
 .tl-item {
   position: relative;
   display: flex;
   align-items: flex-start;
   gap: 2rem;
-  padding-bottom: 4.5rem;
+  padding-bottom: 3.5rem;
 }
 
 .tl-spacer { flex: 1; }
 
+/* ── DOT ── */
 .tl-dot {
   position: absolute;
   left: 50%; top: 4px;
@@ -49,9 +52,11 @@
   box-shadow: 0 0 0 8px rgba(122,174,212,0.18);
 }
 
+/* ── TEXT CARD ── */
 .tl-card {
   flex: 1;
-  padding: 1.7rem;
+  padding: 1.7rem 1.7rem 0;
+  overflow: visible;     /* allow photo to spill below */
 }
 
 .tl-date {
@@ -90,51 +95,91 @@
   border: 1px solid rgba(167,199,231,0.5);
 }
 
-.flashback-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 1rem;
-  margin-left: 0.6rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--blue-dark);
-  border: 1px solid var(--blue);
-  padding: 0.35rem 0.9rem;
-  border-radius: 100px;
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.3s, color 0.3s;
-}
-
-.flashback-btn:hover {
-  background: var(--blue);
-  color: var(--dark);
-}
-
-.flashback-photo {
-  max-height: 0;
+/* ── CASCADING PHOTO ── */
+.tl-photo {
+  width: 280px;
+  height: 200px;
+  border-radius: 12px;
   overflow: hidden;
-  opacity: 0;
-  transition: max-height 0.55s ease, opacity 0.4s, margin-top 0.3s;
+  position: relative;
+  z-index: 3;
+  margin-top: 1.4rem;
+  /* cascade: pull photo down so it overlaps the NEXT card by ~50px */
+  margin-bottom: -50px;
+  box-shadow: 0 8px 32px rgba(167, 199, 231, 0.55),
+              0 2px 8px rgba(122, 174, 212, 0.3);
+  transition: transform 0.38s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.38s ease;
+  cursor: default;
 }
 
-.flashback-photo.open {
-  max-height: 260px;
-  opacity: 1;
-  margin-top: 1rem;
+/* left-side cards: photo rotates -2deg and aligns left */
+.tl-photo--left {
+  transform: rotate(-2deg);
+  margin-left: 0;
+  margin-right: auto;
 }
 
-.photo-ph {
-  width: 100%; height: 200px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, rgba(167,199,231,0.25), rgba(122,174,212,0.18));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 0.78rem;
-  letter-spacing: 0.15em;
+/* right-side cards: photo rotates +2deg and aligns right */
+.tl-photo--right {
+  transform: rotate(2deg);
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* hover: scale up, rotation resets, shadow deepens */
+.tl-photo--left:hover {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow: 0 16px 48px rgba(122, 174, 212, 0.65),
+              0 4px 16px rgba(167, 199, 231, 0.4);
+}
+
+.tl-photo--right:hover {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow: 0 16px 48px rgba(122, 174, 212, 0.65),
+              0 4px 16px rgba(167, 199, 231, 0.4);
+}
+
+/* actual image */
+.tl-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* ── PLACEHOLDER (no image yet) ── */
+.tl-photo-ph {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(167, 199, 231, 0.28) 0%,
+    rgba(122, 174, 212, 0.18) 50%,
+    rgba(167, 199, 231, 0.22) 100%
+  );
+  border: 1px dashed rgba(122, 174, 212, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.tl-photo-ph-icon {
+  font-size: 1.6rem;
+  opacity: 0.45;
+}
+
+.tl-photo-ph-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.82rem;
+  font-style: italic;
   color: var(--blue-dark);
-  opacity: 0.7;
-  border: 1px dashed rgba(167,199,231,0.6);
+  opacity: 0.65;
+  text-align: center;
+  line-height: 1.4;
 }

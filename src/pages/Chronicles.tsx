@@ -36,7 +36,6 @@ const items: TimelineItem[] = [
 ];
 
 export default function Chronicles() {
-  const [open, setOpen] = useState<Record<number, boolean>>({});
   const fillRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,8 +62,6 @@ export default function Chronicles() {
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
-  const toggle = (id: number) => setOpen(p => ({ ...p, [id]: !p[id] }));
-
   return (
     <>
       <ParticleCanvas />
@@ -79,26 +76,35 @@ export default function Chronicles() {
       <section id="timeline" className="tl-section">
         <div className="tl-spine"><div className="tl-fill" ref={fillRef} /></div>
 
-        {items.map((item, i) => (
-          <div className={`tl-item ${i % 2 === 0 ? 'left' : 'right'}`} key={item.id}>
-            {i % 2 !== 0 && <div className="tl-spacer" />}
-            <div className="tl-dot" />
-            {i % 2 === 0 && <div className="tl-spacer" />}
+        {items.map((item, i) => {
+          const side = i % 2 === 0 ? 'left' : 'right';
+          return (
+            <div className={`tl-item ${side}`} key={item.id}>
+              {side === 'right' && <div className="tl-spacer" />}
+              <div className="tl-dot" />
+              {side === 'left'  && <div className="tl-spacer" />}
 
-            <div className="tl-card glass-card">
-              <div className="tl-date">{item.date}</div>
-              <div className="tl-title">{item.title}</div>
-              <p className="tl-body">{item.body}</p>
-              <span className="tl-tag">{item.tag}</span>
-              <button className="flashback-btn" onClick={() => toggle(item.id)}>
-                {open[item.id] ? '✕ Close' : '📸 Flashback'}
-              </button>
-              <div className={`flashback-photo ${open[item.id] ? 'open' : ''}`}>
-                <div className="photo-ph">[ {item.photoLabel} ]</div>
+              <div className="tl-card glass-card">
+                <div className="tl-date">{item.date}</div>
+                <div className="tl-title">{item.title}</div>
+                <p className="tl-body">{item.body}</p>
+                <span className="tl-tag">{item.tag}</span>
+
+                {/* Cascading photo — always visible, overlaps next card by 50px */}
+                <div className={`tl-photo tl-photo--${side}`}>
+                  {item.image ? (
+                    <img src={item.image} alt={item.title} className="tl-photo-img" />
+                  ) : (
+                    <div className="tl-photo-ph">
+                      <span className="tl-photo-ph-icon">📷</span>
+                      <span className="tl-photo-ph-label">{item.title}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
     </>
   );
