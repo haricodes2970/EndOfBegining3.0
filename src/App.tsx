@@ -5,7 +5,6 @@ import Chronicles from './pages/Chronicles';
 import Pantheon from './pages/Pantheon';
 import Vault from './pages/Vault';
 import Echoes from './pages/Echoes';
-import Horizon from './pages/Horizon';
 import './styles/globals.css';
 
 export default function App() {
@@ -18,7 +17,6 @@ export default function App() {
         <Route path="/pantheon"   element={<Pantheon />}   />
         <Route path="/vault"      element={<Vault />}      />
         <Route path="/echoes"     element={<Echoes />}     />
-        <Route path="/horizon"    element={<Horizon />}    />
       </Routes>
     </BrowserRouter>
   );

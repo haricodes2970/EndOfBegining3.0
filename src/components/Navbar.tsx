@@ -8,7 +8,6 @@ const links = [
   { to: '/pantheon',   label: 'Pantheon'   },
   { to: '/vault',      label: 'Vault'      },
   { to: '/echoes',     label: 'Echoes'     },
-  { to: '/horizon',    label: 'Horizon'    },
 ];
 
 export default function Navbar() {
