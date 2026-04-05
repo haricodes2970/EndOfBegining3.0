@@ -62,8 +62,8 @@ export default function Chronicles() {
 
       <div className="page-hero">
         <p className="page-tag pg-tag">Chapter 01</p>
-        <h1 className="page-title pg-title">The Chronicles</h1>
-        <p className="page-subtitle pg-desc">Four years. Compressed into moments that mattered. Scroll through the story that made us.</p>
+        <h1 className="page-title pg-title">The Neural Drift</h1>
+        <p className="page-subtitle pg-desc">Four years of signal and noise. Scroll through every moment that trained us.</p>
       </div>
 
       <section id="timeline" className="tl-section">

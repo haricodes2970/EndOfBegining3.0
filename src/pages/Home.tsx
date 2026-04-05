@@ -9,7 +9,7 @@ import './Home.css';
 gsap.registerPlugin(ScrollTrigger);
 
 const chapters = [
-  { num: '01', icon: '📜', title: 'The Chronicles', sub: 'Timeline & History',   desc: 'Every milestone, every all-nighter, every moment that shaped four unforgettable years.', to: '/chronicles' },
+  { num: '01', icon: '📜', title: 'The Neural Drift', sub: 'Timeline & History',  desc: 'Four years of signal and noise. Every milestone that trained us to become who we are.', to: '/chronicles' },
   { num: '02', icon: '✦',  title: 'The Pantheon',   sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',               to: '/pantheon'   },
   { num: '03', icon: '🎞', title: 'The Vault',       sub: 'Media Gallery',        desc: 'Unfiltered. Unscripted. The photos and videos you\'ll look back at in 20 years.',           to: '/vault'      },
   { num: '04', icon: '💬', title: 'Echoes',          sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                  to: '/echoes'     },

@@ -4,7 +4,7 @@ import './Navbar.css';
 
 const links = [
   { to: '/',           label: 'Home'       },
-  { to: '/chronicles', label: 'Chronicles' },
+  { to: '/chronicles', label: 'Neural Drift' },
   { to: '/pantheon',   label: 'Pantheon'   },
   { to: '/vault',      label: 'Vault'      },
   { to: '/echoes',     label: 'Echoes'     },
