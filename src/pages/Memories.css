@@ -1,0 +1,386 @@
+/* ── BODY ── */
+.memories-body {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 2.5rem 8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 7rem;
+}
+
+/* ── LOCATION SECTION ── */
+.loc-section { position: relative; }
+
+/* ── HEADING ── */
+.loc-heading {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.loc-emoji {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+}
+
+.loc-name {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  color: var(--dark);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.loc-tagline {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--blue-dark);
+  opacity: 0.8;
+  font-family: 'Playfair Display', serif;
+}
+
+.loc-divider {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(167,199,231,0.6), transparent);
+  margin-left: 0.5rem;
+}
+
+/* ── POLAROID ROW ── */
+.polaroid-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+/* ── POLAROID CARD ── */
+.polaroid {
+  flex: 1 1 220px;
+  max-width: 260px;
+  background: white;
+  border-radius: 4px;
+  padding: 10px 10px 40px;
+  box-shadow: 0 8px 30px rgba(51, 51, 51, 0.15),
+              0 2px 8px rgba(51, 51, 51, 0.08);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.35s ease;
+  cursor: pointer;
+  position: relative;
+  /* start hidden — GSAP animates in */
+  opacity: 0;
+}
+
+.polaroid:hover {
+  transform: rotate(0deg) scale(1.05) translateY(-6px);
+  box-shadow: 0 20px 50px rgba(122, 174, 212, 0.4),
+              0 6px 20px rgba(51, 51, 51, 0.12);
+  z-index: 10;
+}
+
+.polaroid-frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 2px;
+  background: linear-gradient(135deg, rgba(167,199,231,0.25), rgba(122,174,212,0.15));
+}
+
+.polaroid-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.polaroid:hover .polaroid-img {
+  transform: scale(1.06);
+}
+
+/* placeholder when no photo */
+.polaroid-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1px dashed rgba(122,174,212,0.45);
+}
+
+.polaroid-ph-loc {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  opacity: 0.6;
+}
+
+.polaroid-ph-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  color: var(--blue-dark);
+  opacity: 0.35;
+}
+
+.polaroid-caption {
+  position: absolute;
+  bottom: 10px;
+  left: 0; right: 0;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #666;
+  letter-spacing: 0.05em;
+}
+
+/* ── VIEW ALL BUTTON ── */
+.view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  border: 1px solid rgba(167,199,231,0.6);
+  background: rgba(167,199,231,0.1);
+  padding: 0.6rem 1.4rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s;
+  opacity: 0; /* GSAP animates in */
+}
+
+.view-all-btn:hover {
+  background: var(--blue);
+  border-color: var(--blue-dark);
+  transform: translateX(4px);
+}
+
+/* ── LIGHTBOX OVERLAY ── */
+.lb-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 20, 20, 0.82);
+  backdrop-filter: blur(10px);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: lbFadeIn 0.25s ease;
+}
+
+@keyframes lbFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.lb-modal {
+  background: var(--beige);
+  border-radius: 20px;
+  border: 1px solid rgba(167,199,231,0.35);
+  width: 100%;
+  max-width: 900px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: lbSlideIn 0.28s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes lbSlideIn {
+  from { opacity: 0; transform: scale(0.95) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ── LIGHTBOX HEADER ── */
+.lb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid rgba(167,199,231,0.3);
+  flex-shrink: 0;
+}
+
+.lb-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.lb-emoji { font-size: 1.3rem; }
+
+.lb-loc-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.lb-count {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--blue-dark);
+  opacity: 0.7;
+  background: rgba(167,199,231,0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+}
+
+.lb-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.lb-back-btn {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  background: rgba(167,199,231,0.15);
+  border: 1px solid rgba(167,199,231,0.4);
+  padding: 0.35rem 0.9rem;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.lb-back-btn:hover { background: var(--blue); }
+
+.lb-close-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: rgba(167,199,231,0.15);
+  border: 1px solid rgba(167,199,231,0.35);
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s;
+}
+.lb-close-btn:hover { background: rgba(167,199,231,0.4); }
+
+/* ── GRID VIEW ── */
+.lb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.7rem;
+  padding: 1.2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+@media (max-width: 600px) { .lb-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.lb-grid-item {
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(167,199,231,0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.lb-grid-item:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(122,174,212,0.4);
+}
+
+.lb-grid-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.lb-grid-ph {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(167,199,231,0.25), rgba(122,174,212,0.15));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--blue-dark);
+  opacity: 0.7;
+  border: 1px dashed rgba(122,174,212,0.4);
+}
+
+/* ── SINGLE PHOTO VIEW ── */
+.lb-single {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 1rem;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.lb-single-img-wrap {
+  flex: 1;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.lb-single-img {
+  max-width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+}
+
+.lb-single-ph {
+  width: 100%;
+  height: 60vh;
+  background: linear-gradient(135deg, rgba(167,199,231,0.25), rgba(122,174,212,0.15));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  color: var(--blue-dark);
+  opacity: 0.7;
+  border: 1px dashed rgba(122,174,212,0.4);
+}
+
+.lb-arrow {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(167,199,231,0.2);
+  border: 1px solid rgba(167,199,231,0.5);
+  font-size: 1.6rem;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.25s, transform 0.25s;
+}
+
+.lb-arrow:hover:not(:disabled) {
+  background: var(--blue);
+  transform: scale(1.1);
+}
+
+.lb-arrow:disabled {
+  opacity: 0.2;
+  cursor: default;
+}

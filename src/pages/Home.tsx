@@ -10,9 +10,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 const chapters = [
   { num: '01', icon: '📜', title: 'The Neural Drift', sub: 'Timeline & History',  desc: 'Four years of signal and noise. Every milestone that trained us to become who we are.', to: '/chronicles' },
-  { num: '02', icon: '✦',  title: 'The Pantheon',   sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',               to: '/pantheon'   },
-  { num: '03', icon: '🎞', title: 'The Vault',       sub: 'Media Gallery',        desc: 'Unfiltered. Unscripted. The photos and videos you\'ll look back at in 20 years.',           to: '/vault'      },
-  { num: '04', icon: '💬', title: 'Echoes',          sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                  to: '/echoes'     },
+  { num: '02', icon: '🌊', title: 'Memories',         sub: 'Trips & Adventures',  desc: 'Gokarna, Dandeli, the Fort — every road we took together, relived.',                         to: '/memories'   },
+  { num: '03', icon: '✦',  title: 'The Pantheon',    sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',               to: '/pantheon'   },
+  { num: '04', icon: '🎞', title: 'The Vault',       sub: 'Media Gallery',        desc: 'Unfiltered. Unscripted. The photos and videos you\'ll look back at in 20 years.',           to: '/vault'      },
+  { num: '05', icon: '💬', title: 'Echoes',          sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                  to: '/echoes'     },
 ];
 
 export default function Home() {
@@ -128,7 +129,7 @@ export default function Home() {
       {/* CHAPTERS */}
       <section className="chapters">
         <div className="chapters-header">
-          <h2 className="section-ttl">Five Chapters. One Story.</h2>
+          <h2 className="section-ttl">Six Chapters. One Story.</h2>
           <p className="section-sub">Choose where you want to begin</p>
         </div>
         <div className="chapters-grid" ref={cardsRef}>
