@@ -1,0 +1,169 @@
+/* ── SECTION ── */
+.vault-grid-section {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 2.5rem 6rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── 4-COLUMN GRID ── */
+.vault-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.4rem;
+}
+
+@media (max-width: 1024px) { .vault-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 720px)  { .vault-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 440px)  { .vault-grid { grid-template-columns: 1fr; } }
+
+/* ── CARD ── */
+.student-ph-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(167, 199, 231, 0.35);
+  background: rgba(167, 199, 231, 0.07);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform 0.38s cubic-bezier(0.23, 1, 0.32, 1),
+              box-shadow 0.38s ease,
+              border-color 0.38s ease;
+  /* cards start hidden — GSAP animates them in */
+  opacity: 0;
+  transform: translateY(50px) scale(0.94);
+}
+
+.student-ph-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 20px 48px rgba(167, 199, 231, 0.38);
+  border-color: var(--blue-dark);
+}
+
+/* shimmer sweep on hover */
+.ph-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(167, 199, 231, 0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+
+.student-ph-card:hover .ph-shimmer {
+  transform: translateX(100%);
+}
+
+/* ── PHOTO AREA ── */
+.ph-photo {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(
+    135deg,
+    rgba(167, 199, 231, 0.2) 0%,
+    rgba(122, 174, 212, 0.12) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid rgba(167, 199, 231, 0.25);
+  overflow: hidden;
+}
+
+.ph-icon {
+  width: 56px;
+  height: 56px;
+  color: var(--blue-dark);
+  opacity: 0.35;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.ph-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.student-ph-card:hover .ph-icon {
+  opacity: 0.55;
+  transform: scale(1.08);
+}
+
+.ph-number {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--blue-dark);
+  opacity: 0.45;
+}
+
+/* ── INFO AREA ── */
+.ph-info {
+  padding: 0.9rem 1rem 1rem;
+  text-align: center;
+}
+
+.ph-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ph-usn {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  opacity: 0.65;
+}
+
+/* empty state text */
+.ph-empty {
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  opacity: 0.3;
+  border-bottom: 1px dashed rgba(122, 174, 212, 0.5);
+  padding-bottom: 1px;
+}
+
+/* ── BATCH FOOTER ── */
+.vault-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem 2rem 5rem;
+  border-top: 1px solid rgba(167, 199, 231, 0.25);
+}
+
+.vault-footer p {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.45;
+}
+
+.vault-footer span {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 1;
+  color: var(--blue-dark);
+}
