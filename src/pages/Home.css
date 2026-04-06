@@ -322,6 +322,153 @@
   background: var(--blue-dark);
 }
 
+/* ── LEGENDS NEVER GRADUATE ── */
+.legends-section {
+  position: relative;
+  z-index: 1;
+  padding: 0 0 8rem;
+  overflow: hidden;
+}
+
+/* ── TICKER ── */
+.ticker-wrap {
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid rgba(167,199,231,0.3);
+  border-bottom: 1px solid rgba(167,199,231,0.3);
+  background: rgba(167,199,231,0.06);
+  padding: 0.75rem 0;
+  margin-bottom: 5rem;
+}
+
+.ticker-track {
+  display: flex;
+  white-space: nowrap;
+  animation: tickerScroll 55s linear infinite;
+  width: max-content;
+}
+
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  padding: 0 1.5rem;
+  opacity: 0.75;
+}
+
+.ticker-dot {
+  opacity: 0.4;
+  margin-left: 1.5rem;
+}
+
+/* ── HEADER ── */
+.lgd-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 3.5rem;
+  padding: 0 2rem;
+}
+
+.lgd-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  margin-bottom: 1rem;
+  opacity: 0;
+}
+
+.lgd-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--blue-dark), var(--dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.8rem;
+  opacity: 0;
+}
+
+.lgd-sub {
+  font-size: 0.9rem;
+  font-style: italic;
+  font-family: 'Playfair Display', serif;
+  color: var(--dark);
+  opacity: 0;
+}
+
+/* ── CARD GRID ── */
+.legends-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 900px) { .legends-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .legends-grid { grid-template-columns: 1fr; } }
+
+.legend-card {
+  padding: 1.8rem;
+  border-radius: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.23,1,0.32,1),
+              box-shadow 0.35s ease;
+}
+
+.legend-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(122,174,212,0.25),
+              0 4px 12px rgba(51,51,51,0.08);
+}
+
+.lgd-nick {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  background: linear-gradient(130deg, var(--blue-dark), var(--dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+}
+
+.lgd-story {
+  font-size: 0.86rem;
+  line-height: 1.8;
+  color: var(--dark);
+  opacity: 0.75;
+  flex: 1;
+}
+
+.lgd-pill {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--blue-dark);
+  border: 1px solid rgba(167,199,231,0.55);
+  background: rgba(167,199,231,0.12);
+  padding: 0.25rem 0.8rem;
+  border-radius: 100px;
+}
+
 /* ── FOOTER ── */
 .site-footer {
   position: relative; z-index: 1;

@@ -8,6 +8,49 @@ import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const tickerItems = [
+  "The Proxy King once answered attendance for 6 people. Simultaneously.",
+  "Mr. Last Bench had the best notes. Nobody knows how.",
+  "The Deadline Whisperer submitted at 11:59 PM. Every. Single. Time.",
+  "WiFi went down. 60 engineers became philosophers.",
+  "The Canteen Oracle predicted every exam date before the professor did.",
+  '"Sir, he\'s in the washroom" — said for the same guy by 4 different people.',
+  "The group project had 4 members. One person knows who did the work.",
+];
+
+const legends = [
+  {
+    nick: 'The Proxy Maestro',
+    tag: 'Attendance Artiste',
+    story: `Six names. Six different voices. One phone.\nHe never rehearsed, never got caught, and somehow his "present, sir" sounded more convincing than the actual person's. Attendance registers across four departments still carry his ghost signatures. A true method actor — just never for the right course.`,
+  },
+  {
+    nick: 'The Last Bench Oracle',
+    tag: 'The Silent Scorer',
+    story: `Terrible attendance. Never spotted near the library. Zero visible study habits. Yet every internal result had his name sitting quietly near the top, like he'd made a deal nobody else knew about.\nJuniors whispered his name like folklore. Seniors never figured out his system. He took the secret with him.`,
+  },
+  {
+    nick: 'The 11:59 Whisperer',
+    tag: 'Deadline Deity',
+    story: `While the group chat was in full meltdown — "bro it's 11:40 WHERE ARE YOU" — he was asleep.\nAt 11:45 he opened his laptop. At 11:58 he formatted the PDF. Submitted at 11:59:04. Closed laptop. Back to sleep.\nNever explained his process. We stopped asking.`,
+  },
+  {
+    nick: 'The Presentation Ghost',
+    tag: 'Lab Report Ghost',
+    story: `Missing for three weeks straight. Not on the group chat. Not in the lab. Not anywhere.\nPresentation day: he walks in. Full formals. Tie straight. Speaks for seven minutes like he built the entire project himself.\nProfessor loved him. We never spoke of it.`,
+  },
+  {
+    nick: 'The Canteen Philosopher',
+    tag: 'Canteen Philosopher',
+    story: `Zero attendance. Infinite wisdom.\nEvery crisis — academic, existential, romantic — was solved over one chai and a samosa at his corner table. He had a new startup idea every week. Most were terrible. Two were genuinely brilliant.\nHe never attended the entrepreneurship elective. He didn't need to.`,
+  },
+  {
+    nick: 'The Night Before Explainer',
+    tag: 'The Explainer',
+    story: `Didn't top a single exam. But every topper called him the night before theirs.\nFifteen minutes before any internal, his phone was unreachable — not because he was studying, but because seven people were already on hold.\nHe made concepts make sense in ways textbooks never could. A teacher who never got the title.`,
+  },
+];
+
 const chapters = [
   { num: '01', icon: '🌊', title: 'Memories',      sub: 'Trips & Adventures',  desc: 'Gokarna, Dandeli, the Fort — every road we took together, relived.',                         to: '/memories'   },
   { num: '02', icon: '✦',  title: 'The Pantheon',  sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',               to: '/pantheon'   },
@@ -23,6 +66,7 @@ export default function Home() {
   const scrollRef   = useRef<HTMLDivElement>(null);
   const logoRef     = useRef<HTMLDivElement>(null);
   const cardsRef    = useRef<HTMLDivElement>(null);
+  const legendsRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Split title letters
@@ -65,6 +109,13 @@ export default function Home() {
     gsap.to('.m-divider',  { scaleX: 1, duration: 0.8, scrollTrigger: { trigger: '.m-divider',  start: 'top 85%' } });
     gsap.to('.m-sub',      { opacity: 0.8, duration: 0.9, scrollTrigger: { trigger: '.m-sub', start: 'top 85%' } });
     gsap.to('.section-ttl', { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
+
+    // Legends section
+    gsap.fromTo('.lgd-tag',      { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-tag',   start: 'top 85%' } });
+    gsap.fromTo('.lgd-heading',  { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.lgd-heading', start: 'top 85%' } });
+    gsap.fromTo('.lgd-sub',      { opacity: 0, y: 16 }, { opacity: 0.6, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-sub', start: 'top 85%' } });
+    gsap.fromTo('.legend-card',  { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out',
+      scrollTrigger: { trigger: legendsRef.current, start: 'top 80%' } });
 
     return () => {
       window.removeEventListener('scroll', onScroll);
@@ -143,6 +194,44 @@ export default function Home() {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* LEGENDS NEVER GRADUATE */}
+      <section className="legends-section">
+
+        {/* TICKER */}
+        <div className="ticker-wrap">
+          <div className="ticker-track">
+            {[...tickerItems, ...tickerItems].map((item, i) => (
+              <span key={i} className="ticker-item">
+                {item} <span className="ticker-dot">·</span>
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* HEADER */}
+        <div className="lgd-header">
+          <p className="lgd-tag">— Every Batch Has Them —</p>
+          <h2 className="lgd-heading">Legends Never Graduate</h2>
+          <p className="lgd-sub">No names. You already know exactly who we mean.</p>
+        </div>
+
+        {/* CARDS */}
+        <div className="legends-grid" ref={legendsRef}>
+          {legends.map((l, i) => (
+            <div key={i} className="legend-card glass-card">
+              <p className="lgd-nick">{l.nick}</p>
+              <p className="lgd-story">
+                {l.story.split('\n').map((line, j) => (
+                  <span key={j}>{line}<br /></span>
+                ))}
+              </p>
+              <span className="lgd-pill">{l.tag}</span>
+            </div>
+          ))}
+        </div>
+
       </section>
 
       <footer className="site-footer">
