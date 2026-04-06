@@ -283,7 +283,11 @@
   grid-auto-rows: 220px;
   gap: 12px;
   padding: 1.2rem 1.4rem;
-  overflow-y: auto;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior: contain;
+  will-change: scroll-position;
   flex: 1;
   align-content: start;
 }
@@ -317,6 +321,8 @@
   object-position: center;
   display: block;
   transition: transform 0.35s;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 .lb-grid-cell:hover .lb-grid-img {
