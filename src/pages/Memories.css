@@ -276,20 +276,20 @@
 }
 .lb-close:hover { background: rgba(167, 199, 231, 0.4); }
 
-/* 4-column photo grid */
+/* 3-column photo grid */
 .lb-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 180px;
-  gap: 10px;
-  padding: 1rem 1.2rem;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 220px;
+  gap: 12px;
+  padding: 1.2rem 1.4rem;
   overflow-y: auto;
   flex: 1;
   align-content: start;
 }
 
 @media (max-width: 600px) {
-  .lb-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .lb-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 160px; gap: 8px; }
 }
 
 .lb-grid-cell {
