@@ -1,8 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
+import SplashScreen from './components/SplashScreen';
 import Home from './pages/Home';
 import Pantheon from './pages/Pantheon';
 import Vault from './pages/Vault';
@@ -13,6 +14,9 @@ import './styles/globals.css';
 function AppInner() {
   const smootherRef = useRef<ReturnType<typeof ScrollSmoother.create> | null>(null);
   const location = useLocation();
+  const [showSplash, setShowSplash] = useState(() => {
+    return !sessionStorage.getItem('splashShown');
+  });
 
   useEffect(() => {
     const isMobile = window.matchMedia('(hover: none)').matches;
@@ -44,6 +48,14 @@ function AppInner() {
 
   return (
     <>
+      {showSplash ? (
+        <SplashScreen
+          onComplete={() => {
+            sessionStorage.setItem('splashShown', 'true');
+            setShowSplash(false);
+          }}
+        />
+      ) : null}
       <Navbar />
       <div id="smooth-wrapper">
         <div id="smooth-content">

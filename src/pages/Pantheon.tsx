@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Flip } from 'gsap/Flip';
+import { Flip } from 'gsap/flip';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Pantheon.css';
 

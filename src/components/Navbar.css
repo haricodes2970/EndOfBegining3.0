@@ -70,3 +70,45 @@
 .nav-links a.active::after {
   width: 100%;
 }
+
+/* ── SCROLL DARKENING ── */
+.navbar.scrolled {
+  background: rgba(13,17,23,0.5) !important;
+  backdrop-filter: blur(20px);
+  transition: background 0.3s ease;
+}
+
+/* ── ACTIVE LINK ACCENTS ── */
+nav[data-page="home"] a.active    { color: #A7C7E7; }
+nav[data-page="memories"] a.active { color: #e8825a; }
+nav[data-page="chronicles"] a.active { color: #4fc3f7; }
+nav[data-page="pantheon"] a.active { color: #c084fc; }
+nav[data-page="vault"] a.active   { color: #94a3b8; }
+nav[data-page="echoes"] a.active  { color: #fb923c; }
+
+/* ── MOBILE HAMBURGER OVERLAY ── */
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 17, 23, 0.97);
+  backdrop-filter: blur(16px);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.mobile-menu-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.mobile-menu-overlay .nav-link {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: #f5e6c8;
+  text-decoration: none;
+}

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import { TextPlugin } from 'gsap/TextPlugin';
 import ParticleCanvas from '../components/ParticleCanvas';
 import logo from '../assets/ainexus.jpeg';
 import './Home.css';
@@ -52,10 +51,11 @@ const legends = [
 ];
 
 const chapters = [
-  { num: '01', icon: '🌊', title: 'Memories',      sub: 'Trips & Adventures',  desc: 'Gokarna, Dandeli, the Fort — every road we took together, relived.',                         to: '/memories'   },
-  { num: '02', icon: '✦',  title: 'The Pantheon',  sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',               to: '/pantheon'   },
-  { num: '03', icon: '🎞', title: 'The Vault',     sub: 'Media Gallery',        desc: 'Unfiltered. Unscripted. The photos and videos you\'ll look back at in 20 years.',           to: '/vault'      },
-  { num: '04', icon: '💬', title: 'Echoes',        sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                  to: '/echoes'     },
+  { num: '01', icon: '🌊', title: 'Memories',      sub: 'Trips & Adventures',  desc: 'Gokarna, Dandeli, the Fort — every road we took together, relived.',                         to: '/memories'     },
+  { num: '02', icon: '✦',  title: 'Neural Drift',  sub: 'Chronicles Timeline',  desc: 'Milestones, detours, and the moments that shaped the batch.',                                  to: '/neural-drift' },
+  { num: '03', icon: '✦',  title: 'The Pantheon',  sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',               to: '/pantheon'     },
+  { num: '04', icon: '🎞', title: 'The Vault',     sub: 'Media Gallery',        desc: 'Unfiltered. Unscripted. The photos and videos you\'ll look back at in 20 years.',           to: '/vault'        },
+  { num: '05', icon: '💬', title: 'Echoes',        sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                  to: '/echoes'       },
 ];
 
 export default function Home() {
@@ -65,8 +65,10 @@ export default function Home() {
   const yearRef     = useRef<HTMLParagraphElement>(null);
   const scrollRef   = useRef<HTMLDivElement>(null);
   const logoRef     = useRef<HTMLDivElement>(null);
-  const cardsRef    = useRef<HTMLDivElement>(null);
-  const legendsRef  = useRef<HTMLDivElement>(null);
+  const cardsRef     = useRef<HTMLDivElement>(null);
+  const legendsRef   = useRef<HTMLDivElement>(null);
+  const heroRef      = useRef<HTMLElement>(null);
+  const heroInnerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // ── HERO TITLE — SplitText bounce ──
@@ -89,13 +91,25 @@ export default function Home() {
       ease: 'none',
     });
 
-    // ── PARALLAX ──
-    const onScroll = () => {
+    const handler = () => {
       const y = window.scrollY;
       gsap.to(titleRef.current,    { y: y * 0.28, duration: 0 });
       gsap.to(subtitleRef.current, { y: y * 0.18, duration: 0 });
     };
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', handler);
+
+    gsap.set(heroInnerRef.current, { scale: 1.4 });
+    ScrollTrigger.create({
+      trigger: heroRef.current,
+      start: 'top top',
+      end: '+=600',
+      pin: true,
+      scrub: 1,
+      animation: gsap.timeline()
+        .to(heroInnerRef.current, { scale: 1.0, ease: 'none' })
+        .fromTo('.hero-deco-left',  { x: -120, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
+        .fromTo('.hero-deco-right', { x:  120, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0),
+    });
 
     // ── MANIFESTO — word-level SplitText ──
     const manifestoWords = new SplitText('.manifesto-text', { type: 'words' });
@@ -124,7 +138,7 @@ export default function Home() {
       scrollTrigger: { trigger: legendsRef.current, start: 'top 80%' } });
 
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('scroll', handler);
       split.revert();
       manifestoWords.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -140,26 +154,40 @@ export default function Home() {
       <div className="orb orb-3" />
 
       {/* HERO */}
-      <section className="hero">
-        <div className="hero-club-logo" ref={logoRef}>
-          <img src={logo} alt="AI Nexus" />
-          <span>AI Nexus</span>
-        </div>
+      <section className="hero" ref={heroRef}>
+        <div className="hero-inner" ref={heroInnerRef}>
 
-        <div className="hero-badge" ref={badgeRef}>
-          Batch of 2022–26 &nbsp;·&nbsp; Jyothy Institute of Technology
-        </div>
+          <div className="hero-deco-left">
+            <span>2022</span>
+            <div className="deco-line" />
+            <span>AI &amp; ML</span>
+          </div>
+          <div className="hero-deco-right">
+            <span>2026</span>
+            <div className="deco-line" />
+            <span>JIT</span>
+          </div>
 
-        <h1 className="hero-title" ref={titleRef}>EndOfBeginning</h1>
+          <div className="hero-club-logo" ref={logoRef}>
+            <img src={logo} alt="AI Nexus" />
+            <span>AI Nexus</span>
+          </div>
 
-        <p className="hero-subtitle" ref={subtitleRef}></p>
-        <p className="hero-year" ref={yearRef}>
-          2022 – 2026 &nbsp;·&nbsp; BE AI &amp; ML &nbsp;·&nbsp; JIT Bengaluru
-        </p>
+          <div className="hero-badge" ref={badgeRef}>
+            Batch of 2022–26 &nbsp;·&nbsp; Jyothy Institute of Technology
+          </div>
 
-        <div className="scroll-indicator" ref={scrollRef}>
-          <div className="scroll-line" />
-          <span>Scroll</span>
+          <h1 className="hero-title" ref={titleRef}>EndOfBeginning</h1>
+
+          <p className="hero-subtitle" ref={subtitleRef}></p>
+          <p className="hero-year" ref={yearRef}>
+            2022 – 2026 &nbsp;·&nbsp; BE AI &amp; ML &nbsp;·&nbsp; JIT Bengaluru
+          </p>
+
+          <div className="scroll-indicator" ref={scrollRef}>
+            <div className="scroll-line" />
+            <span>Scroll</span>
+          </div>
         </div>
       </section>
 
@@ -186,7 +214,7 @@ export default function Home() {
       {/* CHAPTERS */}
       <section className="chapters">
         <div className="chapters-header">
-          <h2 className="section-ttl">Five Chapters. One Story.</h2>
+          <h2 className="section-ttl">Six Chapters. One Story.</h2>
           <p className="section-sub">Choose where you want to begin</p>
         </div>
         <div className="chapters-grid" ref={cardsRef}>

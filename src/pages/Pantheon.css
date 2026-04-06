@@ -1,3 +1,10 @@
+/* ── PAGE BACKGROUND ── */
+.pantheon-wrapper {
+  background: var(--grad-pantheon);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
 .pantheon-controls {
   max-width: 900px;
   margin: 0 auto 2.5rem;

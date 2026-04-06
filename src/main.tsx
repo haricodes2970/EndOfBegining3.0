@@ -6,7 +6,7 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother'
 import { SplitText } from 'gsap/SplitText'
 import { TextPlugin } from 'gsap/TextPlugin'
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin'
-import { Flip } from 'gsap/Flip'
+import { Flip } from 'gsap/flip'
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin'
 import App from './App.tsx'
 

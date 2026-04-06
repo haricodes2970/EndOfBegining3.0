@@ -11,11 +11,14 @@
   --beige-dark: #e8e8c8;
 
   /* ── Per-page gradients & accents ── */
-  --grad-home:       linear-gradient(150deg, #f5e6c8 0%, #1a1a2e 100%);
-  --accent-home:     #c9a96e;
+  --grad-home:       linear-gradient(150deg, #e8f4fd 0%, #1a1a2e 100%);
+  --accent-home:     #A7C7E7;
 
   --grad-memories:   linear-gradient(150deg, #fff0e0 0%, #0d2b3e 100%);
   --accent-memories: #e8825a;
+
+  --grad-chronicles: linear-gradient(150deg, #0a0a1a 0%, #e8e8c8 100%);
+  --accent-chronicles: #4fc3f7;
 
   --grad-pantheon:   linear-gradient(150deg, #1a0533 0%, #f9e8ff 100%);
   --accent-pantheon: #c084fc;
@@ -65,6 +68,10 @@ body {
 
 @media (max-width: 768px) {
   .page-bg { background-attachment: scroll; }
+  .home-wrapper, .memories-wrapper, .chronicles-wrapper,
+  .pantheon-wrapper, .vault-wrapper, .echoes-wrapper {
+    background-attachment: scroll;
+  }
 }
 
 /* ── SHARED PAGE HEADER ── */

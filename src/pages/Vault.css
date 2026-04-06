@@ -1,3 +1,10 @@
+/* ── PAGE BACKGROUND ── */
+.vault-wrapper {
+  background: var(--grad-vault);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
 /* ── VAULT CARD — clean dual-tone border matching gradient ── */
 .student-ph-card {
   border-color: rgba(148,163,184,0.25) !important;

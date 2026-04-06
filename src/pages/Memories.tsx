@@ -2,73 +2,80 @@ import { useEffect, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import { TextPlugin } from 'gsap/TextPlugin';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Memories.css';
 
+const gokarnaPhotos = [
+  { id: 1, src: '/src/assets/trips/gokarna/20240721_201232.jpg' },
+  { id: 2, src: '/src/assets/trips/gokarna/20240721_201233_resized.jpg' },
+  { id: 3, src: '/src/assets/trips/gokarna/448c2e42-914c-4276-9aca-362003b2f9a6.jpg' },
+  { id: 4, src: '/src/assets/trips/gokarna/609a5f56-d59b-4a0b-9346-fa8d4fcf301a.jpg' },
+  { id: 5, src: '/src/assets/trips/gokarna/78c72229-3fcf-4c0e-9611-269460390f69.jpg' },
+  { id: 6, src: '/src/assets/trips/gokarna/93dd5198-208d-4f64-a38d-fc5ba9c312be.jpg' },
+  { id: 7, src: '/src/assets/trips/gokarna/IMG20240722142659.jpg' },
+  { id: 8, src: '/src/assets/trips/gokarna/IMG20240722142704.jpg' },
+  { id: 9, src: '/src/assets/trips/gokarna/IMG_0261.JPG' },
+  { id: 10, src: '/src/assets/trips/gokarna/IMG_0263.JPG' },
+  { id: 11, src: '/src/assets/trips/gokarna/IMG_0265.JPG' },
+  { id: 12, src: '/src/assets/trips/gokarna/IMG_0268.JPG' },
+  { id: 13, src: '/src/assets/trips/gokarna/IMG_0319.JPG' },
+  { id: 14, src: '/src/assets/trips/gokarna/IMG_0322.JPG' },
+  { id: 15, src: '/src/assets/trips/gokarna/IMG_2719.JPG' },
+  { id: 16, src: '/src/assets/trips/gokarna/IMG_2731.JPG' },
+  { id: 17, src: '/src/assets/trips/gokarna/IMG_2735.JPG' },
+  { id: 18, src: '/src/assets/trips/gokarna/IMG_2738.JPG' },
+  { id: 19, src: '/src/assets/trips/gokarna/IMG_2869.JPG' },
+  { id: 20, src: '/src/assets/trips/gokarna/IMG_2875.JPG' },
+  { id: 21, src: '/src/assets/trips/gokarna/IMG_2878.JPG' },
+  { id: 22, src: '/src/assets/trips/gokarna/IMG_2881.JPG' },
+  { id: 23, src: '/src/assets/trips/gokarna/IMG_2885.JPG' },
+  { id: 24, src: '/src/assets/trips/gokarna/IMG_2886.JPG' },
+  { id: 25, src: '/src/assets/trips/gokarna/IMG_2958.JPG' },
+  { id: 26, src: '/src/assets/trips/gokarna/IMG_2963.JPG' },
+  { id: 27, src: '/src/assets/trips/gokarna/IMG_2965.JPG' },
+  { id: 28, src: '/src/assets/trips/gokarna/IMG_2967.JPG' },
+  { id: 29, src: '/src/assets/trips/gokarna/IMG_2969.JPG' },
+  { id: 30, src: '/src/assets/trips/gokarna/IMG_2971.JPG' },
+  { id: 31, src: '/src/assets/trips/gokarna/IMG_2976.JPG' },
+  { id: 32, src: '/src/assets/trips/gokarna/IMG_3116.JPG' },
+  { id: 33, src: '/src/assets/trips/gokarna/IMG_3117.JPG' },
+  { id: 34, src: '/src/assets/trips/gokarna/IMG_9291.JPG' },
+  { id: 35, src: '/src/assets/trips/gokarna/IMG_9450.JPG' },
+  { id: 36, src: '/src/assets/trips/gokarna/IMG_9451.JPG' },
+  { id: 37, src: '/src/assets/trips/gokarna/IMG_9452.JPG' },
+  { id: 38, src: '/src/assets/trips/gokarna/IMG_9453.JPG' },
+  { id: 39, src: '/src/assets/trips/gokarna/IMG_9454.JPG' },
+  { id: 40, src: '/src/assets/trips/gokarna/IMG_9455.JPG' },
+  { id: 41, src: '/src/assets/trips/gokarna/IMG_9456.JPG' },
+  { id: 42, src: '/src/assets/trips/gokarna/IMG_9457.JPG' },
+  { id: 43, src: '/src/assets/trips/gokarna/IMG_9458.JPG' },
+  { id: 44, src: '/src/assets/trips/gokarna/IMG_9459.JPG' },
+  { id: 45, src: '/src/assets/trips/gokarna/IMG_9460.JPG' },
+  { id: 46, src: '/src/assets/trips/gokarna/IMG_9461.JPG' },
+  { id: 47, src: '/src/assets/trips/gokarna/IMG_9462.JPG' },
+  { id: 48, src: '/src/assets/trips/gokarna/IMG_9463.JPG' },
+  { id: 49, src: '/src/assets/trips/gokarna/IMG_9467.JPG' },
+  { id: 50, src: '/src/assets/trips/gokarna/Snapchat-586899129.jpg' },
+  { id: 51, src: '/src/assets/trips/gokarna/ddf79095-b62b-4802-bef7-016f8fdbe0ca.jpg' },
+];
+
+const dandeliPhotos = [
+  { id: 1, src: '/src/assets/trips/dandeli/IMG_0942.JPG' },
+  { id: 2, src: '/src/assets/trips/dandeli/IMG_0943.JPG' },
+  { id: 3, src: '/src/assets/trips/dandeli/IMG_0944.JPG' },
+];
+
+const fortPhotos = [
+  { id: 1, src: '/src/assets/trips/fort/574CF3C1-E061-46E4-B848-32876BED71B3.jpg' },
+];
+
 // ── GOKARNA (JPGs) ────────────────────────────────────────────────────────────
-import g01 from '../assets/trips/gokarna/20240721_201232.jpg';
-import g02 from '../assets/trips/gokarna/20240721_201233_resized.jpg';
-import g03 from '../assets/trips/gokarna/448c2e42-914c-4276-9aca-362003b2f9a6.jpg';
-import g04 from '../assets/trips/gokarna/609a5f56-d59b-4a0b-9346-fa8d4fcf301a.jpg';
-import g05 from '../assets/trips/gokarna/78c72229-3fcf-4c0e-9611-269460390f69.jpg';
-import g06 from '../assets/trips/gokarna/93dd5198-208d-4f64-a38d-fc5ba9c312be.jpg';
-import g07 from '../assets/trips/gokarna/IMG20240722142659.jpg';
-import g08 from '../assets/trips/gokarna/IMG20240722142704.jpg';
-import g09 from '../assets/trips/gokarna/IMG_0261.JPG';
-import g10 from '../assets/trips/gokarna/IMG_0263.JPG';
-import g11 from '../assets/trips/gokarna/IMG_0265.JPG';
-import g12 from '../assets/trips/gokarna/IMG_0268.JPG';
-import g13 from '../assets/trips/gokarna/IMG_0319.JPG';
-import g14 from '../assets/trips/gokarna/IMG_0322.JPG';
-import g15 from '../assets/trips/gokarna/IMG_2719.JPG';
-import g16 from '../assets/trips/gokarna/IMG_2731.JPG';
-import g17 from '../assets/trips/gokarna/IMG_2735.JPG';
-import g18 from '../assets/trips/gokarna/IMG_2738.JPG';
-import g19 from '../assets/trips/gokarna/IMG_2869.JPG';
-import g20 from '../assets/trips/gokarna/IMG_2875.JPG';
-import g21 from '../assets/trips/gokarna/IMG_2878.JPG';
-import g22 from '../assets/trips/gokarna/IMG_2881.JPG';
-import g23 from '../assets/trips/gokarna/IMG_2885.JPG';
-import g24 from '../assets/trips/gokarna/IMG_2886.JPG';
-import g25 from '../assets/trips/gokarna/IMG_2958.JPG';
-import g26 from '../assets/trips/gokarna/IMG_2963.JPG';
-import g27 from '../assets/trips/gokarna/IMG_2965.JPG';
-import g28 from '../assets/trips/gokarna/IMG_2967.JPG';
-import g29 from '../assets/trips/gokarna/IMG_2969.JPG';
-import g30 from '../assets/trips/gokarna/IMG_2971.JPG';
-import g31 from '../assets/trips/gokarna/IMG_2976.JPG';
-import g32 from '../assets/trips/gokarna/IMG_3116.JPG';
-import g33 from '../assets/trips/gokarna/IMG_3117.JPG';
-import g34 from '../assets/trips/gokarna/IMG_9291.JPG';
-import g35 from '../assets/trips/gokarna/IMG_9450.JPG';
-import g36 from '../assets/trips/gokarna/IMG_9451.JPG';
-import g37 from '../assets/trips/gokarna/IMG_9452.JPG';
-import g38 from '../assets/trips/gokarna/IMG_9453.JPG';
-import g39 from '../assets/trips/gokarna/IMG_9454.JPG';
-import g40 from '../assets/trips/gokarna/IMG_9455.JPG';
-import g41 from '../assets/trips/gokarna/IMG_9456.JPG';
-import g42 from '../assets/trips/gokarna/IMG_9457.JPG';
-import g43 from '../assets/trips/gokarna/IMG_9458.JPG';
-import g44 from '../assets/trips/gokarna/IMG_9459.JPG';
-import g45 from '../assets/trips/gokarna/IMG_9460.JPG';
-import g46 from '../assets/trips/gokarna/IMG_9461.JPG';
-import g47 from '../assets/trips/gokarna/IMG_9462.JPG';
-import g48 from '../assets/trips/gokarna/IMG_9463.JPG';
-import g49 from '../assets/trips/gokarna/IMG_9467.JPG';
-import g50 from '../assets/trips/gokarna/Snapchat-586899129.jpg';
-import g51 from '../assets/trips/gokarna/ddf79095-b62b-4802-bef7-016f8fdbe0ca.jpg';
 
 // ── DANDELI ───────────────────────────────────────────────────────────────────
-import d01 from '../assets/trips/dandeli/IMG_0942.JPG';
-import d02 from '../assets/trips/dandeli/IMG_0943.JPG';
-import d03 from '../assets/trips/dandeli/IMG_0944.JPG';
 
 // ── FORT ─────────────────────────────────────────────────────────────────────
-import f01 from '../assets/trips/fort/574CF3C1-E061-46E4-B848-32876BED71B3.jpg';
 
-interface Photo { src: string; }
+interface Photo { id: number; src: string; }
 
 interface TripLocation {
   key: string;
@@ -84,33 +91,19 @@ const locations: TripLocation[] = [
     key: 'gokarna', name: 'Gokarna', emoji: '🌊',
     tagline: 'Salt, sand, and no deadlines.',
     date: 'July 2024',
-    photos: [
-      { src: g01 }, { src: g02 }, { src: g03 }, { src: g04 },
-      { src: g05 }, { src: g06 }, { src: g07 }, { src: g08 },
-      { src: g09 }, { src: g10 }, { src: g11 }, { src: g12 },
-      { src: g13 }, { src: g14 }, { src: g15 }, { src: g16 },
-      { src: g17 }, { src: g18 }, { src: g19 }, { src: g20 },
-      { src: g21 }, { src: g22 }, { src: g23 }, { src: g24 },
-      { src: g25 }, { src: g26 }, { src: g27 }, { src: g28 },
-      { src: g29 }, { src: g30 }, { src: g31 }, { src: g32 },
-      { src: g33 }, { src: g34 }, { src: g35 }, { src: g36 },
-      { src: g37 }, { src: g38 }, { src: g39 }, { src: g40 },
-      { src: g41 }, { src: g42 }, { src: g43 }, { src: g44 },
-      { src: g45 }, { src: g46 }, { src: g47 }, { src: g48 },
-      { src: g49 }, { src: g50 }, { src: g51 },
-    ],
+    photos: gokarnaPhotos,
   },
   {
     key: 'dandeli', name: 'Dandeli', emoji: '🌿',
     tagline: 'Into the wild, all of us.',
     date: '2024',
-    photos: [{ src: d01 }, { src: d02 }, { src: d03 }],
+    photos: dandeliPhotos,
   },
   {
     key: 'fort', name: 'The Fort', emoji: '🏰',
     tagline: 'History beneath our feet.',
     date: '2024',
-    photos: [{ src: f01 }],
+    photos: fortPhotos,
   },
 ];
 

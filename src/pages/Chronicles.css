@@ -1,0 +1,13 @@
+.chronicles-wrapper, .neural-drift-wrapper, 
+.chronicles-page, .neural-drift-page {
+  background: linear-gradient(150deg, #0a0a1a 0%, #e8e8c8 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .chronicles-wrapper, .neural-drift-wrapper,
+  .chronicles-page, .neural-drift-page {
+    background-attachment: scroll;
+  }
+}
