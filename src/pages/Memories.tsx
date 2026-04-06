@@ -141,8 +141,8 @@ export default function Memories() {
           scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 82%' } }
       );
       gsap.fromTo(`.mem-node-${loc.key} .mem-thumb`,
-        { opacity: 0, scale: 0.88 },
-        { opacity: 1, scale: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out',
+        { opacity: 0, scale: 0.82, y: 18 },
+        { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'back.out(1.4)',
           scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 80%' } }
       );
     });

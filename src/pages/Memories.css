@@ -43,7 +43,7 @@
   flex-direction: row;
 }
 .mem-node--left .mem-card {
-  margin-right: calc(50% + 2rem);
+  margin-right: calc(50% + 1.5rem);
 }
 
 /* right side: empty left, card on right */
@@ -51,7 +51,7 @@
   flex-direction: row-reverse;
 }
 .mem-node--right .mem-card {
-  margin-left: calc(50% + 2rem);
+  margin-left: calc(50% + 1.5rem);
 }
 
 /* ── DOT ON SPINE ── */
@@ -123,21 +123,22 @@
   align-self: center;
 }
 
-/* ── PHOTO ROW — 4 in a row ── */
+/* ── PHOTO GRID — 2×2 large ── */
 .mem-thumbs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
   margin-bottom: 1rem;
 }
 
 .mem-thumb {
   position: relative;
   aspect-ratio: 4 / 3;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid rgba(167, 199, 231, 0.3);
+  box-shadow: 0 4px 18px rgba(51, 51, 51, 0.12);
 }
 
 .mem-thumb-img {
@@ -145,11 +146,11 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.45s ease;
 }
 
 .mem-thumb:hover .mem-thumb-img {
-  transform: scale(1.08);
+  transform: scale(1.07);
 }
 
 .mem-thumb-overlay {
@@ -163,14 +164,14 @@
 }
 
 .mem-thumb:hover .mem-thumb-overlay {
-  background: rgba(20, 20, 20, 0.35);
+  background: rgba(20, 20, 20, 0.3);
 }
 
 .mem-thumb-zoom {
   color: white;
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   opacity: 0;
-  transform: scale(0.7);
+  transform: scale(0.6);
   transition: opacity 0.3s, transform 0.3s;
 }
 
