@@ -6,21 +6,10 @@ import fish2Url    from '../assets/3d/Fish2.glb?url';
 import sharkUrl    from '../assets/3d/Shark.glb?url';
 import fishBoneUrl from '../assets/3d/FishBone.glb?url';
 
-/* ── fish data ── */
-interface FishData {
-  mesh: THREE.Object3D;
-  speed: number;
-  dir: number;       // 1 = left→right, -1 = right→left
-  baseY: number;
-  bobOffset: number;
-  bobSpeed: number;
-  baseScale: number;
-  zone: 'surface' | 'mid' | 'deep';
-  isStaring: boolean;
-  dartTimer: number;
-}
-
-const isMobile = () => window.matchMedia('(hover: none)').matches;
+const load = (url: string): Promise<THREE.Object3D | null> =>
+  new Promise(res => {
+    new GLTFLoader().load(url, g => res(g.scene), undefined, () => res(null));
+  });
 
 export default function OceanScene() {
   const mountRef = useRef<HTMLDivElement>(null);
@@ -29,62 +18,49 @@ export default function OceanScene() {
     const mount = mountRef.current;
     if (!mount) return;
 
-    /* ── RENDERER ── */
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !isMobile() });
+    const mobile = window.matchMedia('(hover: none)').matches;
+
+    /* renderer */
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: !mobile });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
 
-    /* ── SCENE ── */
+    /* scene */
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x001a3e, 0.05);
+    scene.fog = new THREE.FogExp2(0x001a3e, 0.02);
 
-    /* ── CAMERA ── */
+    /* camera */
     const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 2, 12);
-    camera.updateProjectionMatrix();
+    camera.position.set(0, 3, 12);
 
-    /* ── LIGHTS ── */
+    /* lights */
     const ambient = new THREE.AmbientLight(0x88ccff, 0.6);
     scene.add(ambient);
-
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
     dirLight.position.set(5, 10, 5);
     scene.add(dirLight);
+    const boneFill = new THREE.PointLight(0x0033aa, 0.8, 10);
+    boneFill.position.set(0, -5, 2);
+    scene.add(boneFill);
+    const causticLight = new THREE.PointLight(0x88ddff, 0.5, 8);
+    causticLight.position.set(0, 1, 3);
+    scene.add(causticLight);
 
-    const pointLight = new THREE.PointLight(0x0044ff, 0.4, 20);
-    pointLight.position.set(0, 0, 5);
-    scene.add(pointLight);
-
-    /* ── BONE GLOW ── */
-    const boneLight = new THREE.PointLight(0x003388, 0.35, 8);
-    boneLight.position.set(0, -5.2, 0);
-    scene.add(boneLight);
-
-    /* ── STATE ── */
-    const fishList: FishData[] = [];
-    let sharkMesh: THREE.Object3D | null = null;
-    let sharkDir = 1;
-    const boneMeshes: THREE.Object3D[] = [];
-
-    /* ── SCROLL STATE ── */
+    /* scroll */
     let scrollProgress = 0;
-    let targetCameraY = 2;
-    let currentCameraY = 2;
-
+    let targetCamY = 3;
     const onScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      scrollProgress = maxScroll > 0 ? window.scrollY / maxScroll : 0;
-      // camera y: 2 (surface) → 0 (mid) → -4 (deep)
-      targetCameraY = 2 - scrollProgress * 6;
-      // fog density
-      const fogDensity = 0.05 + scrollProgress * 0.1;
-      (scene.fog as THREE.FogExp2).density = fogDensity;
+      const max = document.body.scrollHeight - window.innerHeight;
+      scrollProgress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
+      targetCamY = 3 - scrollProgress * 8;
+      (scene.fog as THREE.FogExp2).density = 0.02 + scrollProgress * 0.08;
+      ambient.intensity = 0.6 - scrollProgress * 0.3;
     };
     window.addEventListener('scroll', onScroll);
 
-    /* ── RESIZE ── */
+    /* resize */
     const onResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -92,259 +68,172 @@ export default function OceanScene() {
     };
     window.addEventListener('resize', onResize);
 
-    /* ── MOUSE ── */
-    let mouseX = 0;
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-    };
-    window.addEventListener('mousemove', onMouseMove);
+    /* fish state */
+    interface FishState {
+      mesh: THREE.Object3D;
+      speed: number;
+      dir: number;       // +1 or -1
+      limit: number;
+      offset: number;
+      isDarting: boolean;
+      dartFrames: number;
+    }
+    const fishList: FishState[] = [];
+    let sharkMesh: THREE.Object3D | null = null;
+    let sharkDir = 1;
 
-    /* ── LOADER ── */
-    const loader = new GLTFLoader();
-
-    const loadModel = (url: string): Promise<THREE.Object3D | null> =>
-      new Promise(resolve => {
-        loader.load(
-          url,
-          gltf => resolve(gltf.scene),
-          undefined,
-          () => resolve(null),  // silent fail
-        );
-      });
-
-    /* helper: clone + add to scene */
-    const spawnFish = (
-      template: THREE.Object3D,
-      config: {
-        x: number; y: number; z: number;
-        scale: number; dir: number;
-        speed: number; bobOffset: number; bobSpeed: number;
-        zone: FishData['zone'];
-      }
-    ) => {
-      const mesh = template.clone();
-      mesh.scale.setScalar(config.scale);
-      mesh.position.set(config.x, config.y, config.z);
-      // base orientation: face swimming direction (+x = right = PI/2 on y)
-      mesh.rotation.y = config.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
-      scene.add(mesh);
-
-      fishList.push({
-        mesh,
-        speed: config.speed,
-        dir: config.dir,
-        baseY: config.y,
-        bobOffset: config.bobOffset,
-        bobSpeed: config.bobSpeed,
-        baseScale: config.scale,
-        zone: config.zone,
-        isStaring: false,
-        dartTimer: 0,
-      });
-    };
-
-    /* ── LOAD ALL MODELS ── */
-    const mobile = isMobile();
-    const fishCountMid = mobile ? 2 : 6;
+    /* clock */
+    const clock = new THREE.Clock();
 
     Promise.all([
-      loadModel(fish1Url),
-      loadModel(fish2Url),
-      loadModel(sharkUrl),
-      loadModel(fishBoneUrl),
-    ]).then(([fish1, fish2, shark, bone]) => {
+      load(fish1Url),
+      load(fish2Url),
+      load(sharkUrl),
+      load(fishBoneUrl),
+    ]).then(([f1, f2, shark, bone]) => {
 
-      /* ── SURFACE FISH (2) ── */
-      if (fish1) {
-        spawnFish(fish1, { x: -15, y: 3.5, z: 0,  scale: 0.15, dir:  1, speed: 0.02,  bobOffset: 0,   bobSpeed: 2,   zone: 'surface' });
-        spawnFish(fish1, { x:  10, y: 3.2, z: -1, scale: 0.15, dir: -1, speed: 0.018, bobOffset: 1.2, bobSpeed: 1.8, zone: 'surface' });
+      const addFish = (
+        tmpl: THREE.Object3D | null,
+        sx: number, sy: number, sz: number,
+        scale: number, rotY: number,
+        speed: number, dir: number, limit: number, offset: number
+      ) => {
+        if (!tmpl) return;
+        const m = tmpl.clone();
+        m.scale.setScalar(scale);
+        m.position.set(sx, sy, sz);
+        m.rotation.y = rotY;
+        scene.add(m);
+        fishList.push({ mesh: m, speed, dir, limit, offset, isDarting: false, dartFrames: 0 });
+      };
+
+      // surface fish
+      addFish(f1,  -12, 2.5,  0,  0.12,  Math.PI / 2,  0.03,  1, 16, 0);
+      addFish(f1,   12, 2.8, -1,  0.12, -Math.PI / 2,  0.025,-1, 16, 1.5);
+
+      // mid fish
+      addFish(f1, -15,  0.5,  1,  0.10,  Math.PI / 2,  0.022, 1, 18, 0.7);
+      addFish(f2,  15,  0.0, -1,  0.10, -Math.PI / 2,  0.018,-1, 18, 1.2);
+      addFish(f1, -10,  1.2,  2,  0.09,  Math.PI / 2,  0.020, 1, 16, 2.0);
+      addFish(f2,  10, -0.5, -2,  0.09, -Math.PI / 2,  0.016,-1, 16, 0.3);
+
+      // deep fish
+      if (!mobile) {
+        addFish(f2, -12, -3.5,  0, 0.08,  Math.PI / 2,  0.01,  1, 14, 0.5);
+        addFish(f2,   8, -3.2,  1, 0.08, -Math.PI / 2,  0.01, -1, 14, 1.8);
       }
 
-      /* ── MID OCEAN FISH ── */
-      const midTemplates = [fish1, fish2].filter(Boolean) as THREE.Object3D[];
-      if (midTemplates.length > 0) {
-        const midConfigs = [
-          { x: -12, y:  1.5, z:  1,  scale: 0.12, dir:  1, speed: 0.022, bobOffset: 0.5,  bobSpeed: 1.5 },
-          { x:   8, y:  0.8, z: -1,  scale: 0.12, dir: -1, speed: 0.028, bobOffset: 1.0,  bobSpeed: 1.7 },
-          { x: -10, y:  0.2, z:  2,  scale: 0.13, dir:  1, speed: 0.015, bobOffset: 2.1,  bobSpeed: 1.3 },
-          { x:   5, y:  1.8, z:  0,  scale: 0.12, dir: -1, speed: 0.025, bobOffset: 0.8,  bobSpeed: 2.0 },
-          { x: -14, y: -0.5, z: -2,  scale: 0.11, dir:  1, speed: 0.019, bobOffset: 1.6,  bobSpeed: 1.6 },
-          { x:  12, y:  0.6, z:  1,  scale: 0.12, dir: -1, speed: 0.03,  bobOffset: 0.3,  bobSpeed: 1.9 },
-        ].slice(0, fishCountMid);
-
-        midConfigs.forEach((cfg, i) => {
-          const tmpl = midTemplates[i % midTemplates.length];
-          spawnFish(tmpl, { ...cfg, zone: 'mid' });
-        });
-      }
-
-      /* ── DEEP FISH (2) ── */
-      if (!mobile && fish2) {
-        spawnFish(fish2, { x: -13, y: -3.2, z: -1, scale: 0.1, dir:  1, speed: 0.009, bobOffset: 0,   bobSpeed: 1.0, zone: 'deep' });
-        spawnFish(fish2, { x:  11, y: -3.8, z:  1, scale: 0.1, dir: -1, speed: 0.008, bobOffset: 2.0, bobSpeed: 0.9, zone: 'deep' });
-        // tint deep fish blue
-        fishList.slice(-2).forEach(fd => {
-          fd.mesh.traverse(child => {
-            if ((child as THREE.Mesh).isMesh) {
-              const mat = (child as THREE.Mesh).material;
-              if (mat && !Array.isArray(mat)) {
-                (mat as THREE.MeshStandardMaterial).color?.multiplyScalar(0.4);
-              }
-            }
-          });
-        });
-      }
-
-      /* ── SHARK ── */
+      // shark
       if (!mobile && shark) {
-        shark.scale.setScalar(0.3);
+        shark.scale.setScalar(0.25);
         shark.rotation.y = Math.PI / 2;
-        shark.position.set(-15, -3.5, 0);
+        shark.position.set(-18, -3.8, 0);
         scene.add(shark);
         sharkMesh = shark;
       }
 
-      /* ── FISH BONES ── */
+      // bones
       if (!mobile && bone) {
-        const bonePositions = [{ x: -8 }, { x: -2 }, { x: 4 }, { x: 10 }];
-        bonePositions.forEach((bp, i) => {
-          const b = bone.clone();
-          b.scale.setScalar(0.08);
-          b.position.set(bp.x, -5.3, (i % 3) - 1);
-          b.rotation.y = (i * 0.9) % (Math.PI * 2);
-          scene.add(b);
-          boneMeshes.push(b);
+        const boneData = [
+          { x: -8,  ry:  0.3 },
+          { x: -2,  ry: -0.5 },
+          { x:  4,  ry:  1.2 },
+          { x: 10,  ry: -0.8 },
+        ];
+        boneData.forEach(b => {
+          const m = bone.clone();
+          m.scale.setScalar(0.06);
+          m.position.set(b.x, -5.8, 0);
+          m.rotation.y = b.ry;
+          scene.add(m);
         });
       }
     });
 
-    /* ── IDLE STARE ── */
-    let idleTimer: ReturnType<typeof setTimeout>;
-    const scheduleStare = () => {
-      const delay = 8000 + Math.random() * 7000;
-      idleTimer = setTimeout(() => {
-        const midFish = fishList.filter(f => f.zone === 'mid' && !f.isStaring);
-        if (midFish.length === 0) { scheduleStare(); return; }
-        const target = midFish[Math.floor(Math.random() * midFish.length)];
-        target.isStaring = true;
-        // face camera
-        target.mesh.rotation.y = 0;
-        target.mesh.scale.setScalar(target.baseScale * 1.4);
-        setTimeout(() => {
-          target.isStaring = false;
-          target.mesh.scale.setScalar(target.baseScale);
-          if (target.dir < 0) target.mesh.rotation.y = Math.PI;
-          scheduleStare();
-        }, 2000);
-      }, delay);
-    };
-    scheduleStare();
-
-    /* ── ANIMATION LOOP ── */
+    /* animation loop */
     let rafId: number;
-    let time = 0;
-
     const animate = () => {
       rafId = requestAnimationFrame(animate);
-      time += 0.016;
+      const time = clock.getElapsedTime();
 
-      /* smooth camera */
-      currentCameraY += (targetCameraY - currentCameraY) * 0.05;
-      camera.position.y = currentCameraY;
-      /* subtle camera x from mouse */
-      camera.position.x += (mouseX * 1.5 - camera.position.x) * 0.03;
+      // camera
+      camera.position.y += (targetCamY - camera.position.y) * 0.05;
 
-      /* fish */
-      fishList.forEach(fd => {
-        if (fd.isStaring) return;
+      // caustic shimmer
+      causticLight.position.x = Math.sin(time * 0.7) * 5;
+      causticLight.intensity = 0.3 + Math.sin(time * 2) * 0.2;
 
-        // swim
-        fd.mesh.position.x += fd.speed * fd.dir;
-        // bob
-        fd.mesh.position.y = fd.baseY + Math.sin(time * fd.bobSpeed + fd.bobOffset) * 0.008;
+      // swim fish
+      fishList.forEach((f, i) => {
+        const spd = f.isDarting ? f.speed * 3 : f.speed;
+        f.mesh.position.x += spd * f.dir;
+        f.mesh.rotation.z = Math.sin(time * 3 + f.offset) * 0.08;
 
-        // wrap
-        const limit = 17;
-        if (fd.dir > 0 && fd.mesh.position.x > limit) {
-          fd.mesh.position.x = -limit;
-        } else if (fd.dir < 0 && fd.mesh.position.x < -limit) {
-          fd.mesh.position.x = limit;
+        if (f.dir > 0 && f.mesh.position.x > f.limit) {
+          f.mesh.position.x = -f.limit;
+          f.dir = -1;
+          f.mesh.rotation.y = -Math.PI / 2;
+        } else if (f.dir < 0 && f.mesh.position.x < -f.limit) {
+          f.mesh.position.x = f.limit;
+          f.dir = 1;
+          f.mesh.rotation.y = Math.PI / 2;
+        }
+
+        if (f.isDarting) {
+          f.dartFrames--;
+          if (f.dartFrames <= 0) f.isDarting = false;
+        }
+
+        // shark chase deep fish (index 6,7)
+        if (sharkMesh && i >= 6) {
+          const dist = Math.abs(sharkMesh.position.x - f.mesh.position.x);
+          if (dist < 3 && !f.isDarting) {
+            f.isDarting = true;
+            f.dartFrames = 120;
+            // flip away from shark
+            f.dir = f.mesh.position.x > sharkMesh.position.x ? 1 : -1;
+            f.mesh.rotation.y = f.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
+          }
         }
       });
 
-      /* shark */
+      // shark
       if (sharkMesh) {
-        sharkMesh.position.x += 0.025 * sharkDir;
-        sharkMesh.rotation.z = Math.sin(time) * 0.05;
-        // rotation.y set on direction change, not every frame
-
-        if (sharkMesh.position.x > 18) {
-          sharkMesh.position.x = 18;
-          sharkDir = -1;
-          sharkMesh.rotation.y = -Math.PI / 2;
-        } else if (sharkMesh.position.x < -18) {
-          sharkMesh.position.x = -18;
+        sharkMesh.position.x += 0.02 * sharkDir;
+        sharkMesh.rotation.z = Math.sin(time * 1.5) * 0.05;
+        if (sharkMesh.position.x > 20) {
+          sharkMesh.position.x = -20;
           sharkDir = 1;
           sharkMesh.rotation.y = Math.PI / 2;
-        }
-
-        /* shark chase deep fish */
-        if (!isMobile()) {
-          fishList.filter(f => f.zone === 'deep').forEach(fd => {
-            const dist = Math.abs(sharkMesh!.position.x - fd.mesh.position.x);
-            if (dist < 3 && fd.dartTimer <= 0) {
-              const origSpeed = fd.speed;
-              fd.speed = origSpeed * 3;
-              fd.dartTimer = 120; // frames
-              setTimeout(() => { fd.speed = origSpeed; }, 2000);
-            }
-            if (fd.dartTimer > 0) fd.dartTimer--;
-          });
+        } else if (sharkMesh.position.x < -20) {
+          sharkMesh.position.x = 20;
+          sharkDir = -1;
+          sharkMesh.rotation.y = -Math.PI / 2;
         }
       }
-
-      /* bone slow spin */
-      boneMeshes.forEach(b => { b.rotation.y += 0.002; });
 
       renderer.render(scene, camera);
     };
-
     animate();
 
-    /* ── CLEANUP ── */
     return () => {
       cancelAnimationFrame(rafId);
-      clearTimeout(idleTimer);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', onResize);
-      window.removeEventListener('mousemove', onMouseMove);
-
       scene.traverse(obj => {
-        if ((obj as THREE.Mesh).isMesh) {
-          (obj as THREE.Mesh).geometry?.dispose();
-          const mat = (obj as THREE.Mesh).material;
-          if (Array.isArray(mat)) mat.forEach(m => m.dispose());
-          else (mat as THREE.Material)?.dispose();
+        const m = obj as THREE.Mesh;
+        if (m.isMesh) {
+          m.geometry?.dispose();
+          if (Array.isArray(m.material)) m.material.forEach(x => x.dispose());
+          else (m.material as THREE.Material)?.dispose();
         }
       });
       renderer.dispose();
-      if (mount.contains(renderer.domElement)) {
-        mount.removeChild(renderer.domElement);
-      }
+      if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement);
     };
   }, []);
 
   return (
-    <div
-      ref={mountRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 0,
-        pointerEvents: 'none',
-      }}
-    />
+    <div ref={mountRef} style={{ position: 'fixed', inset: 0, width: '100vw', height: '100vh', zIndex: 0, pointerEvents: 'none' }} />
   );
 }
