@@ -6,36 +6,73 @@ import './Memories.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─────────────────────────────────────────────────────────────────────────────
-// GOKARNA — uncomment imports as photos are added to src/assets/trips/gokarna/
-// import g01 from '../assets/trips/gokarna/01.jpg';
-// import g02 from '../assets/trips/gokarna/02.jpg';
-// import g03 from '../assets/trips/gokarna/03.jpg';
-// import g04 from '../assets/trips/gokarna/04.jpg';
-// import g05 from '../assets/trips/gokarna/05.jpg';
-// import g06 from '../assets/trips/gokarna/06.jpg';
-// import g07 from '../assets/trips/gokarna/07.jpg';
-// import g08 from '../assets/trips/gokarna/08.jpg';
+// ── GOKARNA (51 JPGs) ─────────────────────────────────────────────────────────
+import g01 from '../assets/trips/gokarna/20240721_201232.jpg';
+import g02 from '../assets/trips/gokarna/20240721_201233_resized.jpg';
+import g03 from '../assets/trips/gokarna/448c2e42-914c-4276-9aca-362003b2f9a6.jpg';
+import g04 from '../assets/trips/gokarna/609a5f56-d59b-4a0b-9346-fa8d4fcf301a.jpg';
+import g05 from '../assets/trips/gokarna/78c72229-3fcf-4c0e-9611-269460390f69.jpg';
+import g06 from '../assets/trips/gokarna/93dd5198-208d-4f64-a38d-fc5ba9c312be.jpg';
+import g07 from '../assets/trips/gokarna/IMG20240722142659.jpg';
+import g08 from '../assets/trips/gokarna/IMG20240722142704.jpg';
+import g09 from '../assets/trips/gokarna/IMG_0261.JPG';
+import g10 from '../assets/trips/gokarna/IMG_0263.JPG';
+import g11 from '../assets/trips/gokarna/IMG_0265.JPG';
+import g12 from '../assets/trips/gokarna/IMG_0268.JPG';
+import g13 from '../assets/trips/gokarna/IMG_0319.JPG';
+import g14 from '../assets/trips/gokarna/IMG_0322.JPG';
+import g15 from '../assets/trips/gokarna/IMG_2719.JPG';
+import g16 from '../assets/trips/gokarna/IMG_2731.JPG';
+import g17 from '../assets/trips/gokarna/IMG_2735.JPG';
+import g18 from '../assets/trips/gokarna/IMG_2738.JPG';
+import g19 from '../assets/trips/gokarna/IMG_2869.JPG';
+import g20 from '../assets/trips/gokarna/IMG_2875.JPG';
+import g21 from '../assets/trips/gokarna/IMG_2878.JPG';
+import g22 from '../assets/trips/gokarna/IMG_2881.JPG';
+import g23 from '../assets/trips/gokarna/IMG_2885.JPG';
+import g24 from '../assets/trips/gokarna/IMG_2886.JPG';
+import g25 from '../assets/trips/gokarna/IMG_2958.JPG';
+import g26 from '../assets/trips/gokarna/IMG_2963.JPG';
+import g27 from '../assets/trips/gokarna/IMG_2965.JPG';
+import g28 from '../assets/trips/gokarna/IMG_2967.JPG';
+import g29 from '../assets/trips/gokarna/IMG_2969.JPG';
+import g30 from '../assets/trips/gokarna/IMG_2971.JPG';
+import g31 from '../assets/trips/gokarna/IMG_2976.JPG';
+import g32 from '../assets/trips/gokarna/IMG_3116.JPG';
+import g33 from '../assets/trips/gokarna/IMG_3117.JPG';
+import g34 from '../assets/trips/gokarna/IMG_9291.JPG';
+import g35 from '../assets/trips/gokarna/IMG_9450.JPG';
+import g36 from '../assets/trips/gokarna/IMG_9451.JPG';
+import g37 from '../assets/trips/gokarna/IMG_9452.JPG';
+import g38 from '../assets/trips/gokarna/IMG_9453.JPG';
+import g39 from '../assets/trips/gokarna/IMG_9454.JPG';
+import g40 from '../assets/trips/gokarna/IMG_9455.JPG';
+import g41 from '../assets/trips/gokarna/IMG_9456.JPG';
+import g42 from '../assets/trips/gokarna/IMG_9457.JPG';
+import g43 from '../assets/trips/gokarna/IMG_9458.JPG';
+import g44 from '../assets/trips/gokarna/IMG_9459.JPG';
+import g45 from '../assets/trips/gokarna/IMG_9460.JPG';
+import g46 from '../assets/trips/gokarna/IMG_9461.JPG';
+import g47 from '../assets/trips/gokarna/IMG_9462.JPG';
+import g48 from '../assets/trips/gokarna/IMG_9463.JPG';
+import g49 from '../assets/trips/gokarna/IMG_9467.JPG';
+import g50 from '../assets/trips/gokarna/Snapchat-586899129.jpg';
+import g51 from '../assets/trips/gokarna/ddf79095-b62b-4802-bef7-016f8fdbe0ca.jpg';
+// HEIC pending conversion: IMG_0066, IMG_0067, IMG_0068, IMG_0070–0085, IMG_0174,
+// IMG_0203, IMG_0228–0229, IMG_0283, IMG_0299–0300, IMG_0342, IMG_0349, IMG_0352,
+// IMG_9175, IMG_9207, IMG_9242–9245, IMG_9259, IMG_9277, IMG_9281, IMG_9284, IMG_9286,
+// IMG_9374, IMG_9379–9380, IMG_9435–9436, IMG_9447–9448, IMG_9546, IMG_9651–9652
 
-// DANDELI — uncomment imports as photos are added to src/assets/trips/dandeli/
-// import d01 from '../assets/trips/dandeli/01.jpg';
-// import d02 from '../assets/trips/dandeli/02.jpg';
-// import d03 from '../assets/trips/dandeli/03.jpg';
-// import d04 from '../assets/trips/dandeli/04.jpg';
-// import d05 from '../assets/trips/dandeli/05.jpg';
-// import d06 from '../assets/trips/dandeli/06.jpg';
-// import d07 from '../assets/trips/dandeli/07.jpg';
-// import d08 from '../assets/trips/dandeli/08.jpg';
+// ── DANDELI (3 JPGs — rest are HEIC, pending conversion) ─────────────────────
+import d01 from '../assets/trips/dandeli/IMG_0942.JPG';
+import d02 from '../assets/trips/dandeli/IMG_0943.JPG';
+import d03 from '../assets/trips/dandeli/IMG_0944.JPG';
+// HEIC pending conversion: IMG_1246, IMG_1248, IMG_1255, IMG_1256, IMG_1272, IMG_1573, IMG_1574
 
-// FORT — uncomment imports as photos are added to src/assets/trips/fort/
-// import f01 from '../assets/trips/fort/01.jpg';
-// import f02 from '../assets/trips/fort/02.jpg';
-// import f03 from '../assets/trips/fort/03.jpg';
-// import f04 from '../assets/trips/fort/04.jpg';
-// import f05 from '../assets/trips/fort/05.jpg';
-// import f06 from '../assets/trips/fort/06.jpg';
-// import f07 from '../assets/trips/fort/07.jpg';
-// import f08 from '../assets/trips/fort/08.jpg';
+// ── FORT (1 JPG — rest are HEIC, pending conversion) ─────────────────────────
+import f01 from '../assets/trips/fort/574CF3C1-E061-46E4-B848-32876BED71B3.jpg';
+// HEIC pending conversion: IMG_0500, IMG_0502, IMG_0533, IMG_0558, IMG_0568,
+// IMG_0584–0586, IMG_0590, IMG_0595, IMG_1273–1290 (series), IMG_1322
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface Photo { id: number; src: string | null; }
@@ -48,38 +85,34 @@ interface TripLocation {
   photos: Photo[];
 }
 
-// Placeholder arrays — replace null with the imported variable once photos are added
 const gokarnaPhotos: Photo[] = [
-  { id: 1, src: null }, // { id: 1, src: g01 },
-  { id: 2, src: null }, // { id: 2, src: g02 },
-  { id: 3, src: null }, // { id: 3, src: g03 },
-  { id: 4, src: null }, // { id: 4, src: g04 },
-  { id: 5, src: null }, // { id: 5, src: g05 },
-  { id: 6, src: null }, // { id: 6, src: g06 },
-  { id: 7, src: null }, // { id: 7, src: g07 },
-  { id: 8, src: null }, // { id: 8, src: g08 },
+  { id:  1, src: g01 }, { id:  2, src: g02 }, { id:  3, src: g03 },
+  { id:  4, src: g04 }, { id:  5, src: g05 }, { id:  6, src: g06 },
+  { id:  7, src: g07 }, { id:  8, src: g08 }, { id:  9, src: g09 },
+  { id: 10, src: g10 }, { id: 11, src: g11 }, { id: 12, src: g12 },
+  { id: 13, src: g13 }, { id: 14, src: g14 }, { id: 15, src: g15 },
+  { id: 16, src: g16 }, { id: 17, src: g17 }, { id: 18, src: g18 },
+  { id: 19, src: g19 }, { id: 20, src: g20 }, { id: 21, src: g21 },
+  { id: 22, src: g22 }, { id: 23, src: g23 }, { id: 24, src: g24 },
+  { id: 25, src: g25 }, { id: 26, src: g26 }, { id: 27, src: g27 },
+  { id: 28, src: g28 }, { id: 29, src: g29 }, { id: 30, src: g30 },
+  { id: 31, src: g31 }, { id: 32, src: g32 }, { id: 33, src: g33 },
+  { id: 34, src: g34 }, { id: 35, src: g35 }, { id: 36, src: g36 },
+  { id: 37, src: g37 }, { id: 38, src: g38 }, { id: 39, src: g39 },
+  { id: 40, src: g40 }, { id: 41, src: g41 }, { id: 42, src: g42 },
+  { id: 43, src: g43 }, { id: 44, src: g44 }, { id: 45, src: g45 },
+  { id: 46, src: g46 }, { id: 47, src: g47 }, { id: 48, src: g48 },
+  { id: 49, src: g49 }, { id: 50, src: g50 }, { id: 51, src: g51 },
 ];
 
 const dandeliPhotos: Photo[] = [
-  { id: 1, src: null }, // { id: 1, src: d01 },
-  { id: 2, src: null }, // { id: 2, src: d02 },
-  { id: 3, src: null }, // { id: 3, src: d03 },
-  { id: 4, src: null }, // { id: 4, src: d04 },
-  { id: 5, src: null }, // { id: 5, src: d05 },
-  { id: 6, src: null }, // { id: 6, src: d06 },
-  { id: 7, src: null }, // { id: 7, src: d07 },
-  { id: 8, src: null }, // { id: 8, src: d08 },
+  { id: 1, src: d01 },
+  { id: 2, src: d02 },
+  { id: 3, src: d03 },
 ];
 
 const fortPhotos: Photo[] = [
-  { id: 1, src: null }, // { id: 1, src: f01 },
-  { id: 2, src: null }, // { id: 2, src: f02 },
-  { id: 3, src: null }, // { id: 3, src: f03 },
-  { id: 4, src: null }, // { id: 4, src: f04 },
-  { id: 5, src: null }, // { id: 5, src: f05 },
-  { id: 6, src: null }, // { id: 6, src: f06 },
-  { id: 7, src: null }, // { id: 7, src: f07 },
-  { id: 8, src: null }, // { id: 8, src: f08 },
+  { id: 1, src: f01 },
 ];
 
 const locations: TripLocation[] = [
@@ -88,18 +121,17 @@ const locations: TripLocation[] = [
   { key: 'fort',    name: 'The Fort', emoji: '🏰', tagline: 'History beneath our feet.',      photos: fortPhotos    },
 ];
 
-// Random rotation seeds per card (stable across renders)
+// Rotation seeds — stable per card position
 const rotations = [-2.8, 1.9, -1.4, 2.5, -0.8, 3.0, -2.2, 1.2];
 
 interface LightboxState {
   location: TripLocation;
-  photoIndex: number;  // -1 = grid view
+  photoIndex: number; // -1 = grid view
 }
 
 export default function Memories() {
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
-  // ── GSAP entrance ──
   useEffect(() => {
     gsap.fromTo('.pg-tag',   { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, delay: 0.3 });
     gsap.fromTo('.pg-title', { opacity: 0, y: 30 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.5 });
@@ -126,7 +158,6 @@ export default function Memories() {
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
-  // ── ESC key ──
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!lightbox) return;
     if (e.key === 'Escape') { setLightbox(null); return; }
@@ -156,19 +187,16 @@ export default function Memories() {
       <div className="orb orb-1" />
       <div className="orb orb-2" />
 
-      {/* PAGE HEADER */}
       <div className="page-hero">
         <p className="page-tag pg-tag">Chapter 05</p>
         <h1 className="page-title pg-title">Memories</h1>
         <p className="page-subtitle pg-desc">Every road we took together.</p>
       </div>
 
-      {/* LOCATION SECTIONS */}
       <div className="memories-body">
         {locations.map(loc => (
           <section key={loc.key} className={`loc-section loc-section-${loc.key}`}>
 
-            {/* Heading */}
             <div className={`loc-heading loc-heading-${loc.key}`}>
               <span className="loc-emoji">{loc.emoji}</span>
               <div>
@@ -178,7 +206,6 @@ export default function Memories() {
               <div className="loc-divider" />
             </div>
 
-            {/* 4 Polaroid preview cards */}
             <div className={`polaroid-row loc-cards-${loc.key}`}>
               {loc.photos.slice(0, 4).map((photo, i) => (
                 <div
@@ -202,21 +229,18 @@ export default function Memories() {
               ))}
             </div>
 
-            {/* View All button */}
             <button className={`view-all-btn loc-btn-${loc.key}`} onClick={() => openGrid(loc)}>
-              View All Photos →
+              View All {loc.photos.length} Photos →
             </button>
 
           </section>
         ))}
       </div>
 
-      {/* LIGHTBOX */}
       {lightbox && (
         <div className="lb-overlay" onClick={() => setLightbox(null)}>
           <div className="lb-modal" onClick={e => e.stopPropagation()}>
 
-            {/* Header */}
             <div className="lb-header">
               <div className="lb-header-left">
                 <span className="lb-emoji">{lightbox.location.emoji}</span>
@@ -237,7 +261,6 @@ export default function Memories() {
               </div>
             </div>
 
-            {/* GRID VIEW */}
             {lightbox.photoIndex === -1 && (
               <div className="lb-grid">
                 {lightbox.location.photos.map((photo, i) => (
@@ -254,15 +277,9 @@ export default function Memories() {
               </div>
             )}
 
-            {/* SINGLE PHOTO VIEW */}
             {lightbox.photoIndex >= 0 && (
               <div className="lb-single">
-                <button
-                  className="lb-arrow lb-arrow--prev"
-                  onClick={prevPhoto}
-                  disabled={lightbox.photoIndex === 0}
-                >‹</button>
-
+                <button className="lb-arrow lb-arrow--prev" onClick={prevPhoto} disabled={lightbox.photoIndex === 0}>‹</button>
                 <div className="lb-single-img-wrap">
                   {lightbox.location.photos[lightbox.photoIndex].src ? (
                     <img
@@ -276,12 +293,7 @@ export default function Memories() {
                     </div>
                   )}
                 </div>
-
-                <button
-                  className="lb-arrow lb-arrow--next"
-                  onClick={nextPhoto}
-                  disabled={lightbox.photoIndex === lightbox.location.photos.length - 1}
-                >›</button>
+                <button className="lb-arrow lb-arrow--next" onClick={nextPhoto} disabled={lightbox.photoIndex === lightbox.location.photos.length - 1}>›</button>
               </div>
             )}
 
