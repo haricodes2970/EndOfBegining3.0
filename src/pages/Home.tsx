@@ -99,6 +99,8 @@ export default function Home() {
     window.addEventListener('scroll', handler);
 
     gsap.set(heroInnerRef.current, { scale: 1.4 });
+    gsap.set('.hero-side-left',  { x: -120, opacity: 0 });
+    gsap.set('.hero-side-right', { x:  120, opacity: 0 });
     ScrollTrigger.create({
       trigger: heroRef.current,
       start: 'top top',
@@ -107,8 +109,8 @@ export default function Home() {
       scrub: 1,
       animation: gsap.timeline()
         .to(heroInnerRef.current, { scale: 1.0, ease: 'none' })
-        .fromTo('.hero-deco-left',  { x: -120, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0)
-        .fromTo('.hero-deco-right', { x:  120, opacity: 0 }, { x: 0, opacity: 1, ease: 'none' }, 0),
+        .to('.hero-side-left',  { x: 0, opacity: 1, ease: 'none' }, 0)
+        .to('.hero-side-right', { x: 0, opacity: 1, ease: 'none' }, 0),
     });
 
     // ── MANIFESTO — word-level SplitText ──
@@ -154,19 +156,20 @@ export default function Home() {
       <div className="orb orb-3" />
 
       {/* HERO */}
-      <section className="hero" ref={heroRef}>
-        <div className="hero-inner" ref={heroInnerRef}>
+      <section className="hero-section" ref={heroRef}>
 
-          <div className="hero-deco-left">
-            <span>2022</span>
-            <div className="deco-line" />
-            <span>AI &amp; ML</span>
-          </div>
-          <div className="hero-deco-right">
-            <span>2026</span>
-            <div className="deco-line" />
-            <span>JIT</span>
-          </div>
+        <div className="hero-side-left">
+          <span>2022</span>
+          <div className="deco-line" />
+          <span>AI &amp; ML</span>
+        </div>
+        <div className="hero-side-right">
+          <span>2026</span>
+          <div className="deco-line" />
+          <span>JIT</span>
+        </div>
+
+        <div className="hero-inner" ref={heroInnerRef}>
 
           <div className="hero-club-logo" ref={logoRef}>
             <img src={logo} alt="AI Nexus" />
@@ -177,7 +180,9 @@ export default function Home() {
             Batch of 2022–26 &nbsp;·&nbsp; Jyothy Institute of Technology
           </div>
 
-          <h1 className="hero-title" ref={titleRef}>EndOfBeginning</h1>
+          <h1 className="hero-title" ref={titleRef}>End of Beginning</h1>
+
+          <div className="hero-gold-divider" />
 
           <p className="hero-subtitle" ref={subtitleRef}></p>
           <p className="hero-year" ref={yearRef}>

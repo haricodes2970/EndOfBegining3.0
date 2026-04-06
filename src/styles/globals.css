@@ -11,7 +11,7 @@
   --beige-dark: #e8e8c8;
 
   /* ── Per-page gradients & accents ── */
-  --grad-home:       linear-gradient(150deg, #e8f4fd 0%, #1a1a2e 100%);
+  --grad-home:       linear-gradient(170deg, #f5deb3 0%, #c8ddf0 30%, #7aaed4 65%, #0d1b2a 100%);
   --accent-home:     #A7C7E7;
 
   --grad-memories:   linear-gradient(150deg, #fff0e0 0%, #0d2b3e 100%);
@@ -97,7 +97,7 @@ body {
 
 .page-title {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-size: clamp(3rem, 7vw, 6rem);
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.02em;

@@ -6,7 +6,7 @@
 }
 
 /* ── HERO ── */
-.hero {
+.hero-section {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
@@ -26,8 +26,8 @@
 }
 
 /* ── SIDE DECORATIVES ── */
-.hero-deco-left,
-.hero-deco-right {
+.hero-side-left,
+.hero-side-right {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -36,11 +36,12 @@
   align-items: center;
   gap: 0.6rem;
   opacity: 0;
+  z-index: 2;
 }
-.hero-deco-left  { left: 3rem; }
-.hero-deco-right { right: 3rem; }
-.hero-deco-left span,
-.hero-deco-right span {
+.hero-side-left  { left: 3rem; }
+.hero-side-right { right: 3rem; }
+.hero-side-left span,
+.hero-side-right span {
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.22em;
@@ -107,9 +108,16 @@
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.02em;
-  color: #f5e6c8; /* high-contrast cream on dark background */
+  color: #f5e6c8;
   -webkit-text-fill-color: #f5e6c8;
   opacity: 1;
+}
+
+.hero-gold-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(to right, transparent, #c9a96e, transparent);
+  margin: 1.2rem auto 0;
 }
 
 @keyframes gradientShift {

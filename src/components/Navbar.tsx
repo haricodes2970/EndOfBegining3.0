@@ -50,23 +50,16 @@ export default function Navbar() {
     return () => window.removeEventListener('keydown', handler);
   }, []);
 
-  const logoSrc = isMobile ? logoStacked : logoHorizontal;
-
   return (
     <nav
       className="navbar"
       data-page={currentPage}
       style={{ '--nav-accent': accent } as React.CSSProperties}
     >
-      <NavLink to="/" className="nav-logo" onClick={() => setMenuOpen(false)}>
-        <img
-          src={logoSrc}
-          alt="AI Nexus"
-          onError={(e) => {
-            e.currentTarget.src = aiNexus;
-          }}
-        />
-        End<span>Of</span>Beginning
+      <NavLink to="/" className="nav-brand" onClick={() => setMenuOpen(false)}>
+        <img src={aiNexus} alt="AI Nexus Club" className="nav-ainexus" />
+        <div className="nav-divider" />
+        <img src={isMobile ? logoStacked : logoHorizontal} alt="EndOfBeginning" className="nav-logo" />
       </NavLink>
       <ul className={`nav-links${menuOpen ? ' open' : ''}`}>
         {links.map(l => (
