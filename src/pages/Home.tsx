@@ -5,7 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import ParticleCanvas from '../components/ParticleCanvas';
 import OceanScene from '../components/OceanScene';
-import logo from '../assets/ainexus.jpeg';
 import './Home.css';
 
 /* ── TICKER ── */
@@ -157,7 +156,6 @@ export default function Home() {
   const subtitleRef  = useRef<HTMLParagraphElement>(null);
   const yearRef      = useRef<HTMLParagraphElement>(null);
   const scrollRef    = useRef<HTMLDivElement>(null);
-  const logoRef      = useRef<HTMLDivElement>(null);
   const cardsRef     = useRef<HTMLDivElement>(null);
   const heroRef      = useRef<HTMLElement>(null);
   const heroInnerRef = useRef<HTMLDivElement>(null);
@@ -195,7 +193,6 @@ export default function Home() {
     tl.to('.orb', { opacity: 1, duration: 2, stagger: 0.3 }, 0);
     tl.to(badgeRef.current,  { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.6);
     tl.to(split.chars, { opacity: 1, y: 0, rotation: 0, duration: 0.8, stagger: 0.04, ease: 'back.out(1.7)' }, 0.9);
-    tl.to(logoRef.current,   { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, 1.4);
     tl.to(yearRef.current,   { opacity: 0.65, y: 0, duration: 0.6, ease: 'power3.out' }, 2.1);
     tl.to(scrollRef.current, { opacity: 1, duration: 0.6 }, 2.5);
 
@@ -393,11 +390,6 @@ export default function Home() {
         </div>
 
         <div className="hero-inner" ref={heroInnerRef}>
-          <div className="hero-club-logo" ref={logoRef}>
-            <img src={logo} alt="AI Nexus" />
-            <span>AI Nexus</span>
-          </div>
-
           <div className="hero-badge" ref={badgeRef}>
             Batch of 2022–26 &nbsp;·&nbsp; Jyothy Institute of Technology
           </div>

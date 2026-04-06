@@ -16,6 +16,7 @@
   );
   min-height: 500vh;
   position: relative;
+  z-index: 1;          /* sits above Three.js fixed canvas (z-index 0) */
   overflow: hidden;
 }
 
@@ -31,7 +32,7 @@
   background: radial-gradient(circle, #fff9c4, #ffd700);
   box-shadow: 0 0 60px 30px rgba(255, 220, 50, 0.3);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* ── SUN RAYS (8 spokes) ── */
@@ -45,7 +46,7 @@
   left: 50%;
   transform-origin: center 60px;
   pointer-events: none;
-  z-index: 0;
+  z-index: 2;
 }
 
 /* ── AMBIENT SKY GLOW (replaces old .sun-rays) ── */
@@ -66,7 +67,7 @@
   border-radius: 50px;
   background: rgba(255, 255, 255, 0.7);
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
 }
 .cloud-1 {
   width: 110px;
@@ -112,6 +113,16 @@
   );
   pointer-events: none;
   z-index: 2;
+}
+
+/* ── SKY CONTAINER — keeps sun/clouds contained ── */
+.sky-layer {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 22vh;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 /* ── SURFACE WAVE ── */
@@ -250,35 +261,7 @@
   background: linear-gradient(to bottom, transparent, #c9a96e, transparent);
 }
 
-/* ── HERO CLUB LOGO ── */
-.hero-club-logo {
-  position: absolute;
-  top: 6rem; right: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.35rem;
-  opacity: 0;
-  transform: translateX(20px);
-}
-.hero-club-logo img {
-  width: 72px; height: 72px;
-  object-fit: contain;
-  border-radius: 12px;
-  filter: drop-shadow(0 4px 18px rgba(167,199,231,0.6));
-  animation: logoPulse 4s ease-in-out infinite;
-}
-.hero-club-logo span {
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.7);
-}
-
-@keyframes logoPulse {
-  0%,100% { filter: drop-shadow(0 4px 18px rgba(167,199,231,0.6)); }
-  50%      { filter: drop-shadow(0 4px 28px rgba(122,174,212,0.9)); }
-}
+/* hero-club-logo removed */
 
 /* ── HERO BADGE ── */
 .hero-badge {
@@ -337,13 +320,25 @@
 
 /* ── HERO SUBTITLE ── */
 .hero-subtitle {
-  font-size: clamp(1rem, 2vw, 1.3rem);
+  font-size: clamp(0.75rem, 1.5vw, 1rem);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.7);
   margin-bottom: 2rem;
   min-height: 1.4em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90vw;
+}
+
+@media (max-width: 480px) {
+  .hero-subtitle {
+    white-space: normal;
+    text-align: center;
+    font-size: clamp(0.7rem, 3.5vw, 0.85rem);
+  }
 }
 
 /* ── HERO YEAR ── */

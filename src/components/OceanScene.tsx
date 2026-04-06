@@ -41,8 +41,9 @@ export default function OceanScene() {
     scene.fog = new THREE.FogExp2(0x001a3e, 0.05);
 
     /* ── CAMERA ── */
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 100);
-    camera.position.set(0, 2, 10);
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 2, 12);
+    camera.updateProjectionMatrix();
 
     /* ── LIGHTS ── */
     const ambient = new THREE.AmbientLight(0x88ccff, 0.6);
@@ -124,8 +125,8 @@ export default function OceanScene() {
       const mesh = template.clone();
       mesh.scale.setScalar(config.scale);
       mesh.position.set(config.x, config.y, config.z);
-      // face swimming direction
-      if (config.dir < 0) mesh.rotation.y = Math.PI;
+      // base orientation: face swimming direction (+x = right = PI/2 on y)
+      mesh.rotation.y = config.dir > 0 ? Math.PI / 2 : -Math.PI / 2;
       scene.add(mesh);
 
       fishList.push({
@@ -155,20 +156,20 @@ export default function OceanScene() {
 
       /* ── SURFACE FISH (2) ── */
       if (fish1) {
-        spawnFish(fish1, { x: -15, y: 3.5, z: 0,   scale: 0.3, dir: 1,  speed: 0.02,  bobOffset: 0,    bobSpeed: 2,   zone: 'surface' });
-        spawnFish(fish1, { x:  10, y: 3.2, z: -1,  scale: 0.28,dir: -1, speed: 0.018, bobOffset: 1.2,  bobSpeed: 1.8, zone: 'surface' });
+        spawnFish(fish1, { x: -15, y: 3.5, z: 0,  scale: 0.15, dir:  1, speed: 0.02,  bobOffset: 0,   bobSpeed: 2,   zone: 'surface' });
+        spawnFish(fish1, { x:  10, y: 3.2, z: -1, scale: 0.15, dir: -1, speed: 0.018, bobOffset: 1.2, bobSpeed: 1.8, zone: 'surface' });
       }
 
       /* ── MID OCEAN FISH ── */
       const midTemplates = [fish1, fish2].filter(Boolean) as THREE.Object3D[];
       if (midTemplates.length > 0) {
         const midConfigs = [
-          { x: -12, y:  1.5, z:  1,  scale: 0.35, dir:  1, speed: 0.022, bobOffset: 0.5,  bobSpeed: 1.5 },
-          { x:   8, y:  0.8, z: -1,  scale: 0.28, dir: -1, speed: 0.028, bobOffset: 1.0,  bobSpeed: 1.7 },
-          { x: -10, y:  0.2, z:  2,  scale: 0.4,  dir:  1, speed: 0.015, bobOffset: 2.1,  bobSpeed: 1.3 },
-          { x:   5, y:  1.8, z:  0,  scale: 0.32, dir: -1, speed: 0.025, bobOffset: 0.8,  bobSpeed: 2.0 },
-          { x: -14, y: -0.5, z: -2,  scale: 0.38, dir:  1, speed: 0.019, bobOffset: 1.6,  bobSpeed: 1.6 },
-          { x:  12, y:  0.6, z:  1,  scale: 0.3,  dir: -1, speed: 0.03,  bobOffset: 0.3,  bobSpeed: 1.9 },
+          { x: -12, y:  1.5, z:  1,  scale: 0.12, dir:  1, speed: 0.022, bobOffset: 0.5,  bobSpeed: 1.5 },
+          { x:   8, y:  0.8, z: -1,  scale: 0.12, dir: -1, speed: 0.028, bobOffset: 1.0,  bobSpeed: 1.7 },
+          { x: -10, y:  0.2, z:  2,  scale: 0.13, dir:  1, speed: 0.015, bobOffset: 2.1,  bobSpeed: 1.3 },
+          { x:   5, y:  1.8, z:  0,  scale: 0.12, dir: -1, speed: 0.025, bobOffset: 0.8,  bobSpeed: 2.0 },
+          { x: -14, y: -0.5, z: -2,  scale: 0.11, dir:  1, speed: 0.019, bobOffset: 1.6,  bobSpeed: 1.6 },
+          { x:  12, y:  0.6, z:  1,  scale: 0.12, dir: -1, speed: 0.03,  bobOffset: 0.3,  bobSpeed: 1.9 },
         ].slice(0, fishCountMid);
 
         midConfigs.forEach((cfg, i) => {
@@ -179,8 +180,8 @@ export default function OceanScene() {
 
       /* ── DEEP FISH (2) ── */
       if (!mobile && fish2) {
-        spawnFish(fish2, { x: -13, y: -3.2, z: -1, scale: 0.22, dir:  1, speed: 0.009, bobOffset: 0,   bobSpeed: 1.0, zone: 'deep' });
-        spawnFish(fish2, { x:  11, y: -3.8, z:  1, scale: 0.2,  dir: -1, speed: 0.008, bobOffset: 2.0, bobSpeed: 0.9, zone: 'deep' });
+        spawnFish(fish2, { x: -13, y: -3.2, z: -1, scale: 0.1, dir:  1, speed: 0.009, bobOffset: 0,   bobSpeed: 1.0, zone: 'deep' });
+        spawnFish(fish2, { x:  11, y: -3.8, z:  1, scale: 0.1, dir: -1, speed: 0.008, bobOffset: 2.0, bobSpeed: 0.9, zone: 'deep' });
         // tint deep fish blue
         fishList.slice(-2).forEach(fd => {
           fd.mesh.traverse(child => {
@@ -196,8 +197,9 @@ export default function OceanScene() {
 
       /* ── SHARK ── */
       if (!mobile && shark) {
-        shark.scale.setScalar(0.8);
-        shark.position.set(-18, -3.5, 0);
+        shark.scale.setScalar(0.3);
+        shark.rotation.y = Math.PI / 2;
+        shark.position.set(-15, -3.5, 0);
         scene.add(shark);
         sharkMesh = shark;
       }
@@ -207,9 +209,9 @@ export default function OceanScene() {
         const bonePositions = [{ x: -8 }, { x: -2 }, { x: 4 }, { x: 10 }];
         bonePositions.forEach((bp, i) => {
           const b = bone.clone();
-          b.scale.setScalar(0.15);
-          b.position.set(bp.x, -5.3 + (i % 2) * 0.15, (i % 3) - 1);
-          b.rotation.y = Math.random() * Math.PI;
+          b.scale.setScalar(0.08);
+          b.position.set(bp.x, -5.3, (i % 3) - 1);
+          b.rotation.y = (i * 0.9) % (Math.PI * 2);
           scene.add(b);
           boneMeshes.push(b);
         });
@@ -274,15 +276,16 @@ export default function OceanScene() {
       if (sharkMesh) {
         sharkMesh.position.x += 0.025 * sharkDir;
         sharkMesh.rotation.z = Math.sin(time) * 0.05;
-        if (sharkDir > 0) sharkMesh.rotation.y = 0;
-        else sharkMesh.rotation.y = Math.PI;
+        // rotation.y set on direction change, not every frame
 
         if (sharkMesh.position.x > 18) {
           sharkMesh.position.x = 18;
           sharkDir = -1;
+          sharkMesh.rotation.y = -Math.PI / 2;
         } else if (sharkMesh.position.x < -18) {
           sharkMesh.position.x = -18;
           sharkDir = 1;
+          sharkMesh.rotation.y = Math.PI / 2;
         }
 
         /* shark chase deep fish */
