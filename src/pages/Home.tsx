@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -19,49 +19,91 @@ const tickerItems = [
   "The group project had 4 members. One person knows who did the work.",
 ];
 
-/* ── LEGENDS DATA ── */
-const legends = [
+/* ── ALL LEGENDS (12 stories for story card) ── */
+const allLegends = [
   {
     nick: 'The Proxy Maestro',
     tag: 'Attendance Artiste',
-    story: `Six names. Six different voices. One phone.\nHe never rehearsed, never got caught, and somehow his "present, sir" sounded more convincing than the actual person's. Attendance registers across four departments still carry his ghost signatures.`,
     pull: '"Present, sir" — six voices, one phone.',
-    variant: 'lc-navy',
+    accentColor: '#c9a96e',
+    story: `Six names. Six different voices. One phone.\n\nHe never rehearsed, never got caught, and somehow his "present, sir" sounded more convincing than the actual person's. Attendance registers across four departments still carry his ghost signatures. A true method actor — just never for the right course.`,
   },
   {
     nick: 'The Last Bench Oracle',
     tag: 'The Silent Scorer',
-    story: `Terrible attendance. Never spotted near the library. Zero visible study habits. Yet every internal result had his name sitting quietly near the top, like he'd made a deal nobody else knew about.\nJuniors whispered his name like folklore.`,
-    pull: '',
-    variant: 'lc-blue',
+    pull: '"How did he top again?"',
+    accentColor: '#7aaed4',
+    story: `Terrible attendance. Never spotted near the library. Zero visible study habits. Yet every internal result had his name sitting quietly near the top, like he'd made a deal nobody else knew about.\n\nJuniors whispered his name like folklore. Seniors never figured out his system. He took the secret with him.`,
   },
   {
     nick: 'The 11:59 Whisperer',
     tag: 'Deadline Deity',
-    story: `While the group chat was in full meltdown — "bro it's 11:40 WHERE ARE YOU" — he was asleep.\nAt 11:45 he opened his laptop. At 11:58 he formatted the PDF. Submitted at 11:59:04. Closed laptop. Back to sleep.`,
-    pull: '',
-    variant: 'lc-shallow',
+    pull: '"Submitted at 11:59:04. Closed laptop. Back to sleep."',
+    accentColor: '#ff6b35',
+    story: `While the group chat was in full meltdown — "bro it's 11:40 WHERE ARE YOU" — he was asleep.\n\nAt 11:45 he opened his laptop. At 11:58 he formatted the PDF. Submitted at 11:59:04. Closed laptop. Back to sleep.\n\nNever explained his process. We stopped asking.`,
   },
   {
     nick: 'The Presentation Ghost',
     tag: 'Lab Report Ghost',
-    story: `Missing for three weeks straight. Not on the group chat. Not in the lab. Not anywhere.\nPresentation day: he walks in. Full formals. Tie straight. Speaks for seven minutes like he built the entire project himself.\nProfessor loved him.`,
-    pull: '',
-    variant: 'lc-navy',
+    pull: '"Full formals. Tie straight. Like he built it himself."',
+    accentColor: '#9bc4a8',
+    story: `Missing for three weeks straight. Not on the group chat. Not in the lab. Not anywhere.\n\nPresentation day: he walks in. Full formals. Tie straight. Speaks for seven minutes like he built the entire project himself.\n\nProfessor loved him. We never spoke of it.`,
   },
   {
     nick: 'The Canteen Philosopher',
     tag: 'Canteen Philosopher',
-    story: `Zero attendance. Infinite wisdom.\nEvery crisis — academic, existential, romantic — was solved over one chai and a samosa at his corner table. He had a new startup idea every week. Most were terrible. Two were genuinely brilliant.`,
-    pull: '',
-    variant: 'lc-shallow',
+    pull: '"Zero attendance. Infinite wisdom."',
+    accentColor: '#ffd700',
+    story: `Zero attendance. Infinite wisdom.\n\nEvery crisis — academic, existential, romantic — was solved over one chai and a samosa at his corner table. He had a new startup idea every week. Most were terrible. Two were genuinely brilliant.\n\nHe never attended the entrepreneurship elective. He didn't need to.`,
   },
   {
     nick: 'The Night Before Explainer',
     tag: 'The Explainer',
-    story: `Didn't top a single exam. But every topper called him the night before theirs.\nFifteen minutes before any internal, his phone was unreachable — not because he was studying, but because seven people were already on hold.\nA teacher who never got the title.`,
-    pull: '',
-    variant: 'lc-rose',
+    pull: '"A teacher who never got the title."',
+    accentColor: '#c084fc',
+    story: `Didn't top a single exam. But every topper called him the night before theirs.\n\nFifteen minutes before any internal, his phone was unreachable — not because he was studying, but because seven people were already on hold.\n\nHe made concepts make sense in ways textbooks never could. A teacher who never got the title.`,
+  },
+  {
+    nick: 'The Xerox King',
+    tag: 'The Duplicator',
+    pull: '"The original was never found."',
+    accentColor: '#fb923c',
+    story: `Nobody ever saw him take notes. Nobody ever saw him study. But ten minutes before every submission, a perfectly formatted printout appeared in his hand.\n\nThe xerox shop owner knew his order by heart. The original? Nobody ever found it.`,
+  },
+  {
+    nick: 'The WiFi Wizard',
+    tag: 'Network Necromancer',
+    pull: '"Connected when no one else could."',
+    accentColor: '#2ed573',
+    story: `College WiFi was down. Sixty engineers became philosophers.\n\nHe connected. Nobody knows how. He never explained. He just quietly shared his hotspot with the people he liked and watched the rest debate existence.\n\nPower is knowing something and saying nothing.`,
+  },
+  {
+    nick: 'The Backbencher\'s Frontbencher',
+    tag: 'Strategic Seater',
+    pull: '"Front row energy. Last bench spirit."',
+    accentColor: '#1e90ff',
+    story: `He sat in the front row. But only because the last bench had no power socket.\n\nLaptop always open. Never taking notes. Nobody questioned it because he looked diligent.\n\nHe was six seasons into a show. The professor thought he was the most engaged student in the room.`,
+  },
+  {
+    nick: 'The Group Chat Admin',
+    tag: 'The Curator',
+    pull: '"He never replied. But he never left."',
+    accentColor: '#ff4757',
+    story: `Created the group. Set the rules. Pinned the syllabus. Sent the reminders.\n\nNever replied to any message. Never confirmed if he read anything. But whenever chaos broke out — he appeared, pinned one message, and disappeared.\n\nThe group functioned because of him. He knew it. That was enough.`,
+  },
+  {
+    nick: 'The Attendance Negotiator',
+    tag: 'The Diplomat',
+    pull: '"Sir, technically speaking..."',
+    accentColor: '#a78bfa',
+    story: `He had 28% attendance. The minimum was 75%.\n\nHe walked into the HOD's office with a spreadsheet, a medical certificate, three character references, and an argument so compelling that the HOD — who had never budged once in eleven years — said "fine."\n\nWe don't know what he said. We don't ask. We just watch in awe.`,
+  },
+  {
+    nick: 'Softy Santu',
+    tag: 'The Heart of the Batch',
+    pull: '"He remembered everyone\'s birthday. Always."',
+    accentColor: '#f9a8d4',
+    story: `He remembered everyone's birthday. Not because of reminders — he just remembered.\n\nWhen someone cried in the corridor, he appeared with water and silence. When someone failed, he texted at midnight — not with advice, just "I'm here."\n\nIn a batch full of characters, he was the quiet anchor. The one who held it together without anyone asking him to.`,
   },
 ];
 
@@ -74,34 +116,35 @@ const chapters = [
   { num: '05', icon: '💬', title: 'Echoes',       sub: 'Messages & Tributes', desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                to: '/echoes'       },
 ];
 
-/* ── FISH CONFIG ── */
+/* ── FISH CONFIG (5 fish) ── */
 const fishConfig = [
-  { color: '#ff6b35', size: 32, top: '35%',  duration: 14 },
-  { color: '#ffd700', size: 26, top: '55%',  duration: 18 },
-  { color: '#ff4757', size: 30, top: '65%',  duration: 12 },
-  { color: '#2ed573', size: 22, top: '75%',  duration: 20 },
+  { color: '#ff6b35', top: '35%', duration: 18, delay: 0,  dir: 1  as 1 | -1 },
+  { color: '#ffd700', top: '48%', duration: 14, delay: 4,  dir: -1 as 1 | -1 },
+  { color: '#2ed573', top: '58%', duration: 22, delay: 8,  dir: 1  as 1 | -1 },
+  { color: '#ff4757', top: '42%', duration: 16, delay: 2,  dir: -1 as 1 | -1 },
+  { color: '#1e90ff', top: '65%', duration: 20, delay: 12, dir: 1  as 1 | -1 },
 ];
 
-/* ── BUBBLE CONFIG (20 bubbles) ── */
+/* ── BUBBLES ── */
 const bubbles = Array.from({ length: 20 }, (_, i) => ({
   id: i,
-  size: 4 + Math.random() * 8,
-  left: Math.random() * 100,
-  delay: Math.random() * 10,
-  duration: 6 + Math.random() * 9,
+  size: 4 + (i * 0.47) % 8,
+  left: (i * 5.17) % 100,
+  delay: (i * 0.53) % 10,
+  duration: 6 + (i * 0.47) % 9,
 }));
 
-/* ── SEAWEED POSITIONS ── */
+/* ── SEAWEEDS ── */
 const seaweeds = [
-  { left: '3%',  height: 80, delay: 0 },
-  { left: '7%',  height: 110, delay: 0.4 },
-  { left: '11%', height: 70, delay: 0.8 },
-  { left: '86%', height: 100, delay: 0.2 },
-  { left: '91%', height: 85, delay: 0.6 },
-  { left: '96%', height: 75, delay: 1.0 },
+  { left: '3%',  height: 80  },
+  { left: '7%',  height: 110 },
+  { left: '11%', height: 70  },
+  { left: '86%', height: 100 },
+  { left: '91%', height: 85  },
+  { left: '96%', height: 75  },
 ];
 
-/* ── ROCK POSITIONS ── */
+/* ── ROCKS ── */
 const rocks = [
   { left: '8%',  w: 55, h: 28 },
   { left: '18%', w: 38, h: 20 },
@@ -113,14 +156,17 @@ const rocks = [
   { left: '93%', w: 42, h: 20 },
 ];
 
-/* ── CAUSTIC PATCHES ── */
-const causticPatches = [
+/* ── CAUSTICS ── */
+const causticData = [
   { w: 160, h: 80,  left: '10%', top: '5%'  },
   { w: 120, h: 60,  left: '35%', top: '15%' },
   { w: 200, h: 100, left: '60%', top: '8%'  },
   { w: 140, h: 70,  left: '80%', top: '18%' },
   { w: 100, h: 50,  left: '50%', top: '25%' },
 ];
+
+/* ── SUN RAYS (8) ── */
+const sunRays = Array.from({ length: 8 }, (_, i) => i * 45);
 
 export default function Home() {
   const titleRef     = useRef<HTMLHeadingElement>(null);
@@ -130,25 +176,46 @@ export default function Home() {
   const scrollRef    = useRef<HTMLDivElement>(null);
   const logoRef      = useRef<HTMLDivElement>(null);
   const cardsRef     = useRef<HTMLDivElement>(null);
-  const legendsRef   = useRef<HTMLDivElement>(null);
   const heroRef      = useRef<HTMLElement>(null);
   const heroInnerRef = useRef<HTMLDivElement>(null);
   const wrapperRef   = useRef<HTMLDivElement>(null);
+  const storyCardRef = useRef<HTMLDivElement>(null);
+
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const [prevIdx, setPrevIdx]       = useState<number | null>(null);
+
+  const nextStory = useCallback(() => {
+    const cardEl = storyCardRef.current;
+    if (!cardEl) return;
+    gsap.timeline()
+      .to(cardEl, { opacity: 0, y: -20, duration: 0.3, ease: 'power2.in' })
+      .call(() => {
+        setPrevIdx(currentIdx);
+        setCurrentIdx(prev => {
+          let next = Math.floor(Math.random() * allLegends.length);
+          while (next === prev) next = Math.floor(Math.random() * allLegends.length);
+          return next;
+        });
+      })
+      .to(cardEl, { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' });
+  }, [currentIdx]);
+
+  // Suppress unused prevIdx warning
+  void prevIdx;
 
   useEffect(() => {
-    /* ── HERO TITLE — SplitText bounce ── */
+    /* ── HERO TITLE ── */
     const split = new SplitText(titleRef.current!, { type: 'chars' });
     gsap.set(split.chars, { opacity: 0, y: 80, rotation: 15 });
     const tl = gsap.timeline({ delay: 0.3 });
     tl.set('.orb', { opacity: 0 });
     tl.to('.orb', { opacity: 1, duration: 2, stagger: 0.3 }, 0);
-    tl.to(badgeRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.6);
+    tl.to(badgeRef.current,  { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.6);
     tl.to(split.chars, { opacity: 1, y: 0, rotation: 0, duration: 0.8, stagger: 0.04, ease: 'back.out(1.7)' }, 0.9);
-    tl.to(logoRef.current,  { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, 1.4);
-    tl.to(yearRef.current,  { opacity: 0.65, y: 0, duration: 0.6, ease: 'power3.out' }, 2.1);
+    tl.to(logoRef.current,   { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, 1.4);
+    tl.to(yearRef.current,   { opacity: 0.65, y: 0, duration: 0.6, ease: 'power3.out' }, 2.1);
     tl.to(scrollRef.current, { opacity: 1, duration: 0.6 }, 2.5);
 
-    /* ── SUBTITLE typewriter ── */
     gsap.set(subtitleRef.current, { opacity: 1, text: '' });
     gsap.to(subtitleRef.current, {
       delay: 1.2, duration: 2,
@@ -156,7 +223,21 @@ export default function Home() {
       ease: 'none',
     });
 
-    /* ── PARALLAX scroll handler ── */
+    /* ── SUN BOB ── */
+    gsap.to('.sun', { y: -15, duration: 4, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
+    /* ── SUN RAYS SPIN ── */
+    gsap.to('.sun-ray', { rotation: '+=360', duration: 20, repeat: -1, ease: 'none', transformOrigin: 'center 60px' });
+
+    /* ── CLOUDS DRIFT ── */
+    gsap.fromTo('.cloud-1', { x: '110vw' }, { x: -200, duration: 25, repeat: -1, ease: 'none' });
+    gsap.fromTo('.cloud-2', { x: '110vw' }, { x: -200, duration: 35, repeat: -1, ease: 'none', delay: -12 });
+    gsap.fromTo('.cloud-3', { x: '110vw' }, { x: -200, duration: 20, repeat: -1, ease: 'none', delay: -6  });
+
+    /* ── WATER SURFACE SHIMMER ── */
+    gsap.to('.water-surface', { x: '-50%', duration: 6, repeat: -1, ease: 'none' });
+
+    /* ── PARALLAX ── */
     const parallaxHandler = () => {
       const y = window.scrollY;
       gsap.to(titleRef.current,    { y: y * 0.28, duration: 0 });
@@ -180,238 +261,232 @@ export default function Home() {
         .to('.hero-side-right', { x: 0, opacity: 1, ease: 'none' }, 0),
     });
 
-    /* ── DEPTH OVERLAY (scroll → darken) ── */
+    /* ── DEPTH OVERLAY ── */
     gsap.to('.depth-overlay', {
-      opacity: 0.6,
-      ease: 'none',
+      opacity: 0.6, ease: 'none',
       scrollTrigger: {
         trigger: wrapperRef.current,
-        start: 'top top',
-        end: 'bottom bottom',
+        start: 'top top', end: 'bottom bottom',
         scrub: true,
       },
     });
 
-    /* ── CAUSTICS (shimmer in shallow section) ── */
-    const causticPatches = document.querySelectorAll('.caustic-patch');
-    causticPatches.forEach((el, i) => {
-      gsap.to(el, {
-        opacity: 0.3,
-        x: `+=${20 + i * 5}`,
-        duration: 2 + i * 0.4,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: i * 0.3,
-      });
+    /* ── CAUSTICS ── */
+    document.querySelectorAll('.caustic-patch').forEach((el, i) => {
+      gsap.to(el, { opacity: 0.3, x: `+=${20 + i * 5}`, duration: 2 + i * 0.4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.3 });
     });
-    gsap.fromTo('.caustics', { opacity: 0 }, {
-      opacity: 1,
-      scrollTrigger: {
-        trigger: '.caustics',
-        start: 'top 80%',
-        end: 'bottom 20%',
-        scrub: true,
-      },
-    });
+    gsap.fromTo('.caustics', { opacity: 0 }, { opacity: 1, scrollTrigger: { trigger: '.caustics', start: 'top 80%', end: 'bottom 20%', scrub: true } });
 
     /* ── BUBBLES ── */
-    document.querySelectorAll('.bubble').forEach((el) => {
-      const b = el as HTMLElement;
-      const delay  = parseFloat(b.dataset.delay  ?? '0');
-      const dur    = parseFloat(b.dataset.dur    ?? '8');
+    document.querySelectorAll('.bubble').forEach(el => {
+      const b   = el as HTMLElement;
+      const dur = parseFloat(b.dataset.dur   ?? '8');
+      const del = parseFloat(b.dataset.delay ?? '0');
       gsap.fromTo(b,
-        { y: '100vh', opacity: 0 },
-        {
-          y: '-10vh',
-          opacity: 0,
-          duration: dur,
-          delay,
-          repeat: -1,
-          ease: 'none',
-          keyframes: [
-            { opacity: 0,   y: '100vh' },
-            { opacity: 0.5, y: '50vh'  },
-            { opacity: 0,   y: '-10vh' },
-          ],
-        }
+        { y: 0, opacity: 0 },
+        { y: '-100vh', duration: dur, delay: del, repeat: -1, ease: 'none',
+          keyframes: [{ opacity: 0, y: 0 }, { opacity: 0.5, y: '-50vh' }, { opacity: 0, y: '-100vh' }] }
       );
     });
 
     /* ── SEAWEED ── */
     document.querySelectorAll('.seaweed').forEach((el, i) => {
-      gsap.to(el, {
-        rotation: 10,
-        duration: 2.5 + i * 0.2,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        transformOrigin: 'bottom center',
-        delay: i * 0.3,
-      });
-      gsap.from(el, { rotation: -10 });
+      gsap.fromTo(el, { rotation: -10 }, { rotation: 10, duration: 2.5 + i * 0.2, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: 'bottom center', delay: i * 0.3 });
     });
 
-    /* ── FISH — MotionPath swim ── */
-    document.querySelectorAll('.fish').forEach((el, i) => {
-      const dir = i % 2 === 0 ? 1 : -1;
-      const startX = dir > 0 ? -80 : window.innerWidth + 80;
-      const endX   = dir > 0 ? window.innerWidth + 80 : -80;
-      const dur    = fishConfig[i]?.duration ?? 15;
-      gsap.set(el, { x: startX, scaleX: dir });
-      gsap.to(el, {
-        motionPath: {
-          path: [
-            { x: startX },
-            { x: (startX + endX) / 2, y: -30 + (i % 3) * 20 },
-            { x: endX },
-          ],
-          type: 'cubic',
-        },
-        duration: dur,
-        repeat: -1,
-        ease: 'none',
-        delay: i * 3,
-        onRepeat() {
-          gsap.set(el, { x: startX });
-        },
+    /* ── FISH swim (MotionPath) + wiggle ── */
+    const isMobile = window.matchMedia('(hover: none)').matches;
+    if (!isMobile) {
+      document.querySelectorAll('.fish-wrap').forEach((el, i) => {
+        const cfg = fishConfig[i];
+        const startX = cfg.dir > 0 ? -120 : window.innerWidth + 120;
+        const endX   = cfg.dir > 0 ? window.innerWidth + 120 : -120;
+        const midY   = -40 + (i % 3) * 30;
+        gsap.set(el, { x: startX, scaleX: cfg.dir });
+        gsap.to(el, {
+          duration: cfg.duration,
+          delay: cfg.delay,
+          repeat: -1,
+          ease: 'none',
+          motionPath: {
+            path: [{ x: startX, y: 0 }, { x: (startX + endX) / 2, y: midY }, { x: endX, y: 0 }],
+            curviness: 1.5,
+          },
+          onRepeat() { gsap.set(el, { x: startX, y: 0 }); },
+        });
+        // body wiggle
+        const body = el.querySelector('.fish-body');
+        const tail = el.querySelector('.fish-tail');
+        if (body) gsap.to(body, { skewX: 8, duration: 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+        if (tail)  gsap.to(tail, { rotation: 20, duration: 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: 'left center' });
       });
-    });
+
+      /* ── EYE CONTACT ── */
+      const mouseMoveHandler = (e: MouseEvent) => {
+        document.querySelectorAll('.fish-wrap').forEach(fw => {
+          const rect   = fw.getBoundingClientRect();
+          const fishX  = rect.left + rect.width  / 2;
+          const fishY  = rect.top  + rect.height / 2;
+          const angle  = Math.atan2(e.clientY - fishY, e.clientX - fishX);
+          const pupil  = fw.querySelector('.fish-pupil') as HTMLElement | null;
+          if (pupil) {
+            pupil.style.transform = `translate(${Math.cos(angle) * 2}px, ${Math.sin(angle) * 2}px)`;
+          }
+        });
+      };
+      window.addEventListener('mousemove', mouseMoveHandler);
+
+      /* ── CLICK SCARE ── */
+      const clickHandlers: Array<() => void> = [];
+      document.querySelectorAll('.fish-wrap').forEach(fw => {
+        const handler = () => {
+          const scareDir = (fw as HTMLElement).style.transform?.includes('scaleX(-1)') ? 200 : -200;
+          gsap.to(fw, { x: `+=${scareDir}`, duration: 0.25, ease: 'power4.out',
+            onComplete: () => gsap.to(fw, { x: `-=${scareDir}`, duration: 1, ease: 'power2.out' }) });
+        };
+        fw.addEventListener('click', handler);
+        clickHandlers.push(handler as () => void);
+      });
+
+      /* ── IDLE STARE (random fish pauses + scales up) ── */
+      let idleTimeout: ReturnType<typeof setTimeout>;
+      const scheduleIdle = () => {
+        const delay = 8000 + Math.random() * 7000;
+        idleTimeout = setTimeout(() => {
+          const fishEls = document.querySelectorAll('.fish-wrap');
+          if (!fishEls.length) return;
+          const target = fishEls[Math.floor(Math.random() * fishEls.length)];
+          gsap.to(target, { scale: 1.35, duration: 0.4, ease: 'back.out(1.5)',
+            onComplete: () => {
+              setTimeout(() => gsap.to(target, { scale: 1, duration: 0.4, ease: 'power2.out', onComplete: scheduleIdle }), 2000);
+            }
+          });
+        }, delay);
+      };
+      scheduleIdle();
+
+      return () => {
+        window.removeEventListener('scroll', parallaxHandler);
+        window.removeEventListener('mousemove', mouseMoveHandler);
+        document.querySelectorAll('.fish-wrap').forEach((fw, i) => {
+          if (clickHandlers[i]) fw.removeEventListener('click', clickHandlers[i]);
+        });
+        clearTimeout(idleTimeout);
+        split.revert();
+        ScrollTrigger.getAll().forEach(t => t.kill());
+        gsap.killTweensOf('*');
+      };
+    }
 
     /* ── MANIFESTO ── */
     const manifestoWords = new SplitText('.manifesto-text', { type: 'words' });
     gsap.set(manifestoWords.words, { opacity: 0, y: 40 });
-    gsap.to(manifestoWords.words, {
-      opacity: 1, y: 0, duration: 0.65, stagger: 0.03, ease: 'power3.out',
-      scrollTrigger: { trigger: '.manifesto-text', start: 'top 70%' },
-    });
-    gsap.to('.m-divider', { scaleX: 1, duration: 0.8, scrollTrigger: { trigger: '.m-divider', start: 'top 85%' } });
-    gsap.fromTo('.m-sub', { opacity: 0, y: 20 }, { opacity: 0.8, y: 0, duration: 0.9, scrollTrigger: { trigger: '.m-sub', start: 'top 85%' } });
-
-    /* ── CHAPTER CARDS ── */
-    gsap.fromTo('.chapter-card',
-      { opacity: 0, y: 60 },
-      { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out',
-        scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' } });
-    gsap.fromTo('.section-ttl',
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
-
-    /* ── LEGENDS HEADER ── */
-    gsap.fromTo('.lgd-tag',     { opacity: 0, y: 16 }, { opacity: 1,   y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-tag',     start: 'top 85%' } });
-    gsap.fromTo('.lgd-heading', { opacity: 0, y: 24 }, { opacity: 1,   y: 0, duration: 0.7, scrollTrigger: { trigger: '.lgd-heading', start: 'top 85%' } });
-    gsap.fromTo('.lgd-sub',     { opacity: 0, y: 16 }, { opacity: 0.6, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-sub',     start: 'top 85%' } });
-
-    /* ── MAGAZINE ROW ANIMATIONS ── */
-    // Row 1 — scale in
-    gsap.fromTo('.mag-row-1 .legend-card',
-      { opacity: 0, scale: 0.95 },
-      { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out',
-        scrollTrigger: { trigger: '.mag-row-1', start: 'top 82%' } });
-    // Row 2 — slide from sides
-    gsap.fromTo('.mag-row-2 .mag-col-60 .legend-card',
-      { opacity: 0, x: -60 },
-      { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: '.mag-row-2', start: 'top 82%' } });
-    gsap.fromTo('.mag-row-2 .mag-col-40 .legend-card',
-      { opacity: 0, x: 60 },
-      { opacity: 1, x: 0, duration: 0.7, ease: 'power3.out',
-        scrollTrigger: { trigger: '.mag-row-2', start: 'top 82%' } });
-    // Row 3 — cascade stagger
-    gsap.fromTo('.mag-row-3 .legend-card',
-      { opacity: 0, y: 40 },
-      { opacity: 1, y: 0, duration: 0.6, stagger: 0.15, ease: 'power3.out',
-        scrollTrigger: { trigger: '.mag-row-3', start: 'top 82%' } });
+    gsap.to(manifestoWords.words, { opacity: 1, y: 0, duration: 0.65, stagger: 0.03, ease: 'power3.out', scrollTrigger: { trigger: '.manifesto-text', start: 'top 70%' } });
+    gsap.to('.m-divider',  { scaleX: 1, duration: 0.8, scrollTrigger: { trigger: '.m-divider', start: 'top 85%' } });
+    gsap.fromTo('.m-sub',  { opacity: 0, y: 20 }, { opacity: 0.8, y: 0, duration: 0.9, scrollTrigger: { trigger: '.m-sub', start: 'top 85%' } });
+    gsap.fromTo('.chapter-card', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' } });
+    gsap.fromTo('.section-ttl', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
 
     return () => {
       window.removeEventListener('scroll', parallaxHandler);
       split.revert();
       manifestoWords.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
+      gsap.killTweensOf('*');
     };
   }, []);
+
+  /* Scroll-through manifesto/chapters on desktop path too */
+  useEffect(() => {
+    const manifestoWords = new SplitText('.manifesto-text', { type: 'words' });
+    gsap.set(manifestoWords.words, { opacity: 0, y: 40 });
+    gsap.to(manifestoWords.words, { opacity: 1, y: 0, duration: 0.65, stagger: 0.03, ease: 'power3.out', scrollTrigger: { trigger: '.manifesto-text', start: 'top 70%' } });
+    gsap.to('.m-divider',  { scaleX: 1, duration: 0.8, scrollTrigger: { trigger: '.m-divider', start: 'top 85%' } });
+    gsap.fromTo('.m-sub',  { opacity: 0, y: 20 }, { opacity: 0.8, y: 0, duration: 0.9, scrollTrigger: { trigger: '.m-sub', start: 'top 85%' } });
+    gsap.fromTo('.chapter-card', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out', scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' } });
+    gsap.fromTo('.section-ttl', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
+
+    // Legends header
+    gsap.fromTo('.lgd-tag',     { opacity: 0, y: 16 }, { opacity: 1,   y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-tag',     start: 'top 85%' } });
+    gsap.fromTo('.lgd-heading', { opacity: 0, y: 24 }, { opacity: 1,   y: 0, duration: 0.7, scrollTrigger: { trigger: '.lgd-heading', start: 'top 85%' } });
+    gsap.fromTo('.lgd-sub',     { opacity: 0, y: 16 }, { opacity: 0.6, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-sub',     start: 'top 85%' } });
+    gsap.fromTo('.story-card',  { opacity: 0, y: 30 }, { opacity: 1,   y: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.story-card', start: 'top 85%' } });
+
+    return () => { manifestoWords.revert(); };
+  }, []);
+
+  const legend = allLegends[currentIdx];
 
   return (
     <div className="home-wrapper" ref={wrapperRef}>
 
-      {/* ── DEPTH OVERLAY (fixed, darkens on scroll) ── */}
+      {/* ── DEPTH OVERLAY ── */}
       <div className="depth-overlay" />
 
-      {/* ── OCEAN LAYERS ── */}
-      <div className="sun-rays" />
+      {/* ── SKY GLOW ── */}
+      <div className="sky-glow" />
 
+      {/* ── SUN ── */}
+      <div className="sun" />
+      {sunRays.map(deg => (
+        <div key={deg} className="sun-ray" style={{ transform: `translateX(-50%) rotate(${deg}deg)` }} />
+      ))}
+
+      {/* ── CLOUDS ── */}
+      <div className="cloud cloud-1" />
+      <div className="cloud cloud-2" />
+      <div className="cloud cloud-3" />
+
+      {/* ── WATER SURFACE ── */}
+      <div className="water-surface" />
+
+      {/* ── CAUSTICS ── */}
       <div className="caustics">
-        {causticPatches.map((p, i) => (
-          <div
-            key={i}
-            className="caustic-patch"
-            style={{ width: p.w, height: p.h, left: p.left, top: p.top, opacity: 0 }}
-          />
+        {causticData.map((p, i) => (
+          <div key={i} className="caustic-patch" style={{ width: p.w, height: p.h, left: p.left, top: p.top, opacity: 0 }} />
         ))}
       </div>
 
-      <div className="ocean-surface" />
-
-      {/* 20 bubbles */}
+      {/* ── BUBBLES ── */}
       {bubbles.map(b => (
-        <div
-          key={b.id}
-          className="bubble"
-          data-delay={b.delay}
-          data-dur={b.duration}
-          style={{
-            width: b.size,
-            height: b.size,
-            left: `${b.left}%`,
-            bottom: 0,
-          }}
-        />
+        <div key={b.id} className="bubble" data-delay={b.delay} data-dur={b.duration}
+          style={{ width: b.size, height: b.size, left: `${b.left}%`, bottom: 0, position: 'absolute' }} />
       ))}
 
-      {/* Fish */}
+      {/* ── FISH (5 CSS fish, hidden on mobile) ── */}
       {fishConfig.map((f, i) => (
-        <div
-          key={i}
-          className="fish"
-          style={{ top: f.top, width: f.size, height: Math.round(f.size * 0.56) }}
-        >
-          <div className="fish-body" style={{ background: f.color, width: Math.round(f.size * 0.75), height: Math.round(f.size * 0.44) }} />
-          <div className="fish-tail" style={{ borderRightColor: f.color }} />
-          <div className="fish-eye" />
+        <div key={i} className={`fish-wrap fish-${i + 1}`} style={{ position: 'absolute', top: f.top, cursor: 'pointer', zIndex: 3 }}>
+          <div className="fish-body" style={{ background: f.color }}>
+            <div className="fish-eye">
+              <div className="fish-pupil" />
+            </div>
+          </div>
+          <div className="fish-tail" style={{ borderLeftColor: f.color }} />
         </div>
       ))}
 
-      {/* Seaweed */}
+      {/* ── SEAWEED ── */}
       <div className="seaweed-container">
         {seaweeds.map((s, i) => (
-          <svg
-            key={i}
-            className="seaweed"
-            style={{ left: s.left, bottom: 0 }}
-            width="18" height={s.height}
-            viewBox={`0 0 18 ${s.height}`}
-            fill="none"
-          >
+          <svg key={i} className="seaweed" style={{ left: s.left, bottom: 0, position: 'absolute' }}
+            width="18" height={s.height} viewBox={`0 0 18 ${s.height}`} fill="none">
             <path
               d={`M9,${s.height} C4,${s.height * 0.75} 14,${s.height * 0.55} 9,${s.height * 0.4} C4,${s.height * 0.25} 14,${s.height * 0.1} 9,0`}
-              stroke="#2d6a2d"
-              strokeWidth="4"
-              strokeLinecap="round"
-              fill="none"
+              stroke="#2d6a2d" strokeWidth="4" strokeLinecap="round" fill="none"
             />
           </svg>
         ))}
       </div>
 
-      {/* Ocean floor */}
+      {/* ── OCEAN FLOOR ── */}
       <div className="ocean-floor">
         {rocks.map((r, i) => (
           <div key={i} className="rock" style={{ left: r.left, width: r.w, height: r.h }} />
         ))}
       </div>
 
-      {/* ParticleCanvas — reduced opacity for ocean */}
-      <div style={{ opacity: 0.3, position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+      {/* ── PARTICLE CANVAS ── */}
+      <div style={{ opacity: 0.2, position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
         <ParticleCanvas />
       </div>
 
@@ -443,7 +518,6 @@ export default function Home() {
           </div>
 
           <h1 className="hero-title" ref={titleRef}>End of Beginning</h1>
-
           <div className="hero-gold-divider" />
 
           <p className="hero-subtitle" ref={subtitleRef}></p>
@@ -500,14 +574,11 @@ export default function Home() {
 
       {/* ══════════ LEGENDS ══════════ */}
       <section className="legends-section">
-
         {/* TICKER */}
         <div className="ticker-wrap">
           <div className="ticker-track">
             {[...tickerItems, ...tickerItems].map((item, i) => (
-              <span key={i} className="ticker-item">
-                {item} <span className="ticker-dot">·</span>
-              </span>
+              <span key={i} className="ticker-item">{item} <span className="ticker-dot">·</span></span>
             ))}
           </div>
         </div>
@@ -516,73 +587,35 @@ export default function Home() {
         <div className="lgd-header">
           <p className="lgd-tag">— Every Batch Has Them —</p>
           <h2 className="lgd-heading">Legends Never Graduate</h2>
-          <p className="lgd-sub">No names. You already know exactly who we mean.</p>
+          <p className="lgd-sub">Click to meet the next one</p>
         </div>
 
-        {/* MAGAZINE LAYOUT */}
-        <div className="magazine-layout" ref={legendsRef}>
-
-          {/* ROW 1 — full width, horizontal */}
-          <div className="mag-row mag-row-1">
-            <div className={`legend-card ${legends[0].variant}`} style={{ width: '100%' }}>
-              <div className="lc-left">
-                <p className="lgd-nick">{legends[0].nick}</p>
-                <span className="lgd-pill">{legends[0].tag}</span>
-              </div>
-              <div className="lc-center">
-                <p className="pull-quote">{legends[0].pull}</p>
-              </div>
-              <div className="lc-right">
-                <p className="lgd-story">
-                  {legends[0].story.split('\n').map((line, j) => (
-                    <span key={j}>{line}<br /></span>
-                  ))}
-                </p>
-              </div>
+        {/* SINGLE STORY CARD */}
+        <div className="story-area">
+          <div className="story-card" ref={storyCardRef} style={{ borderLeftColor: legend.accentColor }}>
+            <div className="story-card-top">
+              <p className="story-nick">{legend.nick}</p>
+              <span className="story-pill" style={{ background: legend.accentColor + '22', color: legend.accentColor, borderColor: legend.accentColor + '55' }}>
+                {legend.tag}
+              </span>
+            </div>
+            <p className="story-pull" style={{ color: legend.accentColor }}>{legend.pull}</p>
+            <p className="story-text">
+              {legend.story.split('\n\n').map((para, j) => (
+                <span key={j}>{para}<br /><br /></span>
+              ))}
+            </p>
+            <div className="story-dots">
+              {allLegends.map((_, i) => (
+                <span key={i} className={`story-dot${i === currentIdx ? ' active' : ''}`}
+                  style={i === currentIdx ? { background: legend.accentColor } : {}} />
+              ))}
             </div>
           </div>
 
-          {/* ROW 2 — 60/40 */}
-          <div className="mag-row mag-row-2">
-            <div className="mag-col-60">
-              <div className={`legend-card ${legends[1].variant}`} style={{ height: '100%' }}>
-                <p className="lgd-nick">{legends[1].nick}</p>
-                <p className="lgd-story">
-                  {legends[1].story.split('\n').map((line, j) => (
-                    <span key={j}>{line}<br /></span>
-                  ))}
-                </p>
-                <span className="lgd-pill">{legends[1].tag}</span>
-              </div>
-            </div>
-            <div className="mag-col-40">
-              <div className={`legend-card ${legends[2].variant}`}>
-                <p className="lgd-nick">{legends[2].nick}</p>
-                <p className="lgd-story">
-                  {legends[2].story.split('\n').map((line, j) => (
-                    <span key={j}>{line}<br /></span>
-                  ))}
-                </p>
-                <span className="lgd-pill">{legends[2].tag}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* ROW 3 — three cascade, middle offset down */}
-          <div className="mag-row mag-row-cascade mag-row-3">
-            {[legends[3], legends[4], legends[5]].map((l, i) => (
-              <div key={i} className={`legend-card ${l.variant}`} style={{ flex: 1 }}>
-                <p className="lgd-nick">{l.nick}</p>
-                <p className="lgd-story">
-                  {l.story.split('\n').map((line, j) => (
-                    <span key={j}>{line}<br /></span>
-                  ))}
-                </p>
-                <span className="lgd-pill">{l.tag}</span>
-              </div>
-            ))}
-          </div>
-
+          <button className="story-next-btn" onClick={nextStory}>
+            Another Legend <span>→</span>
+          </button>
         </div>
       </section>
 
