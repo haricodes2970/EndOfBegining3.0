@@ -525,7 +525,7 @@ export default function Home() {
           {/* ROW 1 — full width, horizontal */}
           <div className="mag-row mag-row-1">
             <div className={`legend-card ${legends[0].variant}`} style={{ width: '100%' }}>
-              <div className="mag-row-1 lc-left">
+              <div className="lc-left">
                 <p className="lgd-nick">{legends[0].nick}</p>
                 <span className="lgd-pill">{legends[0].tag}</span>
               </div>

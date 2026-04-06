@@ -627,7 +627,7 @@
   border: 1px solid rgba(255,180,180,0.3);
 }
 
-/* Row 1 — full width */
+/* Row 1 — full width horizontal card */
 .mag-row-1 { width: 100%; }
 .mag-row-1 .legend-card {
   flex-direction: row;
@@ -635,19 +635,19 @@
   min-height: 280px;
   gap: 2rem;
 }
-.mag-row-1 .lc-left {
+.lc-left {
   flex: 0 0 220px;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
 }
-.mag-row-1 .lc-center {
+.lc-center {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.mag-row-1 .lc-right {
+.lc-right {
   flex: 0 0 260px;
 }
 
