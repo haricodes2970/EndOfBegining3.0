@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import logoHorizontal from '../assets/logo-horizontal.jpeg';
 import logoStacked from '../assets/logo-stacked.jpeg';
@@ -14,62 +14,47 @@ const links = [
   { to: '/echoes',       label: 'Echoes'      },
 ];
 
-const accentMap: Record<string, string> = {
-  '/':         'var(--accent-home)',
-  '/memories': 'var(--accent-memories)',
-  '/pantheon': 'var(--accent-pantheon)',
-  '/vault':    'var(--accent-vault)',
-  '/echoes':   'var(--accent-echoes)',
-};
-
 export default function Navbar() {
   const { pathname } = useLocation();
-  const accent = accentMap[pathname] ?? 'var(--blue-dark)';
-  const pageMap: Record<string, string> = {
-    '/':             'home',
-    '/memories':     'memories',
-    '/neural-drift': 'chronicles',
-    '/pantheon':     'pantheon',
-    '/vault':        'vault',
-    '/echoes':       'echoes',
-  };
-  const currentPage = pageMap[pathname] ?? '';
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const handler = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, []);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false);
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
   }, []);
 
   return (
     <nav
-      className="navbar"
-      data-page={currentPage}
-      style={{ '--nav-accent': accent } as React.CSSProperties}
+      ref={navRef}
+      className={`navbar${scrolled ? ' scrolled' : ''}`}
     >
-      <NavLink to="/" className="nav-brand" onClick={() => setMenuOpen(false)}>
-        <img src={aiNexus} alt="AI Nexus Club" className="nav-ainexus" />
+      <NavLink to="/" className="nav-brand">
+        <img src={aiNexus} alt="AI Nexus" className="nav-ainexus" />
         <div className="nav-divider" />
-        <img src={isMobile ? logoStacked : logoHorizontal} alt="EndOfBeginning" className="nav-logo" />
+        <span className="nav-logo-wrap">
+          <img
+            src={isMobile ? logoStacked : logoHorizontal}
+            alt="EndOfBeginning"
+            className="nav-logo"
+          />
+        </span>
       </NavLink>
-      <ul className={`nav-links${menuOpen ? ' open' : ''}`}>
+
+      <ul className="nav-links">
         {links.map(l => (
           <li key={l.to}>
             <NavLink
               to={l.to}
               end={l.to === '/'}
               className={({ isActive }) => isActive ? 'active' : ''}
-              onClick={() => setMenuOpen(false)}
             >
               {l.label}
             </NavLink>

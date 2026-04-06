@@ -1,3 +1,6 @@
+/* ══════════════════════════════════════════
+   NAVBAR
+   ══════════════════════════════════════════ */
 .navbar {
   position: fixed;
   top: 0; left: 0;
@@ -9,26 +12,25 @@
   padding: 0 2rem;
   box-sizing: border-box;
   z-index: 1000;
-  background: rgba(135, 206, 235, 0.1);
-  backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 20, 60, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: background 0.3s ease;
 }
 
 .navbar.scrolled {
-  background: rgba(2, 26, 53, 0.75);
-  backdrop-filter: blur(20px);
-  border-bottom-color: rgba(255, 255, 255, 0.07);
+  background: rgba(0, 15, 45, 0.75);
 }
 
-/* ── BRAND (left side) ── */
+/* ── BRAND ── */
 .nav-brand {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 100%;
   text-decoration: none;
   flex-shrink: 0;
+  height: 44px;
 }
 
 .nav-ainexus {
@@ -36,7 +38,7 @@
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
   flex-shrink: 0;
   display: block;
 }
@@ -48,23 +50,30 @@
   flex-shrink: 0;
 }
 
+/* Dark pill wrapper makes any logo visible on ocean bg */
+.nav-logo-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
+  padding: 4px 8px;
+}
+
 .nav-logo {
-  height: 30px;
+  height: 26px;
   width: auto;
   object-fit: contain;
   display: block;
-  filter: brightness(0) invert(1);
+  /* Do NOT invert — dark pill provides contrast instead */
 }
 
-.navbar.scrolled .nav-logo {
-  filter: brightness(0) invert(1);
-}
-
-/* ── NAV LINKS ── */
+/* ── LINKS ── */
 .nav-links {
   display: flex;
   gap: 1.6rem;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-links a {
@@ -74,7 +83,7 @@
   font-weight: 500;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  transition: color 0.25s, opacity 0.25s;
+  transition: color 0.25s;
   position: relative;
   padding-bottom: 3px;
 }
@@ -99,34 +108,7 @@
   width: 100%;
 }
 
-/* ── MOBILE HAMBURGER OVERLAY ── */
-.mobile-menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(2, 26, 53, 0.97);
-  backdrop-filter: blur(16px);
-  z-index: 999;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.mobile-menu-overlay.open {
-  opacity: 1;
-  pointer-events: all;
-}
-.mobile-menu-overlay .nav-link {
-  font-family: 'Playfair Display', serif;
-  font-size: 2rem;
-  color: #ffffff;
-  text-decoration: none;
-}
-
-/* ── RESPONSIVE ── */
+/* ── MOBILE ── */
 @media (max-width: 768px) {
   .navbar { padding: 0 1.25rem; }
   .nav-links { display: none; }
