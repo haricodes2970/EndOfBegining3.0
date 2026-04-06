@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { TextPlugin } from 'gsap/TextPlugin';
 import ParticleCanvas from '../components/ParticleCanvas';
 import logo from '../assets/ainexus.jpeg';
 import './Home.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const tickerItems = [
   "The Proxy King once answered attendance for 6 people. Simultaneously.",
@@ -69,62 +69,71 @@ export default function Home() {
   const legendsRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Split title letters
-    const el = titleRef.current!;
-    const text = el.textContent || '';
-    el.innerHTML = text.split('').map(c =>
-      `<span class="tl-char">${c === ' ' ? '&nbsp;' : c}</span>`
-    ).join('');
-
+    // ── HERO TITLE — SplitText bounce ──
+    const split = new SplitText(titleRef.current!, { type: 'chars' });
+    gsap.set(split.chars, { opacity: 0, y: 80, rotation: 15 }); // set before animate (fallback: opacity:1 in CSS)
     const tl = gsap.timeline({ delay: 0.3 });
-
     tl.set('.orb', { opacity: 0 });
     tl.to('.orb', { opacity: 1, duration: 2, stagger: 0.3 }, 0);
-    tl.to(badgeRef.current,    { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.6);
-    tl.to('.tl-char',          { opacity: 1, y: 0, rotation: 0, duration: 0.55, stagger: 0.028, ease: 'back.out(1.7)' }, 0.9);
-    tl.to(subtitleRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 1.8);
-    tl.to(yearRef.current,     { opacity: 0.65, y: 0, duration: 0.6, ease: 'power3.out' }, 2.1);
-    tl.to(scrollRef.current,   { opacity: 1, duration: 0.6 }, 2.5);
-    tl.to(logoRef.current,     { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, 1.4);
+    tl.to(badgeRef.current, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.6);
+    tl.to(split.chars, { opacity: 1, y: 0, rotation: 0, duration: 0.8, stagger: 0.04, ease: 'back.out(1.7)' }, 0.9);
+    tl.to(logoRef.current,  { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out' }, 1.4);
+    tl.to(yearRef.current,  { opacity: 0.65, y: 0, duration: 0.6, ease: 'power3.out' }, 2.1);
+    tl.to(scrollRef.current, { opacity: 1, duration: 0.6 }, 2.5);
 
-    // Parallax
+    // ── HERO SUBTITLE — TextPlugin typewriter ──
+    gsap.set(subtitleRef.current, { opacity: 1, text: '' });
+    gsap.to(subtitleRef.current, {
+      delay: 1.2, duration: 2,
+      text: { value: 'BE AI & ML · Batch 2022–26 · Jyothy Institute of Technology', delimiter: '' },
+      ease: 'none',
+    });
+
+    // ── PARALLAX ──
     const onScroll = () => {
       const y = window.scrollY;
-      gsap.to(el,                { y: y * 0.28, duration: 0 });
+      gsap.to(titleRef.current,    { y: y * 0.28, duration: 0 });
       gsap.to(subtitleRef.current, { y: y * 0.18, duration: 0 });
     };
     window.addEventListener('scroll', onScroll);
 
-    // Cards
-    gsap.from('.chapter-card', {
-      opacity: 0, y: 40, duration: 0.65, stagger: 0.1, ease: 'power3.out',
-      scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' },
+    // ── MANIFESTO — word-level SplitText ──
+    const manifestoWords = new SplitText('.manifesto-text', { type: 'words' });
+    gsap.set(manifestoWords.words, { opacity: 0, y: 40 });
+    gsap.to(manifestoWords.words, {
+      opacity: 1, y: 0, duration: 0.65, stagger: 0.03, ease: 'power3.out',
+      scrollTrigger: { trigger: '.manifesto-text', start: 'top 70%' },
     });
+    gsap.to('.m-divider', { scaleX: 1, duration: 0.8, scrollTrigger: { trigger: '.m-divider', start: 'top 85%' } });
+    gsap.fromTo('.m-sub', { opacity: 0, y: 20 }, { opacity: 0.8, y: 0, duration: 0.9, scrollTrigger: { trigger: '.m-sub', start: 'top 85%' } });
 
-    // Manifesto lines
-    gsap.to('.m-line', {
-      y: 0, opacity: 1, duration: 0.85, stagger: 0.18, ease: 'power3.out',
-      scrollTrigger: { trigger: '.manifesto-text', start: 'top 78%' },
-    });
-    gsap.to('.m-divider',  { scaleX: 1, duration: 0.8, scrollTrigger: { trigger: '.m-divider',  start: 'top 85%' } });
-    gsap.to('.m-sub',      { opacity: 0.8, duration: 0.9, scrollTrigger: { trigger: '.m-sub', start: 'top 85%' } });
-    gsap.to('.section-ttl', { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
+    // ── CHAPTER CARDS — stagger slide up ──
+    gsap.fromTo('.chapter-card',
+      { opacity: 0, y: 60 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out',
+        scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' } });
+    gsap.fromTo('.section-ttl',
+      { opacity: 0, y: 20 },
+      { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
 
-    // Legends section
-    gsap.fromTo('.lgd-tag',      { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-tag',   start: 'top 85%' } });
-    gsap.fromTo('.lgd-heading',  { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.lgd-heading', start: 'top 85%' } });
-    gsap.fromTo('.lgd-sub',      { opacity: 0, y: 16 }, { opacity: 0.6, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-sub', start: 'top 85%' } });
-    gsap.fromTo('.legend-card',  { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out',
+    // ── LEGENDS SECTION ──
+    gsap.fromTo('.lgd-tag',     { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-tag',     start: 'top 85%' } });
+    gsap.fromTo('.lgd-heading', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.lgd-heading', start: 'top 85%' } });
+    gsap.fromTo('.lgd-sub',     { opacity: 0, y: 16 }, { opacity: 0.6, y: 0, duration: 0.6, scrollTrigger: { trigger: '.lgd-sub',   start: 'top 85%' } });
+    gsap.fromTo('.legend-card', { opacity: 0, y: 44 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out',
       scrollTrigger: { trigger: legendsRef.current, start: 'top 80%' } });
 
     return () => {
       window.removeEventListener('scroll', onScroll);
+      split.revert();
+      manifestoWords.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
     };
   }, []);
 
   return (
     <>
+      <div className="page-bg page-bg-home" />
       <ParticleCanvas />
       <div className="orb orb-1" />
       <div className="orb orb-2" />
@@ -143,9 +152,7 @@ export default function Home() {
 
         <h1 className="hero-title" ref={titleRef}>EndOfBeginning</h1>
 
-        <p className="hero-subtitle" ref={subtitleRef}>
-          — because every ending is just the prologue —
-        </p>
+        <p className="hero-subtitle" ref={subtitleRef}></p>
         <p className="hero-year" ref={yearRef}>
           2022 – 2026 &nbsp;·&nbsp; BE AI &amp; ML &nbsp;·&nbsp; JIT Bengaluru
         </p>

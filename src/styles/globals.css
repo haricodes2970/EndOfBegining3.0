@@ -9,6 +9,22 @@
   --blue-light: #c8ddf0;
   --blue-dark:  #7aaed4;
   --beige-dark: #e8e8c8;
+
+  /* ── Per-page gradients & accents ── */
+  --grad-home:       linear-gradient(150deg, #f5e6c8 0%, #1a1a2e 100%);
+  --accent-home:     #c9a96e;
+
+  --grad-memories:   linear-gradient(150deg, #fff0e0 0%, #0d2b3e 100%);
+  --accent-memories: #e8825a;
+
+  --grad-pantheon:   linear-gradient(150deg, #1a0533 0%, #f9e8ff 100%);
+  --accent-pantheon: #c084fc;
+
+  --grad-vault:      linear-gradient(150deg, #f8f8f8 0%, #0a0a0a 100%);
+  --accent-vault:    #94a3b8;
+
+  --grad-echoes:     linear-gradient(150deg, #fff4e0 0%, #1a0800 100%);
+  --accent-echoes:   #fb923c;
 }
 
 html { scroll-behavior: smooth; }
@@ -23,6 +39,33 @@ body {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--beige); }
 ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+
+/* ── SCROLL SMOOTHER WRAPPER ── */
+#smooth-wrapper {
+  overflow: hidden;
+}
+#smooth-content {
+  overflow: visible;
+  will-change: transform;
+}
+
+/* ── PAGE GRADIENT BACKGROUNDS ── */
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-attachment: fixed;
+}
+.page-bg-home       { background: var(--grad-home); }
+.page-bg-memories   { background: var(--grad-memories); }
+.page-bg-pantheon   { background: var(--grad-pantheon); }
+.page-bg-vault      { background: var(--grad-vault); }
+.page-bg-echoes     { background: var(--grad-echoes); }
+
+@media (max-width: 768px) {
+  .page-bg { background-attachment: scroll; }
+}
 
 /* ── SHARED PAGE HEADER ── */
 .page-hero {
@@ -42,6 +85,7 @@ body {
   text-transform: uppercase;
   color: var(--blue-dark);
   margin-bottom: 0.8rem;
+  opacity: 1; /* fallback: visible if JS fails */
 }
 
 .page-title {
@@ -56,6 +100,7 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   animation: gradShift 8s ease infinite;
+  opacity: 1; /* fallback */
 }
 
 @keyframes gradShift {
@@ -72,6 +117,7 @@ body {
   max-width: 520px;
   line-height: 1.7;
   font-weight: 300;
+  min-height: 1.5em; /* reserve space for typewriter */
 }
 
 /* ── GLASS CARD ── */

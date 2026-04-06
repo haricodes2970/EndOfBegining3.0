@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Vault.css';
 
-gsap.registerPlugin(ScrollTrigger);
+
 
 const students = [
   { id:  1, usn: '1JT22AI001', name: 'Akash M Athreyas'       },
@@ -123,6 +123,7 @@ export default function Vault() {
 
   return (
     <>
+      <div className="page-bg page-bg-vault" />
       <ParticleCanvas />
       <div className="orb orb-1" />
       <div className="orb orb-2" />

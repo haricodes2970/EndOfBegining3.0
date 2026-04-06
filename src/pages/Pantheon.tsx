@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Pantheon.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface Student {
   id: number;
@@ -35,6 +34,7 @@ export default function Pantheon() {
   const [search, setSearch]       = useState('');
   const [filter, setFilter]       = useState<string>('All');
   const [selected, setSelected]   = useState<Student | null>(null);
+  const cardRefs = useRef<Map<number, HTMLElement>>(new Map());
 
   const filters = ['All', 'Placement', 'Higher Studies', 'Startup'];
 
@@ -45,21 +45,38 @@ export default function Pantheon() {
   });
 
   useEffect(() => {
-    gsap.to('.pg-tag',   { opacity: 1, y: 0, duration: 0.7, delay: 0.3 });
-    gsap.to('.pg-title', { opacity: 1, y: 0, duration: 0.9, delay: 0.5 });
-    gsap.to('.pg-desc',  { opacity: 0.7, y: 0, duration: 0.8, delay: 0.7 });
+    gsap.fromTo('.pg-tag',   { opacity: 0, y: 16 }, { opacity: 1,   y: 0, duration: 0.6, delay: 0.3 });
+    gsap.fromTo('.pg-title', { opacity: 0, y: 30 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.5 });
+    gsap.fromTo('.pg-desc',  { opacity: 0, y: 16 }, { opacity: 0.7, y: 0, duration: 0.8, delay: 0.7 });
 
-    gsap.from('.student-card', {
-      opacity: 0, y: 35, duration: 0.6, stagger: 0.08,
-      ease: 'power3.out',
-      scrollTrigger: { trigger: '.students-grid', start: 'top 82%' },
-    });
+    gsap.fromTo('.student-card',
+      { opacity: 0, y: 35 },
+      { opacity: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out',
+        scrollTrigger: { trigger: '.students-grid', start: 'top 82%' } }
+    );
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
 
+  // Flip-powered modal open
+  const openCard = (s: Student) => {
+    const cardEl = cardRefs.current.get(s.id);
+    if (!cardEl) { setSelected(s); return; }
+    const state = Flip.getState(cardEl);
+    setSelected(s);
+    // After modal renders, animate from card position
+    requestAnimationFrame(() => {
+      const modal = document.querySelector('.modal-card') as HTMLElement | null;
+      if (!modal) return;
+      Flip.from(state, { targets: modal, duration: 0.5, ease: 'power2.inOut', absolute: true });
+    });
+  };
+
+  const closeCard = () => setSelected(null);
+
   return (
     <>
+      <div className="page-bg page-bg-pantheon" />
       <ParticleCanvas />
       <div className="orb orb-1" /> <div className="orb orb-2" />
 
@@ -93,7 +110,12 @@ export default function Pantheon() {
       <section className="students-section" style={{ position:'relative', zIndex:1 }}>
         <div className="students-grid">
           {visible.map(s => (
-            <div className="student-card glass-card" key={s.id} onClick={() => setSelected(s)}>
+            <div
+              className="student-card glass-card"
+              key={s.id}
+              ref={el => { if (el) cardRefs.current.set(s.id, el); }}
+              onClick={() => openCard(s)}
+            >
               <div className="student-photo">
                 <div className="photo-init">{s.name.charAt(1).toUpperCase()}</div>
               </div>
@@ -110,9 +132,9 @@ export default function Pantheon() {
 
       {/* Modal */}
       {selected && (
-        <div className="modal-overlay" onClick={() => setSelected(null)}>
+        <div className="modal-overlay" onClick={closeCard}>
           <div className="modal-card glass-card" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelected(null)}>✕</button>
+            <button className="modal-close" onClick={closeCard}>✕</button>
             <div className="modal-photo">
               <div className="photo-init lg">{selected.name.charAt(1).toUpperCase()}</div>
             </div>

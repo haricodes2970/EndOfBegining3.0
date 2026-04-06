@@ -78,20 +78,21 @@
   100% { background-position: 0% 50%; }
 }
 
-.hero-title :global(.tl-char) {
+/* SplitText chars — visible by default as fallback, GSAP overrides */
+.hero-title .char {
   display: inline-block;
-  opacity: 0;
-  transform: translateY(60px) rotate(8deg);
+  opacity: 1;
 }
 
 .hero-subtitle {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-size: clamp(1rem, 2.5vw, 1.45rem);
-  color: var(--blue-dark);
-  margin-top: 1rem;
-  opacity: 0;
-  letter-spacing: 0.04em;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-home);
+  margin-top: 1.2rem;
+  opacity: 1; /* typewriter fills it */
+  min-height: 1.4em;
 }
 
 .hero-year {

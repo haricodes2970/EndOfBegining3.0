@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { SplitText } from 'gsap/SplitText';
+import { TextPlugin } from 'gsap/TextPlugin';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Memories.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // ── GOKARNA (JPGs) ────────────────────────────────────────────────────────────
 import g01 from '../assets/trips/gokarna/20240721_201232.jpg';
@@ -123,33 +124,72 @@ interface LightboxState {
 export default function Memories() {
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
-  // Hero entrance
+  // Hero entrance + DrawSVG spine + card hover GSAP
   useEffect(() => {
-    gsap.fromTo('.pg-tag',   { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, delay: 0.3 });
-    gsap.fromTo('.pg-title', { opacity: 0, y: 30 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.5 });
-    gsap.fromTo('.pg-desc',  { opacity: 0, y: 20 }, { opacity: 0.7, y: 0, duration: 0.8, delay: 0.7 });
-    gsap.fromTo('.mem-spine', { scaleY: 0 }, { scaleY: 1, duration: 1.2, delay: 0.9, ease: 'power2.out', transformOrigin: 'top center' });
+    // ── PAGE TITLE — SplitText bounce ──
+    const split = new SplitText('.pg-title', { type: 'chars' });
+    gsap.set(split.chars, { opacity: 0, y: 60, rotation: -10 });
+    gsap.to(split.chars, { opacity: 1, y: 0, rotation: 0, duration: 0.9, stagger: 0.06, ease: 'back.out(2)', delay: 0.2 });
 
+    gsap.fromTo('.pg-tag',  { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.1 });
+
+    // ── SUBTITLE — TextPlugin typewriter ──
+    const subEl = document.querySelector('.pg-desc') as HTMLElement | null;
+    if (subEl) {
+      gsap.set(subEl, { opacity: 1, text: '' });
+      gsap.to(subEl, { delay: 1.1, duration: 1.8, text: { value: 'Every road we took together.', delimiter: '' }, ease: 'none' });
+    }
+
+    // ── DRAW SVG SPINE ──
+    gsap.fromTo('.mem-spine-line',
+      { drawSVG: '0%' },
+      { drawSVG: '100%', ease: 'none',
+        scrollTrigger: { trigger: '.mem-timeline-wrap', start: 'top center', end: 'bottom center', scrub: 1 } }
+    );
+
+    // ── LOCATION NODES — alternating slide in ──
     locations.forEach((loc, i) => {
-      const side = i % 2 === 0 ? -60 : 60;
+      const xFrom = i % 2 === 0 ? -80 : 80;
       gsap.fromTo(`.mem-node-${loc.key}`,
-        { opacity: 0, x: side, y: 20 },
-        { opacity: 1, x: 0, y: 0, duration: 0.75, ease: 'power3.out',
-          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 82%' } }
+        { opacity: 0, x: xFrom },
+        { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 75%' } }
       );
       gsap.fromTo(`.mem-node-${loc.key} .mem-dot`,
         { scale: 0 },
         { scale: 1, duration: 0.4, ease: 'back.out(2)',
-          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 82%' } }
+          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 75%' } }
       );
       gsap.fromTo(`.mem-node-${loc.key} .mem-thumb`,
         { opacity: 0, scale: 0.82, y: 18 },
         { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'back.out(1.4)',
-          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 80%' } }
+          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 72%' } }
       );
     });
 
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+    // ── CARD HOVER — GSAP timeline ──
+    const cards = gsap.utils.toArray<HTMLElement>('.mem-card');
+    const cleanups: (() => void)[] = [];
+    cards.forEach(card => {
+      const tl = gsap.timeline({ paused: true });
+      tl.to(card, { y: -10, duration: 0.3, ease: 'power2.out' })
+        .to(card, { borderColor: '#e8825a', boxShadow: '0 16px 40px rgba(232,130,90,0.25)', duration: 0.2 }, '<');
+      const enter = () => tl.play();
+      const leave = () => tl.reverse();
+      card.addEventListener('mouseenter', enter);
+      card.addEventListener('mouseleave', leave);
+      cleanups.push(() => {
+        card.removeEventListener('mouseenter', enter);
+        card.removeEventListener('mouseleave', leave);
+        tl.kill();
+      });
+    });
+
+    return () => {
+      split.revert();
+      ScrollTrigger.getAll().forEach(t => t.kill());
+      cleanups.forEach(fn => fn());
+    };
   }, []);
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -179,6 +219,7 @@ export default function Memories() {
 
   return (
     <>
+      <div className="page-bg page-bg-memories" />
       <ParticleCanvas />
       <div className="orb orb-1" />
       <div className="orb orb-2" />
@@ -186,12 +227,15 @@ export default function Memories() {
       <div className="page-hero">
         <p className="page-tag pg-tag">Chapter 01</p>
         <h1 className="page-title pg-title">Memories</h1>
-        <p className="page-subtitle pg-desc">Every road we took together.</p>
+        <p className="page-subtitle pg-desc"></p>
       </div>
 
       {/* TIMELINE */}
       <div className="mem-timeline-wrap">
-        <div className="mem-spine" />
+        {/* DrawSVG spine */}
+        <svg className="mem-spine-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
+          <line className="mem-spine-line" x1="50%" y1="0" x2="50%" y2="100%" />
+        </svg>
 
         {locations.map((loc, locIdx) => {
           const side = locIdx % 2 === 0 ? 'left' : 'right';

@@ -1,4 +1,7 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Pantheon from './pages/Pantheon';
@@ -7,17 +10,60 @@ import Echoes from './pages/Echoes';
 import Memories from './pages/Memories';
 import './styles/globals.css';
 
+function AppInner() {
+  const smootherRef = useRef<ReturnType<typeof ScrollSmoother.create> | null>(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const isMobile = window.matchMedia('(hover: none)').matches;
+    if (!isMobile) {
+      smootherRef.current = ScrollSmoother.create({
+        wrapper: '#smooth-wrapper',
+        content: '#smooth-content',
+        smooth: 1.4,
+        effects: true,
+      });
+    }
+    return () => {
+      smootherRef.current?.kill();
+      smootherRef.current = null;
+    };
+  }, []);
+
+  // Scroll to top and refresh triggers on every route change
+  useEffect(() => {
+    if (smootherRef.current) {
+      smootherRef.current.scrollTo(0, false);
+    } else {
+      window.scrollTo(0, 0);
+    }
+    // Slight delay to let new page content render before refreshing triggers
+    const id = setTimeout(() => ScrollTrigger.refresh(), 100);
+    return () => clearTimeout(id);
+  }, [location.pathname]);
+
+  return (
+    <>
+      <Navbar />
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          <Routes>
+            <Route path="/"         element={<Home />}     />
+            <Route path="/memories" element={<Memories />} />
+            <Route path="/pantheon" element={<Pantheon />} />
+            <Route path="/vault"    element={<Vault />}    />
+            <Route path="/echoes"   element={<Echoes />}   />
+          </Routes>
+        </div>
+      </div>
+    </>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/"           element={<Home />}       />
-        <Route path="/pantheon"   element={<Pantheon />}   />
-        <Route path="/vault"      element={<Vault />}      />
-        <Route path="/echoes"     element={<Echoes />}     />
-        <Route path="/memories"   element={<Memories />}   />
-      </Routes>
+      <AppInner />
     </BrowserRouter>
   );
 }

@@ -30,7 +30,7 @@
   filter: drop-shadow(0 2px 6px rgba(167,199,231,0.5));
 }
 
-.nav-logo span { color: var(--blue-dark); }
+.nav-logo span { color: var(--nav-accent, var(--blue-dark)); transition: color 0.3s; }
 
 .nav-links {
   display: flex;
@@ -46,7 +46,7 @@
   letter-spacing: 0.09em;
   text-transform: uppercase;
   opacity: 0.6;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, color 0.3s;
   position: relative;
   padding-bottom: 3px;
 }
@@ -56,13 +56,14 @@
   position: absolute;
   bottom: 0; left: 0;
   width: 0; height: 1.5px;
-  background: var(--blue-dark);
-  transition: width 0.3s ease;
+  background: var(--nav-accent, var(--blue-dark));
+  transition: width 0.3s ease, background 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
   opacity: 1;
+  color: var(--nav-accent, var(--blue-dark));
 }
 
 .nav-links a:hover::after,

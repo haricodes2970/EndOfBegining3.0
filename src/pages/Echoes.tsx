@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
 import ParticleCanvas from '../components/ParticleCanvas';
 import './Echoes.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 type NoteType = 'Junior' | 'Senior' | 'Professor';
 
@@ -43,15 +42,18 @@ export default function Echoes() {
 
   const visible = filter === 'All' ? notes : notes.filter(n => n.role === filter);
 
-  useEffect(() => {
-    gsap.to('.pg-tag',   { opacity: 1, y: 0, duration: 0.7, delay: 0.3 });
-    gsap.to('.pg-title', { opacity: 1, y: 0, duration: 0.9, delay: 0.5 });
-    gsap.to('.pg-desc',  { opacity: 0.7, y: 0, duration: 0.8, delay: 0.7 });
+  const fabRef = useRef<HTMLButtonElement>(null);
 
-    gsap.from('.note-card', {
-      opacity: 0, y: 30, rotation: 0, duration: 0.55, stagger: 0.07, ease: 'power3.out',
-      scrollTrigger: { trigger: '.notes-grid', start: 'top 82%' },
-    });
+  useEffect(() => {
+    gsap.fromTo('.pg-tag',   { opacity: 0, y: 16 }, { opacity: 1,   y: 0, duration: 0.6, delay: 0.3 });
+    gsap.fromTo('.pg-title', { opacity: 0, y: 30 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.5 });
+    gsap.fromTo('.pg-desc',  { opacity: 0, y: 16 }, { opacity: 0.7, y: 0, duration: 0.8, delay: 0.7 });
+
+    gsap.fromTo('.note-card',
+      { opacity: 0, y: 30 },
+      { opacity: 1, y: 0, duration: 0.55, stagger: 0.07, ease: 'power3.out',
+        scrollTrigger: { trigger: '.notes-grid', start: 'top 82%' } }
+    );
 
     return () => ScrollTrigger.getAll().forEach(t => t.kill());
   }, []);
@@ -62,8 +64,24 @@ export default function Echoes() {
     setTimeout(() => { setFabOpen(false); setSubmitted(false); setForm({ name: '', role: 'Junior', message: '' }); }, 2500);
   };
 
+  const openFab = () => {
+    // Flip: capture FAB state, then expand modal from that position
+    if (fabRef.current) {
+      const state = Flip.getState(fabRef.current);
+      setFabOpen(true);
+      requestAnimationFrame(() => {
+        const modal = document.querySelector('.modal-card') as HTMLElement | null;
+        if (!modal) return;
+        Flip.from(state, { targets: modal, duration: 0.55, ease: 'power3.inOut', absolute: true, scale: true });
+      });
+    } else {
+      setFabOpen(true);
+    }
+  };
+
   return (
     <>
+      <div className="page-bg page-bg-echoes" />
       <ParticleCanvas />
       <div className="orb orb-1" /> <div className="orb orb-2" />
 
@@ -94,7 +112,7 @@ export default function Echoes() {
       </section>
 
       {/* FAB */}
-      <button className="fab" onClick={() => setFabOpen(true)} aria-label="Leave a note">
+      <button className="fab" ref={fabRef} onClick={openFab} aria-label="Leave a note">
         + Leave a Note
       </button>
 
