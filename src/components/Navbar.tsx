@@ -6,11 +6,12 @@ import aiNexus from '../assets/ainexus.jpeg';
 import './Navbar.css';
 
 const links = [
-  { to: '/',         label: 'Home'     },
-  { to: '/memories', label: 'Memories' },
-  { to: '/pantheon', label: 'Pantheon' },
-  { to: '/vault',    label: 'Vault'    },
-  { to: '/echoes',   label: 'Echoes'   },
+  { to: '/',             label: 'Home'        },
+  { to: '/memories',     label: 'Memories'    },
+  { to: '/neural-drift', label: 'Neural Drift'},
+  { to: '/pantheon',     label: 'Pantheon'    },
+  { to: '/vault',        label: 'Vault'       },
+  { to: '/echoes',       label: 'Echoes'      },
 ];
 
 const accentMap: Record<string, string> = {
