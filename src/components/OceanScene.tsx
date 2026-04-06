@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import fish1Url    from '../assets/3d/Fish.glb?url';
-import fish2Url    from '../assets/3d/Fish 2.glb?url';
+import fish2Url    from '../assets/3d/Fish2.glb?url';
 import sharkUrl    from '../assets/3d/Shark.glb?url';
-import fishBoneUrl from '../assets/3d/Fish Bone.glb?url';
+import fishBoneUrl from '../assets/3d/FishBone.glb?url';
 
 /* ── fish data ── */
 interface FishData {

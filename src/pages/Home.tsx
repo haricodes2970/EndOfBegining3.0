@@ -108,11 +108,10 @@ const allLegends = [
 
 /* ── CHAPTERS ── */
 const chapters = [
-  { num: '01', icon: '🌊', title: 'Memories',     sub: 'Trips & Adventures',  desc: 'Gokarna, Dandeli, the Fort — every road we took together, relived.',                       to: '/memories'     },
-  { num: '02', icon: '✦',  title: 'Neural Drift', sub: 'Chronicles Timeline', desc: 'Milestones, detours, and the moments that shaped the batch.',                                to: '/neural-drift' },
-  { num: '03', icon: '✦',  title: 'The Pantheon', sub: 'Student Directory',   desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',              to: '/pantheon'     },
-  { num: '04', icon: '🎞', title: 'The Vault',    sub: 'Media Gallery',       desc: "Unfiltered. Unscripted. The photos and videos you'll look back at in 20 years.",          to: '/vault'        },
-  { num: '05', icon: '💬', title: 'Echoes',       sub: 'Messages & Tributes', desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                to: '/echoes'       },
+  { num: '01', icon: '🌊', title: 'Echoes of Time', sub: 'Every Road We Took',   desc: 'Every road we took together — Gokarna, Dandeli, the Fort, and beyond.',              to: '/echoes-of-time' },
+  { num: '02', icon: '✦',  title: 'The Pantheon',   sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',        to: '/pantheon'       },
+  { num: '03', icon: '🎞', title: 'The Vault',       sub: 'Media Gallery',        desc: "Unfiltered. Unscripted. The photos and videos you'll look back at in 20 years.",    to: '/vault'          },
+  { num: '04', icon: '💬', title: 'Echoes',          sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',          to: '/echoes'         },
 ];
 
 
@@ -432,7 +431,7 @@ export default function Home() {
       {/* ══════════ CHAPTERS ══════════ */}
       <section className="chapters">
         <div className="chapters-header">
-          <h2 className="section-ttl">Six Chapters. One Story.</h2>
+          <h2 className="section-ttl">Four Chapters. One Story.</h2>
           <p className="section-sub">Choose where you want to begin</p>
         </div>
         <div className="chapters-grid" ref={cardsRef}>

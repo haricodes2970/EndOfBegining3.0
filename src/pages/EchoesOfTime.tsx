@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import ParticleCanvas from '../components/ParticleCanvas';
-import './Memories.css';
+import './EchoesOfTime.css';
 
 const gokarnaPhotos = [
   { id: 1, src: '/src/assets/trips/gokarna/20240721_201232.jpg' },
@@ -114,7 +114,7 @@ interface LightboxState {
   index: number; // only used in 'single' mode
 }
 
-export default function Memories() {
+export default function EchoesOfTime() {
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
   // Hero entrance + DrawSVG spine + card hover GSAP
@@ -218,9 +218,9 @@ export default function Memories() {
       <div className="orb orb-2" />
 
       <div className="page-hero">
-        <p className="page-tag pg-tag">Chapter 01</p>
-        <h1 className="page-title pg-title">Memories</h1>
-        <p className="page-subtitle pg-desc"></p>
+        <p className="page-tag pg-tag">The Full Story</p>
+        <h1 className="page-title pg-title">Echoes of Time</h1>
+        <p className="page-subtitle pg-desc">Every milestone. Every road. Every memory.</p>
       </div>
 
       {/* TIMELINE */}

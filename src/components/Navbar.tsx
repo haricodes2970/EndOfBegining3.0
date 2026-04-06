@@ -1,21 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import logoHorizontal from '../assets/logo-horizontal.jpeg';
 import logoStacked from '../assets/logo-stacked.jpeg';
 import aiNexus from '../assets/ainexus.jpeg';
 import './Navbar.css';
 
 const links = [
-  { to: '/',             label: 'Home'        },
-  { to: '/memories',     label: 'Memories'    },
-  { to: '/neural-drift', label: 'Neural Drift'},
-  { to: '/pantheon',     label: 'Pantheon'    },
-  { to: '/vault',        label: 'Vault'       },
-  { to: '/echoes',       label: 'Echoes'      },
+  { to: '/',               label: 'Home'          },
+  { to: '/echoes-of-time', label: 'Echoes of Time'},
+  { to: '/pantheon',       label: 'Pantheon'      },
+  { to: '/vault',          label: 'Vault'         },
+  { to: '/echoes',         label: 'Echoes'        },
 ];
 
 export default function Navbar() {
-  const { pathname } = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [scrolled, setScrolled] = useState(false);
   const navRef = useRef<HTMLElement>(null);

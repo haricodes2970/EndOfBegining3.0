@@ -8,7 +8,7 @@ import Home from './pages/Home';
 import Pantheon from './pages/Pantheon';
 import Vault from './pages/Vault';
 import Echoes from './pages/Echoes';
-import Memories from './pages/Memories';
+import EchoesOfTime from './pages/EchoesOfTime';
 import './styles/globals.css';
 
 function AppInner() {
@@ -61,7 +61,7 @@ function AppInner() {
         <div id="smooth-content">
           <Routes>
             <Route path="/"         element={<Home />}     />
-            <Route path="/memories" element={<Memories />} />
+            <Route path="/echoes-of-time" element={<EchoesOfTime />} />
             <Route path="/pantheon" element={<Pantheon />} />
             <Route path="/vault"    element={<Vault />}    />
             <Route path="/echoes"   element={<Echoes />}   />
