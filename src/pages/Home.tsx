@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
-import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import ParticleCanvas from '../components/ParticleCanvas';
-import logo from '../assets/ainexus.jpeg';
+import OceanScene from '../components/OceanScene';
 import './Home.css';
 
 /* ── TICKER ── */
@@ -116,23 +115,6 @@ const chapters = [
   { num: '05', icon: '💬', title: 'Echoes',       sub: 'Messages & Tributes', desc: 'Words left behind — from juniors, professors, and the seniors themselves.',                to: '/echoes'       },
 ];
 
-/* ── FISH CONFIG (5 fish) ── */
-const fishConfig = [
-  { color: '#ff6b35', top: '35%', duration: 18, delay: 0,  dir: 1  as 1 | -1 },
-  { color: '#ffd700', top: '48%', duration: 14, delay: 4,  dir: -1 as 1 | -1 },
-  { color: '#2ed573', top: '58%', duration: 22, delay: 8,  dir: 1  as 1 | -1 },
-  { color: '#ff4757', top: '42%', duration: 16, delay: 2,  dir: -1 as 1 | -1 },
-  { color: '#1e90ff', top: '65%', duration: 20, delay: 12, dir: 1  as 1 | -1 },
-];
-
-/* ── BUBBLES ── */
-const bubbles = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  size: 4 + (i * 0.47) % 8,
-  left: (i * 5.17) % 100,
-  delay: (i * 0.53) % 10,
-  duration: 6 + (i * 0.47) % 9,
-}));
 
 /* ── SEAWEEDS ── */
 const seaweeds = [
@@ -294,89 +276,6 @@ export default function Home() {
       gsap.fromTo(el, { rotation: -10 }, { rotation: 10, duration: 2.5 + i * 0.2, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: 'bottom center', delay: i * 0.3 });
     });
 
-    /* ── FISH swim (MotionPath) + wiggle ── */
-    const isMobile = window.matchMedia('(hover: none)').matches;
-    if (!isMobile) {
-      document.querySelectorAll('.fish-wrap').forEach((el, i) => {
-        const cfg = fishConfig[i];
-        const startX = cfg.dir > 0 ? -120 : window.innerWidth + 120;
-        const endX   = cfg.dir > 0 ? window.innerWidth + 120 : -120;
-        const midY   = -40 + (i % 3) * 30;
-        gsap.set(el, { x: startX, scaleX: cfg.dir });
-        gsap.to(el, {
-          duration: cfg.duration,
-          delay: cfg.delay,
-          repeat: -1,
-          ease: 'none',
-          motionPath: {
-            path: [{ x: startX, y: 0 }, { x: (startX + endX) / 2, y: midY }, { x: endX, y: 0 }],
-            curviness: 1.5,
-          },
-          onRepeat() { gsap.set(el, { x: startX, y: 0 }); },
-        });
-        // body wiggle
-        const body = el.querySelector('.fish-body');
-        const tail = el.querySelector('.fish-tail');
-        if (body) gsap.to(body, { skewX: 8, duration: 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut' });
-        if (tail)  gsap.to(tail, { rotation: 20, duration: 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: 'left center' });
-      });
-
-      /* ── EYE CONTACT ── */
-      const mouseMoveHandler = (e: MouseEvent) => {
-        document.querySelectorAll('.fish-wrap').forEach(fw => {
-          const rect   = fw.getBoundingClientRect();
-          const fishX  = rect.left + rect.width  / 2;
-          const fishY  = rect.top  + rect.height / 2;
-          const angle  = Math.atan2(e.clientY - fishY, e.clientX - fishX);
-          const pupil  = fw.querySelector('.fish-pupil') as HTMLElement | null;
-          if (pupil) {
-            pupil.style.transform = `translate(${Math.cos(angle) * 2}px, ${Math.sin(angle) * 2}px)`;
-          }
-        });
-      };
-      window.addEventListener('mousemove', mouseMoveHandler);
-
-      /* ── CLICK SCARE ── */
-      const clickHandlers: Array<() => void> = [];
-      document.querySelectorAll('.fish-wrap').forEach(fw => {
-        const handler = () => {
-          const scareDir = (fw as HTMLElement).style.transform?.includes('scaleX(-1)') ? 200 : -200;
-          gsap.to(fw, { x: `+=${scareDir}`, duration: 0.25, ease: 'power4.out',
-            onComplete: () => gsap.to(fw, { x: `-=${scareDir}`, duration: 1, ease: 'power2.out' }) });
-        };
-        fw.addEventListener('click', handler);
-        clickHandlers.push(handler as () => void);
-      });
-
-      /* ── IDLE STARE (random fish pauses + scales up) ── */
-      let idleTimeout: ReturnType<typeof setTimeout>;
-      const scheduleIdle = () => {
-        const delay = 8000 + Math.random() * 7000;
-        idleTimeout = setTimeout(() => {
-          const fishEls = document.querySelectorAll('.fish-wrap');
-          if (!fishEls.length) return;
-          const target = fishEls[Math.floor(Math.random() * fishEls.length)];
-          gsap.to(target, { scale: 1.35, duration: 0.4, ease: 'back.out(1.5)',
-            onComplete: () => {
-              setTimeout(() => gsap.to(target, { scale: 1, duration: 0.4, ease: 'power2.out', onComplete: scheduleIdle }), 2000);
-            }
-          });
-        }, delay);
-      };
-      scheduleIdle();
-
-      return () => {
-        window.removeEventListener('scroll', parallaxHandler);
-        window.removeEventListener('mousemove', mouseMoveHandler);
-        document.querySelectorAll('.fish-wrap').forEach((fw, i) => {
-          if (clickHandlers[i]) fw.removeEventListener('click', clickHandlers[i]);
-        });
-        clearTimeout(idleTimeout);
-        split.revert();
-        ScrollTrigger.getAll().forEach(t => t.kill());
-        gsap.killTweensOf('*');
-      };
-    }
 
     /* ── MANIFESTO ── */
     const manifestoWords = new SplitText('.manifesto-text', { type: 'words' });
@@ -447,23 +346,8 @@ export default function Home() {
         ))}
       </div>
 
-      {/* ── BUBBLES ── */}
-      {bubbles.map(b => (
-        <div key={b.id} className="bubble" data-delay={b.delay} data-dur={b.duration}
-          style={{ width: b.size, height: b.size, left: `${b.left}%`, bottom: 0, position: 'absolute' }} />
-      ))}
-
-      {/* ── FISH (5 CSS fish, hidden on mobile) ── */}
-      {fishConfig.map((f, i) => (
-        <div key={i} className={`fish-wrap fish-${i + 1}`} style={{ position: 'absolute', top: f.top, cursor: 'pointer', zIndex: 3 }}>
-          <div className="fish-body" style={{ background: f.color }}>
-            <div className="fish-eye">
-              <div className="fish-pupil" />
-            </div>
-          </div>
-          <div className="fish-tail" style={{ borderLeftColor: f.color }} />
-        </div>
-      ))}
+      {/* ── THREE.JS OCEAN (fish, shark, bones handled in OceanScene) ── */}
+      <OceanScene />
 
       {/* ── SEAWEED ── */}
       <div className="seaweed-container">
@@ -509,7 +393,6 @@ export default function Home() {
 
         <div className="hero-inner" ref={heroInnerRef}>
           <div className="hero-club-logo" ref={logoRef}>
-            <img src={logo} alt="AI Nexus" />
             <span>AI Nexus</span>
           </div>
 
