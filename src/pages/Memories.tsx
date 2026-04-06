@@ -113,9 +113,11 @@ const locations: TripLocation[] = [
   },
 ];
 
+// mode: 'grid' = show all photos in grid, 'single' = fullscreen one photo
 interface LightboxState {
   location: TripLocation;
-  index: number;
+  mode: 'grid' | 'single';
+  index: number; // only used in 'single' mode
 }
 
 export default function Memories() {
@@ -152,7 +154,12 @@ export default function Memories() {
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!lightbox) return;
-    if (e.key === 'Escape') { setLightbox(null); return; }
+    if (e.key === 'Escape') {
+      if (lightbox.mode === 'single') setLightbox(s => s ? { ...s, mode: 'grid' } : null);
+      else setLightbox(null);
+      return;
+    }
+    if (lightbox.mode !== 'single') return;
     const max = lightbox.location.photos.length - 1;
     if (e.key === 'ArrowRight') setLightbox(s => s ? { ...s, index: Math.min(s.index + 1, max) } : null);
     if (e.key === 'ArrowLeft')  setLightbox(s => s ? { ...s, index: Math.max(s.index - 1, 0) } : null);
@@ -163,7 +170,10 @@ export default function Memories() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const open = (loc: TripLocation, idx: number) => setLightbox({ location: loc, index: idx });
+  // clicking a preview photo or "view all" → open grid
+  const openGrid   = (loc: TripLocation) => setLightbox({ location: loc, mode: 'grid', index: 0 });
+  // from grid, click a photo → fullscreen
+  const openSingle = (idx: number) => setLightbox(s => s ? { ...s, mode: 'single', index: idx } : null);
   const prev = () => setLightbox(s => s ? { ...s, index: Math.max(s.index - 1, 0) } : null);
   const next = () => setLightbox(s => s ? { ...s, index: Math.min(s.index + 1, s.location.photos.length - 1) } : null);
 
@@ -203,23 +213,21 @@ export default function Memories() {
                   <p className="mem-loc-tag">{loc.tagline}</p>
                 </div>
 
-                {/* 4 thumbnails in a row */}
+                {/* 4 preview thumbnails */}
                 <div className="mem-thumbs">
                   {preview.map((photo, i) => (
-                    <div key={i} className="mem-thumb" onClick={() => open(loc, i)}>
+                    <div key={i} className="mem-thumb" onClick={() => openGrid(loc)}>
                       <img src={photo.src} alt={`${loc.name} ${i + 1}`} className="mem-thumb-img" />
                       <div className="mem-thumb-overlay">
-                        <span className="mem-thumb-zoom">⤢</span>
+                        <span className="mem-thumb-zoom">⊞</span>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {loc.photos.length > 4 && (
-                  <button className="mem-view-all" onClick={() => open(loc, 0)}>
-                    View all {loc.photos.length} photos →
-                  </button>
-                )}
+                <button className="mem-view-all" onClick={() => openGrid(loc)}>
+                  View all {loc.photos.length} photos →
+                </button>
               </div>
 
             </div>
@@ -227,13 +235,41 @@ export default function Memories() {
         })}
       </div>
 
-      {/* FULLSCREEN LIGHTBOX */}
-      {lightbox && (
-        <div className="fs-overlay" onClick={() => setLightbox(null)}>
+      {/* ── GRID POPUP ── */}
+      {lightbox && lightbox.mode === 'grid' && (
+        <div className="lb-overlay" onClick={() => setLightbox(null)}>
+          <div className="lb-modal" onClick={e => e.stopPropagation()}>
+
+            <div className="lb-header">
+              <span className="lb-title">{lightbox.location.emoji} {lightbox.location.name}</span>
+              <span className="lb-count">{lightbox.location.photos.length} photos</span>
+              <button className="lb-close" onClick={() => setLightbox(null)}>✕</button>
+            </div>
+
+            <div className="lb-grid">
+              {lightbox.location.photos.map((photo, i) => (
+                <div key={i} className="lb-grid-cell" onClick={() => openSingle(i)}>
+                  <img src={photo.src} alt={`${lightbox.location.name} ${i + 1}`} className="lb-grid-img" />
+                  <div className="lb-grid-hover">
+                    <span className="lb-grid-num">{i + 1}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* ── FULLSCREEN SINGLE ── */}
+      {lightbox && lightbox.mode === 'single' && (
+        <div className="fs-overlay" onClick={() => setLightbox(s => s ? { ...s, mode: 'grid' } : null)}>
           <div className="fs-inner" onClick={e => e.stopPropagation()}>
 
-            {/* top bar */}
             <div className="fs-bar">
+              <button className="fs-back" onClick={() => setLightbox(s => s ? { ...s, mode: 'grid' } : null)}>
+                ← Back to grid
+              </button>
               <span className="fs-bar-loc">
                 {lightbox.location.emoji} {lightbox.location.name}
                 <span className="fs-bar-count">{lightbox.index + 1} / {lightbox.location.photos.length}</span>
@@ -241,24 +277,22 @@ export default function Memories() {
               <button className="fs-close" onClick={() => setLightbox(null)}>✕</button>
             </div>
 
-            {/* image */}
             <div className="fs-img-wrap">
-              <button className="fs-arrow fs-arrow--prev" onClick={prev} disabled={lightbox.index === 0}>‹</button>
+              <button className="fs-arrow" onClick={prev} disabled={lightbox.index === 0}>‹</button>
               <img
                 key={lightbox.index}
                 src={lightbox.location.photos[lightbox.index].src}
                 alt={`${lightbox.location.name} ${lightbox.index + 1}`}
                 className="fs-img"
               />
-              <button className="fs-arrow fs-arrow--next" onClick={next} disabled={lightbox.index === lightbox.location.photos.length - 1}>›</button>
+              <button className="fs-arrow" onClick={next} disabled={lightbox.index === lightbox.location.photos.length - 1}>›</button>
             </div>
 
-            {/* strip */}
             <div className="fs-strip">
               {lightbox.location.photos.map((p, i) => (
                 <div
                   key={i}
-                  className={`fs-strip-thumb ${i === lightbox.index ? 'fs-strip-thumb--active' : ''}`}
+                  className={`fs-strip-thumb ${i === lightbox.index ? 'active' : ''}`}
                   onClick={() => setLightbox(s => s ? { ...s, index: i } : null)}
                 >
                   <img src={p.src} alt="" />
