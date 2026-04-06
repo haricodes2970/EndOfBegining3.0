@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import ParticleCanvas from '../components/ParticleCanvas';
 import OceanScene from '../components/OceanScene';
+import logo from '../assets/ainexus.jpeg';
 import './Home.css';
 
 /* ── TICKER ── */
@@ -393,6 +394,7 @@ export default function Home() {
 
         <div className="hero-inner" ref={heroInnerRef}>
           <div className="hero-club-logo" ref={logoRef}>
+            <img src={logo} alt="AI Nexus" />
             <span>AI Nexus</span>
           </div>
 

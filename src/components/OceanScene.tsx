@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import fish1Url    from '../assets/3d/Fish.glb?url';
+import fish2Url    from '../assets/3d/Fish 2.glb?url';
+import sharkUrl    from '../assets/3d/Shark.glb?url';
+import fishBoneUrl from '../assets/3d/Fish Bone.glb?url';
 
 /* ── fish data ── */
 interface FishData {
@@ -143,10 +147,10 @@ export default function OceanScene() {
     const fishCountMid = mobile ? 2 : 6;
 
     Promise.all([
-      loadModel('/src/assets/3d/Fish.glb'),
-      loadModel('/src/assets/3d/Fish 2.glb'),
-      loadModel('/src/assets/3d/Shark.glb'),
-      loadModel('/src/assets/3d/Fish Bone.glb'),
+      loadModel(fish1Url),
+      loadModel(fish2Url),
+      loadModel(sharkUrl),
+      loadModel(fishBoneUrl),
     ]).then(([fish1, fish2, shark, bone]) => {
 
       /* ── SURFACE FISH (2) ── */
