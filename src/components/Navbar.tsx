@@ -6,11 +6,10 @@ import aiNexus from '../assets/ainexus.jpeg';
 import './Navbar.css';
 
 const links = [
-  { to: '/',               label: 'Home'          },
-  { to: '/echoes-of-time', label: 'Echoes of Time'},
-  { to: '/pantheon',       label: 'Pantheon'      },
-  { to: '/vault',          label: 'Vault'         },
-  { to: '/echoes',         label: 'Echoes'        },
+  { to: '/',               label: 'Home'              },
+  { to: '/echoes-of-time', label: 'Echoes of Time'    },
+  { to: '/constellation',  label: 'The Constellation' },
+  { to: '/vault',          label: 'Vault'             },
 ];
 
 export default function Navbar() {

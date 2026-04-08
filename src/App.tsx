@@ -5,9 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
 import SplashScreen from './components/SplashScreen';
 import Home from './pages/Home';
-import Pantheon from './pages/Pantheon';
+import Constellation from './pages/Constellation';
 import Vault from './pages/Vault';
-import Echoes from './pages/Echoes';
 import EchoesOfTime from './pages/EchoesOfTime';
 import './styles/globals.css';
 
@@ -62,9 +61,8 @@ function AppInner() {
           <Routes>
             <Route path="/"         element={<Home />}     />
             <Route path="/echoes-of-time" element={<EchoesOfTime />} />
-            <Route path="/pantheon" element={<Pantheon />} />
+            <Route path="/constellation" element={<Constellation />} />
             <Route path="/vault"    element={<Vault />}    />
-            <Route path="/echoes"   element={<Echoes />}   />
           </Routes>
         </div>
       </div>

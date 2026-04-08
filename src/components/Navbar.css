@@ -5,17 +5,17 @@
   position: fixed;
   top: 0; left: 0;
   width: 100%;
-  height: 64px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding: 0 3rem;
   box-sizing: border-box;
   z-index: 1000;
-  background: rgba(0, 20, 60, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0,30,60,0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   transition: background 0.3s ease;
 }
 
@@ -27,26 +27,26 @@
 .nav-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   text-decoration: none;
   flex-shrink: 0;
-  height: 44px;
+  height: 100%;
 }
 
 .nav-ainexus {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border: 2px solid rgba(255,255,255,0.3);
   flex-shrink: 0;
   display: block;
 }
 
 .nav-divider {
   width: 1px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.25);
+  height: 26px;
+  background: rgba(255,255,255,0.2);
   flex-shrink: 0;
 }
 
@@ -54,17 +54,18 @@
 .nav-logo-wrap {
   display: flex;
   align-items: center;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 8px;
-  padding: 4px 8px;
 }
 
 .nav-logo {
-  height: 26px;
+  height: 38px;
   width: auto;
+  max-width: 220px;
   object-fit: contain;
   display: block;
-  /* Do NOT invert — dark pill provides contrast instead */
+  background: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  filter: brightness(0) invert(1);
 }
 
 /* ── LINKS ── */
@@ -112,4 +113,26 @@
 @media (max-width: 768px) {
   .navbar { padding: 0 1.25rem; }
   .nav-links { display: none; }
+}
+
+/* ── VAULT PAGE OVERRIDES ── */
+nav[data-page="vault"].navbar {
+  background: rgba(10,20,10,0.7);
+  border-bottom-color: rgba(109,184,109,0.15);
+}
+
+nav[data-page="vault"].navbar.scrolled {
+  background: rgba(6,14,6,0.9);
+}
+
+nav[data-page="vault"] .nav-links a.active {
+  color: #6db86d;
+}
+
+nav[data-page="vault"] .nav-links a.active::after {
+  background: #6db86d;
+}
+
+nav[data-page="vault"] .nav-links a:hover {
+  color: #a8d5a2;
 }

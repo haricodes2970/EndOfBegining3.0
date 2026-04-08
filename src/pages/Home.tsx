@@ -4,8 +4,53 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import ParticleCanvas from '../components/ParticleCanvas';
-import OceanScene from '../components/OceanScene';
+import logoHorizontal from '../assets/logo-horizontal.jpeg';
+import aiNexus from '../assets/ainexus.jpeg';
 import './Home.css';
+
+/* ── CSS FISH DATA ── */
+const FISH_DATA = [
+  { cls: 'css-fish-1',     top: '22%', color: '#ff8c00', dir:  1, dur:  4, bDur: 1.5, del: 0,  opacity: 1.0  },
+  { cls: 'css-fish-2',     top: '30%', color: '#00bcd4', dir: -1, dur:  5, bDur: 1.4, del: 0.5,opacity: 0.95 },
+  { cls: 'css-fish-3',     top: '38%', color: '#ffd700', dir:  1, dur:  5, bDur: 1.6, del: 1,  opacity: 0.88 },
+  { cls: 'css-fish-chase', top: '55%', color: '#ff6b35', dir:  1, dur:  4, bDur: 1.2, del: 0,  opacity: 0.8  },
+  /* deep zone density */
+  { cls: 'css-fish-d1',    top: '58%', color: '#9b59b6', dir: -1, dur:  5, bDur: 1.4, del: 1,  opacity: 0.75 },
+  { cls: 'css-fish-d2',    top: '62%', color: '#2ecc71', dir:  1, dur:  3, bDur: 1.1, del: 0.5,opacity: 0.70 },
+  { cls: 'css-fish-d3',    top: '66%', color: '#e74c3c', dir: -1, dur:  4, bDur: 1.3, del: 2,  opacity: 0.65 },
+  { cls: 'css-fish-d4',    top: '60%', color: '#f39c12', dir:  1, dur:  5, bDur: 1.2, del: 2.5,opacity: 0.70 },
+  { cls: 'css-fish-d5',    top: '64%', color: '#1abc9c', dir: -1, dur:  4, bDur: 1.5, del: 1.5,opacity: 0.65 },
+  { cls: 'css-fish-d6',    top: '70%', color: '#3498db', dir:  1, dur:  4, bDur: 1.1, del: 3,  opacity: 0.55 },
+  { cls: 'css-fish-d7',    top: '73%', color: '#e91e63', dir: -1, dur:  3, bDur: 1.3, del: 1,  opacity: 0.50 },
+] as const;
+
+/* Tiny school fish — shallow zone, just below water surface */
+const SCHOOL_DATA = [
+  { cls: 'sf-1', top: '19%',   color: '#87ceeb', dir:  1, dur: 2.5, del: 0   },
+  { cls: 'sf-2', top: '20%',   color: '#87ceeb', dir:  1, dur: 2.5, del: 0.2 },
+  { cls: 'sf-3', top: '19.5%', color: '#87ceeb', dir:  1, dur: 2.5, del: 0.4 },
+  { cls: 'sf-4', top: '21%',   color: '#a0d8ef', dir: -1, dur: 3,   del: 0.8 },
+  { cls: 'sf-5', top: '20.5%', color: '#a0d8ef', dir: -1, dur: 3,   del: 1.0 },
+] as const;
+
+/* God-rays from water surface */
+const GOD_RAY_DATA = [
+  { left: '8%',  height: '52vh', rotation: -10 },
+  { left: '22%', height: '44vh', rotation: -5  },
+  { left: '38%', height: '58vh', rotation:  1  },
+  { left: '54%', height: '48vh', rotation:  7  },
+  { left: '70%', height: '42vh', rotation:  12 },
+  { left: '84%', height: '55vh', rotation:  16 },
+];
+
+const BUBBLE_DATA = Array.from({ length: 16 }, (_, i) => ({
+  id:    i,
+  left:  `${6  + (i * 5.8) % 88}%`,
+  top:   `${24 + (i * 4.7) % 55}%`,
+  size:  3 + (i % 4) * 2.5,
+  dur:   5 + (i % 5) * 2.0,
+  delay: (i * 0.85) % 6,
+}));
 
 /* ── TICKER ── */
 const tickerItems = [
@@ -108,33 +153,39 @@ const allLegends = [
 
 /* ── CHAPTERS ── */
 const chapters = [
-  { num: '01', icon: '🌊', title: 'Echoes of Time', sub: 'Every Road We Took',   desc: 'Every road we took together — Gokarna, Dandeli, the Fort, and beyond.',              to: '/echoes-of-time' },
-  { num: '02', icon: '✦',  title: 'The Pantheon',   sub: 'Student Directory',    desc: 'Faces, stories, and futures. Meet every soul who made this batch legendary.',        to: '/pantheon'       },
-  { num: '03', icon: '🎞', title: 'The Vault',       sub: 'Media Gallery',        desc: "Unfiltered. Unscripted. The photos and videos you'll look back at in 20 years.",    to: '/vault'          },
-  { num: '04', icon: '💬', title: 'Echoes',          sub: 'Messages & Tributes',  desc: 'Words left behind — from juniors, professors, and the seniors themselves.',          to: '/echoes'         },
+  { num: '01', icon: '🌊', title: 'Echoes of Time',     sub: 'Every Road We Took',   desc: 'Every road we took together — Gokarna, Dandeli, the Fort, and beyond.',              to: '/echoes-of-time'   },
+  { num: '02', icon: '✦',  title: 'The Constellation',  sub: 'Student Directory',    desc: 'Every moment. Every event. Every star.',                                              to: '/constellation'    },
+  { num: '03', icon: '🎞', title: 'The Vault',           sub: 'Media Gallery',        desc: "Unfiltered. Unscripted. The photos and videos you'll look back at in 20 years.",    to: '/vault'            },
 ];
 
 
 /* ── SEAWEEDS ── */
 const seaweeds = [
-  { left: '3%',  height: 80  },
-  { left: '7%',  height: 110 },
-  { left: '11%', height: 70  },
-  { left: '86%', height: 100 },
-  { left: '91%', height: 85  },
-  { left: '96%', height: 75  },
+  { left: '3%',  height: 80,  color: '#27ae60', color2: '#1e8449' },
+  { left: '7%',  height: 110, color: '#2ecc71', color2: '#27ae60' },
+  { left: '11%', height: 70,  color: '#1a9b4e', color2: '#145f31' },
+  { left: '17%', height: 90,  color: '#2ecc71', color2: '#1e8449' },
+  { left: '23%', height: 65,  color: '#27ae60', color2: '#1a9b4e' },
+  { left: '76%', height: 72,  color: '#2ecc71', color2: '#27ae60' },
+  { left: '81%', height: 95,  color: '#1a9b4e', color2: '#2ecc71' },
+  { left: '86%', height: 100, color: '#27ae60', color2: '#1e8449' },
+  { left: '91%', height: 85,  color: '#2ecc71', color2: '#1a9b4e' },
+  { left: '96%', height: 75,  color: '#1e8449', color2: '#27ae60' },
 ];
 
 /* ── ROCKS ── */
 const rocks = [
-  { left: '8%',  w: 55, h: 28 },
-  { left: '18%', w: 38, h: 20 },
-  { left: '30%', w: 70, h: 35 },
-  { left: '48%', w: 44, h: 22 },
-  { left: '62%', w: 60, h: 30 },
-  { left: '74%', w: 35, h: 18 },
-  { left: '85%', w: 50, h: 25 },
-  { left: '93%', w: 42, h: 20 },
+  { left: '5%',  w: 36, h: 16 },
+  { left: '13%', w: 24, h: 12 },
+  { left: '22%', w: 44, h: 20 },
+  { left: '33%', w: 28, h: 14 },
+  { left: '42%', w: 38, h: 18 },
+  { left: '51%', w: 26, h: 12 },
+  { left: '59%', w: 40, h: 18 },
+  { left: '68%', w: 22, h: 10 },
+  { left: '77%', w: 32, h: 15 },
+  { left: '86%', w: 26, h: 13 },
+  { left: '93%', w: 34, h: 16 },
 ];
 
 /* ── CAUSTICS ── */
@@ -153,7 +204,6 @@ export default function Home() {
   const titleRef     = useRef<HTMLHeadingElement>(null);
   const badgeRef     = useRef<HTMLDivElement>(null);
   const subtitleRef  = useRef<HTMLParagraphElement>(null);
-  const yearRef      = useRef<HTMLParagraphElement>(null);
   const scrollRef    = useRef<HTMLDivElement>(null);
   const cardsRef     = useRef<HTMLDivElement>(null);
   const heroRef      = useRef<HTMLElement>(null);
@@ -192,7 +242,6 @@ export default function Home() {
     tl.to('.orb', { opacity: 1, duration: 2, stagger: 0.3 }, 0);
     tl.to(badgeRef.current,  { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.6);
     tl.to(split.chars, { opacity: 1, y: 0, rotation: 0, duration: 0.8, stagger: 0.04, ease: 'back.out(1.7)' }, 0.9);
-    tl.to(yearRef.current,   { opacity: 0.65, y: 0, duration: 0.6, ease: 'power3.out' }, 2.1);
     tl.to(scrollRef.current, { opacity: 1, duration: 0.6 }, 2.5);
 
     gsap.set(subtitleRef.current, { opacity: 1, text: '' });
@@ -216,28 +265,52 @@ export default function Home() {
     /* ── WATER SURFACE SHIMMER ── */
     gsap.to('.water-surface', { x: '-50%', duration: 6, repeat: -1, ease: 'none' });
 
-    /* ── PARALLAX ── */
-    const parallaxHandler = () => {
-      const y = window.scrollY;
-      gsap.to(titleRef.current,    { y: y * 0.28, duration: 0 });
-      gsap.to(subtitleRef.current, { y: y * 0.18, duration: 0 });
-    };
-    window.addEventListener('scroll', parallaxHandler);
+    /* ── LOGO ENTRANCE ── */
+    gsap.from('.hero-logo-horizontal', {
+      opacity: 0,
+      y: -30,
+      duration: 1.2,
+      ease: 'power3.out',
+      delay: 0.2,
+    });
 
-    /* ── HERO ZOOM SCROLL ── */
-    gsap.set(heroInnerRef.current, { scale: 1.4 });
-    gsap.set('.hero-side-left',  { x: -120, opacity: 0 });
-    gsap.set('.hero-side-right', { x:  120, opacity: 0 });
+    /* ── AI NEXUS CLUB LOGO — party entrance ── */
+    const clubTl = gsap.timeline({ delay: 1.5 });
+    clubTl
+      .from('.hero-club-logo', {
+        scale: 0,
+        rotation: -180,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'back.out(2)',
+      })
+      .to('.hero-club-logo img', {
+        boxShadow: '0 0 20px rgba(201,169,110,0.8)',
+        duration: 0.4,
+        yoyo: true,
+        repeat: 3,
+        ease: 'power2.inOut',
+      })
+      .to('.hero-club-logo', {
+        y: -5,
+        duration: 2,
+        yoyo: true,
+        repeat: -1,
+        ease: 'sine.inOut',
+      });
+
+    /* ── HERO ZOOM SCROLL — title only, not full inner div ── */
+    gsap.set('.hero-title', { scale: 1.3 });
     ScrollTrigger.create({
       trigger: heroRef.current,
       start: 'top top',
-      end: '+=600',
+      end: '+=500',
       pin: true,
       scrub: 1,
       animation: gsap.timeline()
-        .to(heroInnerRef.current, { scale: 1.0, ease: 'none' })
-        .to('.hero-side-left',  { x: 0, opacity: 1, ease: 'none' }, 0)
-        .to('.hero-side-right', { x: 0, opacity: 1, ease: 'none' }, 0),
+        .to('.hero-title',      { scale: 1,  ease: 'none' })
+        .from('.hero-side-left',  { x: -80, opacity: 0, ease: 'none' }, 0)
+        .from('.hero-side-right', { x:  80, opacity: 0, ease: 'none' }, 0),
     });
 
     /* ── DEPTH OVERLAY ── */
@@ -273,6 +346,47 @@ export default function Home() {
       gsap.fromTo(el, { rotation: -10 }, { rotation: 10, duration: 2.5 + i * 0.2, repeat: -1, yoyo: true, ease: 'sine.inOut', transformOrigin: 'bottom center', delay: i * 0.3 });
     });
 
+    /* ── FISH BOUNCE — stays inside screen, flips at edges ── */
+    const swimBounce = (
+      sel: string, startDir: number, dur: number,
+      bDur: number, del: number, opacity: number, margin = 80
+    ) => {
+      const el = document.querySelector(sel) as HTMLElement | null;
+      if (!el) return;
+      let d = startDir;
+      gsap.set(el, { x: d > 0 ? margin : window.innerWidth - margin - 70, scaleX: d, opacity });
+      const swim = () => {
+        const toX = d > 0 ? window.innerWidth - margin - 70 : margin;
+        gsap.to(el, {
+          x: toX, duration: dur, ease: 'none',
+          onComplete() { d = -d; gsap.set(el, { scaleX: d }); swim(); },
+        });
+      };
+      gsap.delayedCall(del, swim);
+      gsap.to(el, { y: '+=12', duration: bDur, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: del * 0.4 });
+    };
+
+    FISH_DATA.forEach(({ cls, dir, dur, bDur, del, opacity }) =>
+      swimBounce(`.${cls}`, dir, dur, bDur, del, opacity, 80));
+
+    /* ── SCHOOL FISH ── */
+    SCHOOL_DATA.forEach(({ cls, dir, dur, del }) =>
+      swimBounce(`.${cls}`, dir, dur, 1.5, del, 0.7, 50));
+
+    /* ── GOD-RAYS: pulse in/out ── */
+    document.querySelectorAll('.god-ray').forEach((el, i) => {
+      gsap.fromTo(el,
+        { opacity: 0.04, scaleX: 0.8 },
+        { opacity: 0.13, scaleX: 1.2, duration: 4 + i * 0.7, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.9 }
+      );
+    });
+
+    /* ── SHARK (bounces, faster than chase fish) ── */
+    swimBounce('.css-shark', 1, 3, 3, 1.5, 0.85, 40);
+
+    /* ── ABYSS GLOW pulse ── */
+    gsap.to('.abyss-glow', { opacity: 0.7, duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
 
     /* ── MANIFESTO ── */
     const manifestoWords = new SplitText('.manifesto-text', { type: 'words' });
@@ -284,7 +398,7 @@ export default function Home() {
     gsap.fromTo('.section-ttl', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, scrollTrigger: { trigger: '.section-ttl', start: 'top 80%' } });
 
     return () => {
-      window.removeEventListener('scroll', parallaxHandler);
+      clubTl.kill();
       split.revert();
       manifestoWords.revert();
       ScrollTrigger.getAll().forEach(t => t.kill());
@@ -343,27 +457,145 @@ export default function Home() {
         ))}
       </div>
 
-      {/* ── THREE.JS OCEAN (fish, shark, bones handled in OceanScene) ── */}
-      <OceanScene />
+      {/* ── GOD-RAYS (crepuscular rays from water surface) ── */}
+      {GOD_RAY_DATA.map((r, i) => (
+        <div key={i} className="god-ray" style={{
+          left: r.left,
+          height: r.height,
+          transform: `rotate(${r.rotation}deg)`,
+          opacity: 0,
+        }} />
+      ))}
 
-      {/* ── SEAWEED ── */}
-      <div className="seaweed-container">
-        {seaweeds.map((s, i) => (
-          <svg key={i} className="seaweed" style={{ left: s.left, bottom: 0, position: 'absolute' }}
-            width="18" height={s.height} viewBox={`0 0 18 ${s.height}`} fill="none">
-            <path
-              d={`M9,${s.height} C4,${s.height * 0.75} 14,${s.height * 0.55} 9,${s.height * 0.4} C4,${s.height * 0.25} 14,${s.height * 0.1} 9,0`}
-              stroke="#2d6a2d" strokeWidth="4" strokeLinecap="round" fill="none"
-            />
-          </svg>
-        ))}
+      {/* ── SCHOOL FISH (tiny shallow fish) ── */}
+      {SCHOOL_DATA.map(f => (
+        <div key={f.cls} className={`css-fish school-fish ${f.cls}`} style={{ color: f.color, top: f.top }}>
+          <div className="fish-wrap">
+            <div className="fish-tail" />
+            <div className="fish-body school-body">
+              <div className="fish-eye school-eye" />
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {/* ── CSS FISH (mid + deep) ── */}
+      {FISH_DATA.map(f => (
+        <div key={f.cls} className={`css-fish ${f.cls}`} style={{ color: f.color, top: f.top }}>
+          <div className="fish-wrap">
+            <div className="fish-tail" />
+            <div className="fish-body">
+              <div className="fish-eye"><div className="fish-pupil" /></div>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      {/* ── SHARK ── */}
+      <div className="css-fish css-shark" style={{ top: '57%' }}>
+        <div className="fish-wrap">
+          <div className="fish-tail shark-tail" />
+          <div className="fish-body shark-body">
+            <div className="shark-fin" />
+            <div className="fish-eye shark-eye"><div className="fish-pupil" /></div>
+          </div>
+        </div>
       </div>
 
-      {/* ── OCEAN FLOOR ── */}
+      {/* ── BUBBLES ── */}
+      {BUBBLE_DATA.map(b => (
+        <div key={b.id} className="bubble"
+          style={{ left: b.left, top: b.top, width: b.size, height: b.size }}
+          data-dur={b.dur} data-delay={b.delay} />
+      ))}
+
+      {/* ── FISH BONES (seabed) ── */}
+      {/* ── ABYSS CREATURE (deep bioluminescent fish) ── */}
+      <div className="abyss-creature" style={{ top: '78%', left: '65%' }}>
+        <div className="abyss-glow" />
+        <div className="css-fish" style={{ color: '#1a1a2e', position: 'relative' }}>
+          <div className="fish-wrap abyss-fish-wrap">
+            <div className="fish-tail abyss-tail" />
+            <div className="fish-body abyss-body">
+              <div className="fish-eye abyss-eye"><div className="fish-pupil" /></div>
+              <div className="abyss-lure" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── OCEAN FLOOR (seaweed + rocks + bones all inside) ── */}
       <div className="ocean-floor">
+
+        {/* seaweed grows upward out of the sand */}
+        {seaweeds.map((s, i) => {
+          const h = Math.round(s.height * 0.55); // shorter to match thin floor
+          const d1 = `M9,${h} C3,${h*0.75} 15,${h*0.52} 8,${h*0.38} C2,${h*0.24} 14,${h*0.09} 9,0`;
+          const d2 = `M13,${h} C7,${h*0.78} 18,${h*0.58} 11,${h*0.42} C5,${h*0.27} 16,${h*0.12} 12,${h*0.02}`;
+          return (
+            <svg key={i} className="seaweed" style={{ left: s.left, bottom: '100%', position: 'absolute' }}
+              width="24" height={h} viewBox={`0 0 24 ${h}`} fill="none">
+              <path d={d2} stroke={s.color2} strokeWidth="4" strokeLinecap="round" opacity="0.75" />
+              <path d={d1} stroke={s.color}  strokeWidth="5" strokeLinecap="round" />
+            </svg>
+          );
+        })}
+
+        {/* rocks sitting on the sand surface */}
         {rocks.map((r, i) => (
           <div key={i} className="rock" style={{ left: r.left, width: r.w, height: r.h }} />
         ))}
+
+        {/* fish skeletons half-buried in sand */}
+        <div className="fish-bone-container" style={{ bottom: '55%', left: '18%' }}>
+          <svg viewBox="0 0 160 40" width="160" height="40" fill="none">
+            <line x1="18" y1="20" x2="136" y2="20" stroke="rgba(201,169,110,0.75)" strokeWidth="2" strokeLinecap="round"/>
+            {[38,56,74,92,110,126].map(x => (
+              <g key={x}>
+                <line x1={x} y1="20" x2={x-2} y2="9"  stroke="rgba(201,169,110,0.75)" strokeWidth="1.5" strokeLinecap="round"/>
+                <line x1={x} y1="20" x2={x-2} y2="31" stroke="rgba(201,169,110,0.75)" strokeWidth="1.5" strokeLinecap="round"/>
+              </g>
+            ))}
+            <circle cx="133" cy="20" r="8"  stroke="rgba(201,169,110,0.75)" strokeWidth="1.8" fill="none"/>
+            <circle cx="136" cy="18" r="2"  fill="rgba(201,169,110,0.6)"/>
+            <line x1="18" y1="20" x2="6"  y2="11" stroke="rgba(201,169,110,0.75)" strokeWidth="1.8" strokeLinecap="round"/>
+            <line x1="18" y1="20" x2="4"  y2="20" stroke="rgba(201,169,110,0.75)" strokeWidth="1.8" strokeLinecap="round"/>
+            <line x1="18" y1="20" x2="6"  y2="29" stroke="rgba(201,169,110,0.75)" strokeWidth="1.8" strokeLinecap="round"/>
+          </svg>
+        </div>
+
+        <div className="fish-bone-container" style={{ bottom: '40%', left: '55%' }}>
+          <svg viewBox="0 0 110 32" width="110" height="32" fill="none">
+            <line x1="14" y1="16" x2="92" y2="16" stroke="rgba(201,169,110,0.55)" strokeWidth="1.8" strokeLinecap="round"/>
+            {[30,46,62,78].map(x => (
+              <g key={x}>
+                <line x1={x} y1="16" x2={x-2} y2="7"  stroke="rgba(201,169,110,0.55)" strokeWidth="1.3" strokeLinecap="round"/>
+                <line x1={x} y1="16" x2={x-2} y2="25" stroke="rgba(201,169,110,0.55)" strokeWidth="1.3" strokeLinecap="round"/>
+              </g>
+            ))}
+            <circle cx="90" cy="16" r="7"  stroke="rgba(201,169,110,0.55)" strokeWidth="1.6" fill="none"/>
+            <line x1="14" y1="16" x2="4"  y2="9"  stroke="rgba(201,169,110,0.55)" strokeWidth="1.5" strokeLinecap="round"/>
+            <line x1="14" y1="16" x2="2"  y2="16" stroke="rgba(201,169,110,0.55)" strokeWidth="1.5" strokeLinecap="round"/>
+            <line x1="14" y1="16" x2="4"  y2="23" stroke="rgba(201,169,110,0.55)" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </div>
+
+        <div className="fish-bone-container" style={{ bottom: '50%', left: '37%' }}>
+          <svg viewBox="0 0 90 28" width="90" height="28" fill="none">
+            <line x1="12" y1="14" x2="74" y2="14" stroke="rgba(201,169,110,0.45)" strokeWidth="1.6" strokeLinecap="round"/>
+            {[28,42,58,70].map(x => (
+              <g key={x}>
+                <line x1={x} y1="14" x2={x-2} y2="6"  stroke="rgba(201,169,110,0.45)" strokeWidth="1.2" strokeLinecap="round"/>
+                <line x1={x} y1="14" x2={x-2} y2="22" stroke="rgba(201,169,110,0.45)" strokeWidth="1.2" strokeLinecap="round"/>
+              </g>
+            ))}
+            <circle cx="72" cy="14" r="6"  stroke="rgba(201,169,110,0.45)" strokeWidth="1.5" fill="none"/>
+            <line x1="12" y1="14" x2="4"  y2="8"  stroke="rgba(201,169,110,0.45)" strokeWidth="1.4" strokeLinecap="round"/>
+            <line x1="12" y1="14" x2="2"  y2="14" stroke="rgba(201,169,110,0.45)" strokeWidth="1.4" strokeLinecap="round"/>
+            <line x1="12" y1="14" x2="4"  y2="20" stroke="rgba(201,169,110,0.45)" strokeWidth="1.4" strokeLinecap="round"/>
+          </svg>
+        </div>
+
       </div>
 
       {/* ── PARTICLE CANVAS ── */}
@@ -377,6 +609,12 @@ export default function Home() {
 
       {/* ══════════ HERO ══════════ */}
       <section className="hero-section" ref={heroRef}>
+        {/* AI Nexus club logo — top left hero decoration */}
+        <div className="hero-club-logo">
+          <img src={aiNexus} alt="AI Nexus Club" />
+          <span>AI Nexus</span>
+        </div>
+
         <div className="hero-side-left">
           <span className="year">2022</span>
           <div className="deco-line" />
@@ -389,17 +627,26 @@ export default function Home() {
         </div>
 
         <div className="hero-inner" ref={heroInnerRef}>
+          {/* 1. Badge */}
           <div className="hero-badge" ref={badgeRef}>
             Batch of 2022–26 &nbsp;·&nbsp; Jyothy Institute of Technology
           </div>
 
+          {/* 2. Horizontal logo */}
+          <img
+            src={logoHorizontal}
+            alt="EndOfBeginning"
+            className="hero-logo-horizontal"
+          />
+
+          {/* 3. Title */}
           <h1 className="hero-title" ref={titleRef}>End of Beginning</h1>
+
+          {/* 4. Divider */}
           <div className="hero-gold-divider" />
 
+          {/* 5. Subtitle — flex child, never absolutely positioned */}
           <p className="hero-subtitle" ref={subtitleRef}></p>
-          <p className="hero-year" ref={yearRef}>
-            2022 – 2026 &nbsp;·&nbsp; BE AI &amp; ML &nbsp;·&nbsp; JIT Bengaluru
-          </p>
 
           <div className="scroll-indicator" ref={scrollRef}>
             <div className="scroll-line" />
