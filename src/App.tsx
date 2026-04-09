@@ -4,6 +4,8 @@ import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Navbar from './components/Navbar';
 import SplashScreen from './components/SplashScreen';
+import CursorFollower from './components/CursorFollower';
+import SoundToggle from './components/SoundToggle';
 import Home from './pages/Home';
 import Constellation from './pages/Constellation';
 import Vault from './pages/Vault';
@@ -47,6 +49,8 @@ function AppInner() {
 
   return (
     <>
+      <CursorFollower />
+      <SoundToggle />
       {showSplash ? (
         <SplashScreen
           onComplete={() => {

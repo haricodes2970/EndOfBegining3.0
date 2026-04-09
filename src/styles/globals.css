@@ -4,30 +4,30 @@
 
 :root {
   --blue:       #A7C7E7;
-  --beige:      #F5F5DC;
-  --dark:       #333333;
+  --beige:      #FAF3E0;
+  --dark:       #3D1500;
   --blue-light: #c8ddf0;
-  --blue-dark:  #7aaed4;
-  --beige-dark: #e8e8c8;
+  --blue-dark:  #8B5E1A;
+  --beige-dark: #EFE2C4;
 
   /* ── Per-page gradients & accents ── */
-  --grad-home:       linear-gradient(170deg, #f5deb3 0%, #c8ddf0 30%, #7aaed4 65%, #0d1b2a 100%);
-  --accent-home:     #A7C7E7;
+  --grad-home:       linear-gradient(170deg, #FDB813 0%, #FFE08A 35%, #FFF3B0 65%, #F0B429 100%);
+  --accent-home:     #FDB813;
 
-  --grad-memories:   linear-gradient(150deg, #fff0e0 0%, #0d2b3e 100%);
-  --accent-memories: #e8825a;
+  --grad-memories:   linear-gradient(150deg, #F5E6CC 0%, #E8D4A8 100%);
+  --accent-memories: #C27800;
 
-  --grad-chronicles: linear-gradient(150deg, #0a0a1a 0%, #e8e8c8 100%);
-  --accent-chronicles: #4fc3f7;
+  --grad-chronicles: linear-gradient(150deg, #020008 0%, #0B1D3A 100%);
+  --accent-chronicles: #a78bfa;
 
   --grad-pantheon:   linear-gradient(150deg, #1a0533 0%, #f9e8ff 100%);
   --accent-pantheon: #c084fc;
 
-  --grad-vault:      linear-gradient(150deg, #f8f8f8 0%, #0a0a0a 100%);
-  --accent-vault:    #94a3b8;
+  --grad-vault:      linear-gradient(150deg, #FAF3E0 0%, #E8D8B8 100%);
+  --accent-vault:    #8B5E1A;
 
-  --grad-echoes:     linear-gradient(150deg, #fff4e0 0%, #1a0800 100%);
-  --accent-echoes:   #fb923c;
+  --grad-echoes:     linear-gradient(150deg, #F5E6CC 0%, #EFE2C4 100%);
+  --accent-echoes:   #C27800;
 }
 
 html { scroll-behavior: smooth; }
@@ -37,11 +37,13 @@ body {
   color: var(--dark);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  font-size: 18px;
 }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--beige); }
-::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #EFE2C4; }
+::-webkit-scrollbar-thumb { background: #C27800; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #8B5E1A; }
 
 /* ── SCROLL SMOOTHER WRAPPER ── */
 #smooth-wrapper {
@@ -101,7 +103,7 @@ body {
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.02em;
-  background: linear-gradient(135deg, var(--blue-dark) 0%, #6b9ec7 40%, var(--dark) 100%);
+  background: linear-gradient(135deg, #8B5E1A 0%, #C27800 40%, #5A3000 100%);
   background-size: 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -129,16 +131,18 @@ body {
 
 /* ── GLASS CARD ── */
 .glass-card {
-  background: rgba(167, 199, 231, 0.1);
-  border: 1px solid rgba(167, 199, 231, 0.4);
+  background: rgba(255,243,180,0.12);
+  border: 1px solid rgba(200,160,60,0.35);
   border-radius: 16px;
   backdrop-filter: blur(10px);
-  transition: box-shadow 0.35s, border-color 0.35s, transform 0.35s;
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transition: box-shadow 0.4s, border-color 0.4s, transform 0.4s;
 }
 
 .glass-card:hover {
-  box-shadow: 0 16px 45px rgba(167, 199, 231, 0.3);
-  border-color: var(--blue-dark);
+  box-shadow: 0 16px 40px rgba(200,140,0,0.22);
+  border-color: #C27800;
   transform: translateY(-4px);
 }
 

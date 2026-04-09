@@ -33,27 +33,29 @@
   height: 100%;
 }
 
+/* Hide AI Nexus secondary logo — only club logo is shown */
 .nav-ainexus {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid rgba(255,255,255,0.3);
-  flex-shrink: 0;
-  display: block;
+  display: none !important;
 }
 
 .nav-divider {
-  width: 1px;
-  height: 26px;
-  background: rgba(255,255,255,0.2);
-  flex-shrink: 0;
+  display: none !important;
 }
 
-/* Dark pill wrapper makes any logo visible on ocean bg */
 .nav-logo-wrap {
   display: flex;
   align-items: center;
+}
+
+@keyframes logoEntrance {
+  0%   { opacity: 0; transform: scale(0.88); filter: brightness(0) invert(1) drop-shadow(0 0 0px rgba(255,220,100,0)); }
+  60%  { opacity: 1; transform: scale(1.04); filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,220,100,0.5)); }
+  100% { opacity: 1; transform: scale(1);    filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,220,100,0.35)); }
+}
+
+@keyframes logoGlow {
+  0%, 100% { filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(255,220,100,0.25)); }
+  50%       { filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,220,100,0.5)); }
 }
 
 .nav-logo {
@@ -65,7 +67,15 @@
   background: none !important;
   padding: 0 !important;
   border-radius: 0 !important;
-  filter: brightness(0) invert(1);
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,220,100,0.35));
+  animation: logoEntrance 1.1s cubic-bezier(0.22,1,0.36,1) both,
+             logoGlow 4s ease-in-out 1.2s infinite;
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.nav-logo:hover {
+  filter: brightness(0) invert(1) drop-shadow(0 0 14px rgba(255,220,100,0.7)) !important;
+  transform: scale(1.04);
 }
 
 /* ── LINKS ── */

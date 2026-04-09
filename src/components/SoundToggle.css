@@ -1,0 +1,67 @@
+/* ══════════════════════════════════
+   SOUND TOGGLE BUTTON
+   ══════════════════════════════════ */
+.sound-toggle-btn {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.4rem;
+  z-index: 9000;
+
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(200,140,0,0.35);
+  background: rgba(255,243,180,0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.12),
+    0 0 0 1px rgba(200,140,0,0.1);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: rgba(100,50,0,0.65);
+
+  transition:
+    background   0.3s ease,
+    border-color 0.3s ease,
+    box-shadow   0.3s ease,
+    color        0.3s ease,
+    transform    0.2s ease;
+}
+
+.sound-toggle-btn:hover {
+  background: rgba(255,220,80,0.6);
+  border-color: rgba(200,140,0,0.6);
+  box-shadow:
+    0 6px 20px rgba(0,0,0,0.15),
+    0 0 12px rgba(253,184,19,0.3);
+  color: rgba(80,40,0,0.9);
+  transform: scale(1.08);
+}
+
+.sound-toggle-btn.sound-on {
+  background: rgba(255,220,80,0.55);
+  border-color: rgba(200,140,0,0.55);
+  color: rgba(100,50,0,0.9);
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.12),
+    0 0 10px rgba(253,184,19,0.25);
+}
+
+.sound-toggle-btn:active {
+  transform: scale(0.94);
+}
+
+/* Accessible focus ring */
+.sound-toggle-btn:focus-visible {
+  outline: 2px solid #C27800;
+  outline-offset: 3px;
+}
+
+/* Hide on very small screens to avoid layout clash */
+@media (max-width: 360px) {
+  .sound-toggle-btn { bottom: 0.8rem; right: 0.8rem; width: 36px; height: 36px; }
+}
