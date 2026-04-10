@@ -33,49 +33,51 @@
   height: 100%;
 }
 
-/* Hide AI Nexus secondary logo — only club logo is shown */
+/* ── AI Nexus club logo (circle) ── */
 .nav-ainexus {
-  display: none !important;
+  display: block !important;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255,220,100,0.5);
+  box-shadow: 0 0 10px rgba(255,200,50,0.25);
+  flex-shrink: 0;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
+.nav-ainexus:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 18px rgba(255,200,50,0.45);
+}
+
+/* ── Divider between logo and brand name ── */
 .nav-divider {
+  display: block !important;
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+/* ── EndOfBeginning wordmark — hidden (broken JPEG renders white) ── */
+.nav-logo-wrap {
   display: none !important;
 }
 
-.nav-logo-wrap {
-  display: flex;
-  align-items: center;
+/* ── Brand text ── */
+.nav-brand-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 240, 180, 0.9);
+  white-space: nowrap;
+  text-shadow: 0 0 8px rgba(255,200,50,0.3);
 }
 
-@keyframes logoEntrance {
-  0%   { opacity: 0; transform: scale(0.88); filter: brightness(0) invert(1) drop-shadow(0 0 0px rgba(255,220,100,0)); }
-  60%  { opacity: 1; transform: scale(1.04); filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255,220,100,0.5)); }
-  100% { opacity: 1; transform: scale(1);    filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,220,100,0.35)); }
-}
-
-@keyframes logoGlow {
-  0%, 100% { filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(255,220,100,0.25)); }
-  50%       { filter: brightness(0) invert(1) drop-shadow(0 0 10px rgba(255,220,100,0.5)); }
-}
-
-.nav-logo {
-  height: 38px;
-  width: auto;
-  max-width: 220px;
-  object-fit: contain;
-  display: block;
-  background: none !important;
-  padding: 0 !important;
-  border-radius: 0 !important;
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,220,100,0.35));
-  animation: logoEntrance 1.1s cubic-bezier(0.22,1,0.36,1) both,
-             logoGlow 4s ease-in-out 1.2s infinite;
-  transition: filter 0.3s ease, transform 0.3s ease;
-}
-
-.nav-logo:hover {
-  filter: brightness(0) invert(1) drop-shadow(0 0 14px rgba(255,220,100,0.7)) !important;
-  transform: scale(1.04);
+@media (max-width: 480px) {
+  .nav-brand-text { display: none; }
 }
 
 /* ── LINKS ── */
