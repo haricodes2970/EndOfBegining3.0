@@ -1,345 +1,62 @@
-import { useEffect, useState, useCallback } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
-import ParticleCanvas from '../components/ParticleCanvas';
+import { useState } from 'react';
 import './EchoesOfTime.css';
 
-const gokarnaPhotos = [
-  { id: 1, src: '/src/assets/trips/gokarna/20240721_201232.jpg' },
-  { id: 2, src: '/src/assets/trips/gokarna/20240721_201233_resized.jpg' },
-  { id: 3, src: '/src/assets/trips/gokarna/448c2e42-914c-4276-9aca-362003b2f9a6.jpg' },
-  { id: 4, src: '/src/assets/trips/gokarna/609a5f56-d59b-4a0b-9346-fa8d4fcf301a.jpg' },
-  { id: 5, src: '/src/assets/trips/gokarna/78c72229-3fcf-4c0e-9611-269460390f69.jpg' },
-  { id: 6, src: '/src/assets/trips/gokarna/93dd5198-208d-4f64-a38d-fc5ba9c312be.jpg' },
-  { id: 7, src: '/src/assets/trips/gokarna/IMG20240722142659.jpg' },
-  { id: 8, src: '/src/assets/trips/gokarna/IMG20240722142704.jpg' },
-  { id: 9, src: '/src/assets/trips/gokarna/IMG_0261.JPG' },
-  { id: 10, src: '/src/assets/trips/gokarna/IMG_0263.JPG' },
-  { id: 11, src: '/src/assets/trips/gokarna/IMG_0265.JPG' },
-  { id: 12, src: '/src/assets/trips/gokarna/IMG_0268.JPG' },
-  { id: 13, src: '/src/assets/trips/gokarna/IMG_0319.JPG' },
-  { id: 14, src: '/src/assets/trips/gokarna/IMG_0322.JPG' },
-  { id: 15, src: '/src/assets/trips/gokarna/IMG_2719.JPG' },
-  { id: 16, src: '/src/assets/trips/gokarna/IMG_2731.JPG' },
-  { id: 17, src: '/src/assets/trips/gokarna/IMG_2735.JPG' },
-  { id: 18, src: '/src/assets/trips/gokarna/IMG_2738.JPG' },
-  { id: 19, src: '/src/assets/trips/gokarna/IMG_2869.JPG' },
-  { id: 20, src: '/src/assets/trips/gokarna/IMG_2875.JPG' },
-  { id: 21, src: '/src/assets/trips/gokarna/IMG_2878.JPG' },
-  { id: 22, src: '/src/assets/trips/gokarna/IMG_2881.JPG' },
-  { id: 23, src: '/src/assets/trips/gokarna/IMG_2885.JPG' },
-  { id: 24, src: '/src/assets/trips/gokarna/IMG_2886.JPG' },
-  { id: 25, src: '/src/assets/trips/gokarna/IMG_2958.JPG' },
-  { id: 26, src: '/src/assets/trips/gokarna/IMG_2963.JPG' },
-  { id: 27, src: '/src/assets/trips/gokarna/IMG_2965.JPG' },
-  { id: 28, src: '/src/assets/trips/gokarna/IMG_2967.JPG' },
-  { id: 29, src: '/src/assets/trips/gokarna/IMG_2969.JPG' },
-  { id: 30, src: '/src/assets/trips/gokarna/IMG_2971.JPG' },
-  { id: 31, src: '/src/assets/trips/gokarna/IMG_2976.JPG' },
-  { id: 32, src: '/src/assets/trips/gokarna/IMG_3116.JPG' },
-  { id: 33, src: '/src/assets/trips/gokarna/IMG_3117.JPG' },
-  { id: 34, src: '/src/assets/trips/gokarna/IMG_9291.JPG' },
-  { id: 35, src: '/src/assets/trips/gokarna/IMG_9450.JPG' },
-  { id: 36, src: '/src/assets/trips/gokarna/IMG_9451.JPG' },
-  { id: 37, src: '/src/assets/trips/gokarna/IMG_9452.JPG' },
-  { id: 38, src: '/src/assets/trips/gokarna/IMG_9453.JPG' },
-  { id: 39, src: '/src/assets/trips/gokarna/IMG_9454.JPG' },
-  { id: 40, src: '/src/assets/trips/gokarna/IMG_9455.JPG' },
-  { id: 41, src: '/src/assets/trips/gokarna/IMG_9456.JPG' },
-  { id: 42, src: '/src/assets/trips/gokarna/IMG_9457.JPG' },
-  { id: 43, src: '/src/assets/trips/gokarna/IMG_9458.JPG' },
-  { id: 44, src: '/src/assets/trips/gokarna/IMG_9459.JPG' },
-  { id: 45, src: '/src/assets/trips/gokarna/IMG_9460.JPG' },
-  { id: 46, src: '/src/assets/trips/gokarna/IMG_9461.JPG' },
-  { id: 47, src: '/src/assets/trips/gokarna/IMG_9462.JPG' },
-  { id: 48, src: '/src/assets/trips/gokarna/IMG_9463.JPG' },
-  { id: 49, src: '/src/assets/trips/gokarna/IMG_9467.JPG' },
-  { id: 50, src: '/src/assets/trips/gokarna/Snapchat-586899129.jpg' },
-  { id: 51, src: '/src/assets/trips/gokarna/ddf79095-b62b-4802-bef7-016f8fdbe0ca.jpg' },
-];
-
-const dandeliPhotos = [
-  { id: 1, src: '/src/assets/trips/dandeli/IMG_0942.JPG' },
-  { id: 2, src: '/src/assets/trips/dandeli/IMG_0943.JPG' },
-  { id: 3, src: '/src/assets/trips/dandeli/IMG_0944.JPG' },
-];
-
-const fortPhotos = [
-  { id: 1, src: '/src/assets/trips/fort/574CF3C1-E061-46E4-B848-32876BED71B3.jpg' },
-];
-
-// ── GOKARNA (JPGs) ────────────────────────────────────────────────────────────
-
-// ── DANDELI ───────────────────────────────────────────────────────────────────
-
-// ── FORT ─────────────────────────────────────────────────────────────────────
-
-interface Photo { id: number; src: string; }
-
-interface TripLocation {
-  key: string;
-  name: string;
-  emoji: string;
-  tagline: string;
-  date: string;
-  photos: Photo[];
-}
-
-const locations: TripLocation[] = [
-  {
-    key: 'gokarna', name: 'Gokarna', emoji: '🌊',
-    tagline: 'Salt, sand, and no deadlines.',
-    date: 'July 2024',
-    photos: gokarnaPhotos,
-  },
-  {
-    key: 'dandeli', name: 'Dandeli', emoji: '🌿',
-    tagline: 'Into the wild, all of us.',
-    date: '2024',
-    photos: dandeliPhotos,
-  },
-  {
-    key: 'fort', name: 'The Fort', emoji: '🏰',
-    tagline: 'History beneath our feet.',
-    date: '2024',
-    photos: fortPhotos,
-  },
-];
-
-// mode: 'grid' = show all photos in grid, 'single' = fullscreen one photo
-interface LightboxState {
-  location: TripLocation;
-  mode: 'grid' | 'single';
-  index: number; // only used in 'single' mode
-}
+/* ── Generate 50 random placeholders on every page load ── */
+const placeholders = Array.from({ length: 50 }, (_, i) => ({
+  id: i,
+  top:    Math.random() * 82,          // % from top
+  left:   Math.random() * 86,          // % from left
+  width:  110 + Math.random() * 80,    // 110–190 px
+  rotate: (Math.random() - 0.5) * 18, // –9° to +9°
+  dur:    5 + Math.random() * 7,       // float duration
+  delay:  Math.random() * 6,           // start delay
+  amp:    10 + Math.random() * 14,     // float amplitude (px)
+}));
 
 export default function EchoesOfTime() {
-  const [lightbox, setLightbox] = useState<LightboxState | null>(null);
-
-  // Hero entrance + DrawSVG spine + card hover GSAP
-  useEffect(() => {
-    // ── PAGE TITLE — SplitText bounce ──
-    const split = new SplitText('.pg-title', { type: 'chars' });
-    gsap.set(split.chars, { opacity: 0, y: 60, rotation: -10 });
-    gsap.to(split.chars, { opacity: 1, y: 0, rotation: 0, duration: 0.9, stagger: 0.06, ease: 'back.out(2)', delay: 0.2 });
-
-    gsap.fromTo('.pg-tag',  { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.1 });
-
-    // ── SUBTITLE — TextPlugin typewriter ──
-    const subEl = document.querySelector('.pg-desc') as HTMLElement | null;
-    if (subEl) {
-      gsap.set(subEl, { opacity: 1, text: '' });
-      gsap.to(subEl, { delay: 1.1, duration: 1.8, text: { value: 'Every road we took together.', delimiter: '' }, ease: 'none' });
-    }
-
-    // ── DRAW SVG SPINE ──
-    gsap.fromTo('.mem-spine-line',
-      { drawSVG: '0%' },
-      { drawSVG: '100%', ease: 'none',
-        scrollTrigger: { trigger: '.mem-timeline-wrap', start: 'top center', end: 'bottom center', scrub: 1 } }
-    );
-
-    // ── LOCATION NODES — alternating slide in ──
-    locations.forEach((loc, i) => {
-      const xFrom = i % 2 === 0 ? -80 : 80;
-      gsap.fromTo(`.mem-node-${loc.key}`,
-        { opacity: 0, x: xFrom },
-        { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 75%' } }
-      );
-      gsap.fromTo(`.mem-node-${loc.key} .mem-dot`,
-        { scale: 0 },
-        { scale: 1, duration: 0.4, ease: 'back.out(2)',
-          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 75%' } }
-      );
-      gsap.fromTo(`.mem-node-${loc.key} .mem-thumb`,
-        { opacity: 0, scale: 0.82, y: 18 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.55, stagger: 0.1, ease: 'back.out(1.4)',
-          scrollTrigger: { trigger: `.mem-node-${loc.key}`, start: 'top 72%' } }
-      );
-    });
-
-    // ── CARD HOVER — GSAP timeline ──
-    const cards = gsap.utils.toArray<HTMLElement>('.mem-card');
-    const cleanups: (() => void)[] = [];
-    cards.forEach(card => {
-      const tl = gsap.timeline({ paused: true });
-      tl.to(card, { y: -10, duration: 0.3, ease: 'power2.out' })
-        .to(card, { borderColor: '#e8825a', boxShadow: '0 16px 40px rgba(232,130,90,0.25)', duration: 0.2 }, '<');
-      const enter = () => tl.play();
-      const leave = () => tl.reverse();
-      card.addEventListener('mouseenter', enter);
-      card.addEventListener('mouseleave', leave);
-      cleanups.push(() => {
-        card.removeEventListener('mouseenter', enter);
-        card.removeEventListener('mouseleave', leave);
-        tl.kill();
-      });
-    });
-
-    return () => {
-      split.revert();
-      ScrollTrigger.getAll().forEach(t => t.kill());
-      cleanups.forEach(fn => fn());
-    };
-  }, []);
-
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!lightbox) return;
-    if (e.key === 'Escape') {
-      if (lightbox.mode === 'single') setLightbox(s => s ? { ...s, mode: 'grid' } : null);
-      else setLightbox(null);
-      return;
-    }
-    if (lightbox.mode !== 'single') return;
-    const max = lightbox.location.photos.length - 1;
-    if (e.key === 'ArrowRight') setLightbox(s => s ? { ...s, index: Math.min(s.index + 1, max) } : null);
-    if (e.key === 'ArrowLeft')  setLightbox(s => s ? { ...s, index: Math.max(s.index - 1, 0) } : null);
-  }, [lightbox]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
-
-  // clicking a preview photo or "view all" → open grid
-  const openGrid   = (loc: TripLocation) => setLightbox({ location: loc, mode: 'grid', index: 0 });
-  // from grid, click a photo → fullscreen
-  const openSingle = (idx: number) => setLightbox(s => s ? { ...s, mode: 'single', index: idx } : null);
-  const prev = () => setLightbox(s => s ? { ...s, index: Math.max(s.index - 1, 0) } : null);
-  const next = () => setLightbox(s => s ? { ...s, index: Math.min(s.index + 1, s.location.photos.length - 1) } : null);
+  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <>
-      <div className="page-bg page-bg-memories" />
-      <ParticleCanvas />
-      <div className="orb orb-1" />
-      <div className="orb orb-2" />
-
-      <div className="page-hero">
-        <p className="page-tag pg-tag">The Full Story</p>
-        <h1 className="page-title pg-title">Echoes of Time</h1>
-        <p className="page-subtitle pg-desc">Every milestone. Every road. Every memory.</p>
+    <div className="echoes-wrapper">
+      {/* Page header */}
+      <div className="echoes-header">
+        <p className="echoes-tag">Batch of 2022–26</p>
+        <h1 className="echoes-title">Echoes of Time</h1>
+        <p className="echoes-sub">Photos coming soon — every road we took together.</p>
       </div>
 
-      {/* TIMELINE */}
-      <div className="mem-timeline-wrap">
-        {/* DrawSVG spine */}
-        <svg className="mem-spine-svg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" aria-hidden="true">
-          <line className="mem-spine-line" x1="50%" y1="0" x2="50%" y2="100%" />
-        </svg>
-
-        {locations.map((loc, locIdx) => {
-          const side = locIdx % 2 === 0 ? 'left' : 'right';
-          const preview = loc.photos.slice(0, 4);
-          return (
-            <div key={loc.key} className={`mem-node mem-node--${side} mem-node-${loc.key}`}>
-
-              {/* DOT on spine */}
-              <div className="mem-dot" />
-
-              {/* CONTENT CARD */}
-              <div className="mem-card glass-card">
-                <div className="mem-card-header">
-                  <span className="mem-loc-emoji">{loc.emoji}</span>
-                  <div>
-                    <h2 className="mem-loc-name">{loc.name}</h2>
-                    <p className="mem-loc-meta">{loc.date} &nbsp;·&nbsp; {loc.photos.length} photos</p>
-                  </div>
-                  <p className="mem-loc-tag">{loc.tagline}</p>
-                </div>
-
-                {/* 4 preview thumbnails */}
-                <div className="mem-thumbs">
-                  {preview.map((photo, i) => (
-                    <div key={i} className="mem-thumb" onClick={() => openGrid(loc)}>
-                      <img src={photo.src} alt={`${loc.name} ${i + 1}`} className="mem-thumb-img" />
-                      <div className="mem-thumb-overlay">
-                        <span className="mem-thumb-zoom">⊞</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <button className="mem-view-all" onClick={() => openGrid(loc)}>
-                  View all {loc.photos.length} photos →
-                </button>
-              </div>
-
+      {/* 50 floating placeholder cards */}
+      <div className="echoes-float-field">
+        {placeholders.map(p => (
+          <div
+            key={p.id}
+            className={`echoes-card${hovered === p.id ? ' echoes-card--hovered' : ''}`}
+            style={{
+              top:    `${p.top}%`,
+              left:   `${p.left}%`,
+              width:  `${p.width}px`,
+              transform: `rotate(${p.rotate}deg)`,
+              animationDuration:      `${p.dur}s`,
+              animationDelay:         `${p.delay}s`,
+              '--amp': `${p.amp}px`,
+            } as React.CSSProperties}
+            onMouseEnter={() => setHovered(p.id)}
+            onMouseLeave={() => setHovered(null)}
+          >
+            {/* Photo placeholder area */}
+            <div className="echoes-photo">
+              <svg viewBox="0 0 60 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="30" cy="22" r="13" fill="rgba(180,130,50,0.25)" />
+                <path d="M4 64 C4 45 56 45 56 64" fill="rgba(180,130,50,0.2)" />
+              </svg>
             </div>
-          );
-        })}
+            {/* Polaroid caption bar */}
+            <div className="echoes-caption">
+              <span className="echoes-num">{String(p.id + 1).padStart(2, '0')}</span>
+            </div>
+          </div>
+        ))}
       </div>
-
-      {/* ── GRID POPUP ── */}
-      {lightbox && lightbox.mode === 'grid' && (
-        <div className="lb-overlay" onClick={() => setLightbox(null)}>
-          <div className="lb-modal" onClick={e => e.stopPropagation()}>
-
-            <div className="lb-header">
-              <span className="lb-title">{lightbox.location.emoji} {lightbox.location.name}</span>
-              <span className="lb-count">{lightbox.location.photos.length} photos</span>
-              <button className="lb-close" onClick={() => setLightbox(null)}>✕</button>
-            </div>
-
-            <div className="lb-grid">
-              {lightbox.location.photos.map((photo, i) => (
-                <div key={i} className="lb-grid-cell" onClick={() => openSingle(i)}>
-                  <img src={photo.src} alt={`${lightbox.location.name} ${i + 1}`} className="lb-grid-img" />
-                  <div className="lb-grid-hover">
-                    <span className="lb-grid-num">{i + 1}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      )}
-
-      {/* ── FULLSCREEN SINGLE ── */}
-      {lightbox && lightbox.mode === 'single' && (
-        <div className="fs-overlay" onClick={() => setLightbox(s => s ? { ...s, mode: 'grid' } : null)}>
-          <div className="fs-inner" onClick={e => e.stopPropagation()}>
-
-            <div className="fs-bar">
-              <button className="fs-back" onClick={() => setLightbox(s => s ? { ...s, mode: 'grid' } : null)}>
-                ← Back to grid
-              </button>
-              <span className="fs-bar-loc">
-                {lightbox.location.emoji} {lightbox.location.name}
-                <span className="fs-bar-count">{lightbox.index + 1} / {lightbox.location.photos.length}</span>
-              </span>
-              <button className="fs-close" onClick={() => setLightbox(null)}>✕</button>
-            </div>
-
-            <div className="fs-img-wrap">
-              <button className="fs-arrow" onClick={prev} disabled={lightbox.index === 0}>‹</button>
-              <img
-                key={lightbox.index}
-                src={lightbox.location.photos[lightbox.index].src}
-                alt={`${lightbox.location.name} ${lightbox.index + 1}`}
-                className="fs-img"
-              />
-              <button className="fs-arrow" onClick={next} disabled={lightbox.index === lightbox.location.photos.length - 1}>›</button>
-            </div>
-
-            <div className="fs-strip">
-              {lightbox.location.photos.map((p, i) => (
-                <div
-                  key={i}
-                  className={`fs-strip-thumb ${i === lightbox.index ? 'active' : ''}`}
-                  onClick={() => setLightbox(s => s ? { ...s, index: i } : null)}
-                >
-                  <img src={p.src} alt="" />
-                </div>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 }
