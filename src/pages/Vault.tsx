@@ -21,7 +21,7 @@ function p(filename: string): string | undefined {
 
 /* ── STUDENTS ── */
 const students = [
-  { id:  1, usn: '1JT22AI001', name: 'Akash M Athreyas',    photo: undefined },
+  { id:  1, usn: '1JT22AI001', name: 'Akash M Athreyas',    photo: p('Akash.png') },
   { id:  2, usn: '1JT22AI002', name: 'Amith Kashyap P S',   photo: p('IMG-20230528-WA0019 - AMITH KASHYAP P S AMITH KASHYAP P S.jpg') },
   { id:  3, usn: '1JT22AI003', name: 'Aryan M',             photo: p('ARYAN M ARYAN M.jpg') },
   { id:  4, usn: '1JT22AI004', name: 'Asritha Y',           photo: p('photolatest - Asritha Yerramsetty.jpg') },
