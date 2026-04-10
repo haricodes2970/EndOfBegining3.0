@@ -1,32 +1,42 @@
 /* ══════════════════════════════════════════
-   ECHOES OF TIME — Floating Polaroids
+   ECHOES OF TIME — Crazy Polaroid Scatter
    ══════════════════════════════════════════ */
 
 .echoes-wrapper {
   position: relative;
   min-height: 100vh;
   background: linear-gradient(180deg,
-    #FDB813 0%,
-    #FFC84A 12%,
-    #FFE08A 30%,
-    #FFF3B0 50%,
-    #FFEFD0 70%,
-    #FFD97D 88%,
-    #F0B429 100%
+    #FDB813 0%, #FFC84A 12%, #FFE08A 30%,
+    #FFF3B0 50%, #FFEFD0 70%, #FFD97D 88%, #F0B429 100%
   );
   overflow-x: hidden;
-  /* overflow-y: auto is default — page scrolls naturally */
 }
 
-/* ── Header (fixed visual layer above the cards) ── */
+/* ── Balloons: fixed viewport layer, z behind cards ── */
+.echoes-balloons {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.balloon-el {
+  position: absolute;
+  top: 0;
+  will-change: transform;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+}
+
+/* ── Header ── */
 .echoes-header {
   position: relative;
-  z-index: 20;
+  z-index: 30;
   text-align: center;
   padding: 7rem 2rem 1.5rem;
   pointer-events: none;
   background: linear-gradient(to bottom,
-    rgba(253,184,19,0.92) 0%,
+    rgba(253,184,19,0.95) 0%,
     rgba(253,184,19,0.0) 100%
   );
 }
@@ -35,7 +45,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(80, 40, 0, 0.6);
+  color: rgba(80,40,0,0.6);
   margin-bottom: 0.5rem;
   font-family: 'Georgia', serif;
 }
@@ -45,13 +55,13 @@
   font-size: clamp(2.8rem, 7vw, 5rem);
   color: #3D1500;
   letter-spacing: 0.04em;
-  text-shadow: 0 2px 12px rgba(200, 100, 0, 0.15);
+  text-shadow: 0 2px 12px rgba(200,100,0,0.15);
   margin: 0 0 0.5rem;
 }
 
 .echoes-sub {
   font-size: 1rem;
-  color: rgba(80, 40, 0, 0.55);
+  color: rgba(80,40,0,0.55);
   font-style: italic;
   font-family: 'Georgia', serif;
   margin-bottom: 0.4rem;
@@ -60,76 +70,73 @@
 .echoes-hint {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
-  color: rgba(80, 40, 0, 0.4);
+  color: rgba(80,40,0,0.4);
   text-transform: uppercase;
   animation: hintBob 2.5s ease-in-out infinite;
 }
 
 @keyframes hintBob {
   0%, 100% { opacity: 0.4; transform: translateY(0); }
-  50%       { opacity: 0.8; transform: translateY(6px); }
+  50%       { opacity: 0.85; transform: translateY(7px); }
 }
 
-/* ── Float field — tall relative container ── */
+/* ── Tall relative canvas ── */
 .echoes-float-field {
   position: relative;
   width: 100%;
-  /* height set inline via JS */
-  pointer-events: none;
+  /* height set inline */
 }
 
 /* ── Polaroid card ── */
 .echoes-card {
   position: absolute;
-  pointer-events: all;
-  cursor: default;
+  cursor: pointer;
   background: #FEFAF3;
   border-radius: 3px;
-  padding: 8px 8px 30px;
+  padding: 8px 8px 32px;
   box-shadow:
-    0 4px 18px rgba(0, 0, 0, 0.13),
-    0 1px 4px rgba(100, 60, 20, 0.1),
-    inset 0 1px 0 rgba(255, 245, 210, 0.9);
-  border: 1px solid rgba(180, 130, 50, 0.18);
-  animation: echoFloat ease-in-out infinite both;
-  will-change: translate;
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+    0 6px 20px rgba(0,0,0,0.16),
+    0 1px 5px rgba(100,60,20,0.12),
+    inset 0 1px 0 rgba(255,245,210,0.95);
+  border: 1px solid rgba(180,130,50,0.2);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  will-change: transform;
 }
 
 .echoes-card:hover {
   box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.2),
-    0 4px 12px rgba(180, 100, 0, 0.18);
-  z-index: 50;
+    0 16px 40px rgba(0,0,0,0.24),
+    0 4px 14px rgba(180,100,0,0.2);
+  /* slight lift on hover */
+  translate: 0 -6px;
+  z-index: 100 !important;
 }
 
-@keyframes echoFloat {
-  0%   { translate: 0 0; }
-  25%  { translate: 0 calc(var(--amp) * -1); }
-  75%  { translate: 0 var(--amp); }
-  100% { translate: 0 0; }
-}
-
-/* ── Placeholder photo area ── */
+/* ── Photo area (real image) ── */
 .echoes-photo {
   width: 100%;
   aspect-ratio: 3 / 4;
-  background: linear-gradient(145deg, #F5EBD0, #EFE2C4);
+  background: #EFE2C4;
   border-radius: 2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
 }
 
-.echoes-photo svg {
-  width: 52%;
-  height: 52%;
+.echoes-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.echoes-card:hover .echoes-img {
+  transform: scale(1.05);
 }
 
 /* ── Caption strip ── */
 .echoes-caption {
-  height: 22px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -138,6 +145,13 @@
 .echoes-num {
   font-family: 'Courier New', monospace;
   font-size: 0.58rem;
-  color: rgba(160, 100, 30, 0.38);
+  color: rgba(160,100,30,0.38);
   letter-spacing: 0.1em;
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .echoes-card {
+    padding: 5px 5px 24px;
+  }
 }
