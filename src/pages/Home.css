@@ -1090,6 +1090,33 @@
   padding: 0 24px 32px;
 }
 
+/* ── Story card: dark text for light-yellow background ── */
+.story-card * { color: #1a1a1a !important; }
+
+.story-card .story-nick,
+.story-card h2,
+.story-card h3 {
+  color: #0d0d0d !important;
+  font-weight: 700;
+}
+
+.story-card .story-pull {
+  color: #2d2d2d !important;
+  font-style: italic;
+}
+
+.story-card .story-text,
+.story-card p {
+  color: #333333 !important;
+  line-height: 1.8;
+}
+
+.story-card .story-pill {
+  color: #1a1a1a !important;
+  background: rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
 .story-card {
   /* FIXED DIMENSIONS — shell never changes */
   width: min(660px, 90vw);

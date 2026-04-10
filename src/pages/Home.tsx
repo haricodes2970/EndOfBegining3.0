@@ -5,7 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import ParticleCanvas from '../components/ParticleCanvas';
 import logoHorizontal from '../assets/logo-horizontal.jpeg';
-import aiNexus from '../assets/ainexus.jpeg';
 import './Home.css';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -620,10 +619,6 @@ export default function Home() {
 
       {/* ═══ HERO ═══ */}
       <section className="hero-section" ref={heroRef}>
-        <div className="hero-club-logo">
-          <img src={aiNexus} alt="AI Nexus" />
-          <span>AI Nexus</span>
-        </div>
         <div className="hero-inner">
           <div className="hero-badge" ref={badgeRef}>Batch of 2022–26 · Jyothy Institute of Technology</div>
           <img src={logoHorizontal} alt="EndOfBeginning" className="hero-logo-horizontal" />

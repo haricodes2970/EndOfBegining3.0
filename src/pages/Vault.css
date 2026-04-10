@@ -247,13 +247,13 @@
   font-size: 1.2rem;
 }
 
-/* ── GRID — 4 columns ── */
+/* ── GRID — 3 columns ── */
 .vault-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  padding: 3rem 5rem 6rem;
-  max-width: 1400px;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.8rem !important;
+  padding: 3rem 4rem 6rem !important;
+  max-width: 1300px;
   margin: 0 auto;
   position: relative;
   z-index: 10;
@@ -262,23 +262,14 @@
 
 @media (max-width: 900px) {
   .vault-grid {
-    grid-template-columns: repeat(3, 1fr);
-    padding: 2rem 2rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 2rem !important;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 500px) {
   .vault-grid {
-    grid-template-columns: repeat(2, 1fr);
-    padding: 1.5rem;
-    gap: 1.2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .vault-grid {
-    grid-template-columns: 1fr;
-    padding: 1rem;
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -369,7 +360,8 @@
 /* ── PHOTO AREA ── */
 .vault-photo-area {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 3/4 !important;
+  max-height: 300px !important;
   overflow: hidden;
   border-radius: 12px 12px 0 0;
   position: relative;
