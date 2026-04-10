@@ -33,7 +33,7 @@ const students = [
   { id: 10, usn: '1JT22AI011', name: 'Chandra N',           photo: p('IMG_20240929_195215 - CHANDRA N CHANDRA N.JPG') },
   { id: 11, usn: '1JT22AI012', name: 'Diya K Bhat',         photo: p('Diya proffessional - DIYA K BHAT.jpg') },
   { id: 12, usn: '1JT22AI013', name: 'Eshwar Siddartha',    photo: p('IMG_20230412_133320-min - ESHWAR SIDDARTHA T ESHWAR SIDDARTHA T.jpg') },
-  { id: 13, usn: '1JT22AI014', name: 'Harini V',            photo: p('harini - HARINI V HARINI V.jpg') },
+  { id: 13, usn: '1JT22AI014', name: 'Harini V',            photo: p('harini - Harini.jpg') },
   { id: 14, usn: '1JT22AI015', name: 'J Sanjana',           photo: p('IMG_20240928_233133 - J SANJANA J SANJANA.jpg') },
   { id: 15, usn: '1JT22AI016', name: 'Jyothish S',          photo: p('Jyothish S Hebbar.JPG') },
   { id: 16, usn: '1JT22AI017', name: 'K Vihar',             photo: p('IMG-20240929-WA0001 - K Vihar.jpg') },
