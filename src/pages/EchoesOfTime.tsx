@@ -20,21 +20,24 @@ function shuffle<T>(arr: T[]): T[] {
 /* Shuffle once at module load → fresh every hard refresh */
 const allPhotos = shuffle(Object.values(imageModules).map(m => m.default));
 
-/* ── Layout ── */
-const COLS     = 5;
-const ROW_H    = 340;           // px between row tops (cards ~300px tall → ~30–40px gap)
-const COL_L    = [2, 21, 40, 59, 78]; // % left per column
-const W_MIN    = 175;
-const W_MAX    = 250;
+/* ── Layout ──
+   Card widths in vw so they scale with any screen size.
+   5 columns at 3 / 22 / 41 / 60 / 79 % with ±2% jitter.
+   Row height chosen so card bottoms leave ~1-finger gap before next row top. */
+const COLS   = 5;
+const ROW_H  = 340;
+const COL_L  = [3, 22, 41, 60, 79]; // % — evenly spread, 1-finger margins
+const VW_MIN = 14;   // vw
+const VW_MAX = 17;   // vw  (≈196–238px on 1400px, scales down on small screens)
 
-const n        = allPhotos.length;
-const CONT_H   = Math.ceil(n / COLS) * ROW_H + 440;
+const n      = allPhotos.length;
+const CONT_H = Math.ceil(n / COLS) * ROW_H + 440;
 
 const cards = allPhotos.map((src, i) => ({
   src,
-  topPx:   220 + Math.floor(i / COLS) * ROW_H + (Math.random() - 0.4) * 70,
-  leftPct: COL_L[i % COLS] + (Math.random() - 0.5) * 7,
-  width:   W_MIN + Math.random() * (W_MAX - W_MIN),
+  topPx:   220 + Math.floor(i / COLS) * ROW_H + (Math.random() - 0.4) * 65,
+  leftPct: COL_L[i % COLS] + (Math.random() - 0.5) * 4,   // tighter jitter
+  widthVw: VW_MIN + Math.random() * (VW_MAX - VW_MIN),
   rotate:  (Math.random() - 0.5) * 22,
   zIdx:    4 + Math.floor(Math.random() * 22),
 }));
@@ -129,7 +132,7 @@ export default function EchoesOfTime() {
             style={{
               top:       `${c.topPx}px`,
               left:      `${c.leftPct}%`,
-              width:     `${c.width}px`,
+              width:     `${c.widthVw}vw`,
               transform: `rotate(${c.rotate}deg)`,
               zIndex:    c.zIdx,
             }}
