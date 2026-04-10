@@ -426,50 +426,52 @@ export default function Home() {
       <div className="ocean-bg" />
       <div className="depth-overlay" />
 
-      {/* ═══ ROOM FRAME (desktop) ═══ */}
+      {/* ═══ ROOM FRAME (desktop) — sticky zone: room sticks while spacer scrolls, GSAP dissolves it ═══ */}
       {isDesktop && (
-        <section className="room-frame">
-          <div className="room-bg" />
-          <div className="room-window-area">
-            <div className="window-frame">
-              <div className="window-cross-h" /><div className="window-cross-v" />
-            </div>
-            <div className="window-light-rays">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-light-ray" style={{ left: `${15 + i * 18}%`, transform: `rotate(${-20 + i * 10}deg)` }} />
-              ))}
-            </div>
-          </div>
-          {[...Array(12)].map((_, i) => (
-            <div key={i} className="dust-mote" style={{
-              left: `${10 + (i * 7) % 80}%`, top: `${15 + (i * 5) % 50}%`,
-              width: 2 + (i % 3), height: 2 + (i % 3),
-              opacity: 0.12 + (i % 4) * 0.06,
-            }} />
-          ))}
-          <div className="room-cup room-obj"><CupSVG /></div>
-          <div className="room-plant room-obj"><PlantSVG /></div>
-          <div className="room-notebook room-obj"><NotebookSVG /></div>
-          <div className="room-desk" />
-          <div className="room-monitor">
-            <div className="monitor-frame">
-              <div className="monitor-screen">
-                <div className="screen-content">
-                  <div className="screen-badge">Batch 2022–26 · JIT</div>
-                  <div className="screen-title">End of Beginning</div>
-                  <div className="screen-line" />
-                  <div className="screen-sub">AI Nexus · BE AI &amp; ML</div>
-                </div>
-                <div className="screen-reflection" />
+        <div className="room-zone">
+          <section className="room-frame">
+            <div className="room-bg" />
+            <div className="room-window-area">
+              <div className="window-frame">
+                <div className="window-cross-h" /><div className="window-cross-v" />
+              </div>
+              <div className="window-light-rays">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="w-light-ray" style={{ left: `${15 + i * 18}%`, transform: `rotate(${-20 + i * 10}deg)` }} />
+                ))}
               </div>
             </div>
-            <div className="monitor-stand" />
-            <div className="room-monitor-glow" />
-          </div>
-          <div className="room-scroll-hint">Scroll to enter</div>
-        </section>
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="dust-mote" style={{
+                left: `${10 + (i * 7) % 80}%`, top: `${15 + (i * 5) % 50}%`,
+                width: 2 + (i % 3), height: 2 + (i % 3),
+                opacity: 0.12 + (i % 4) * 0.06,
+              }} />
+            ))}
+            <div className="room-cup room-obj"><CupSVG /></div>
+            <div className="room-plant room-obj"><PlantSVG /></div>
+            <div className="room-notebook room-obj"><NotebookSVG /></div>
+            <div className="room-desk" />
+            <div className="room-monitor">
+              <div className="monitor-frame">
+                <div className="monitor-screen">
+                  <div className="screen-content">
+                    <div className="screen-badge">Batch 2022–26 · JIT</div>
+                    <div className="screen-title">End of Beginning</div>
+                    <div className="screen-line" />
+                    <div className="screen-sub">AI Nexus · BE AI &amp; ML</div>
+                  </div>
+                  <div className="screen-reflection" />
+                </div>
+              </div>
+              <div className="monitor-stand" />
+              <div className="room-monitor-glow" />
+            </div>
+            <div className="room-scroll-hint">Scroll to enter</div>
+          </section>
+          <div className="room-spacer" />
+        </div>
       )}
-      <div className="room-spacer" style={{ height: isDesktop ? '100vh' : '0' }} />
 
       {/* ═══ DECORATIVE LAYERS (fixed) ═══ */}
       <div className="decor-layer sky-layer">
